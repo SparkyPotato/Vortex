@@ -40,6 +40,8 @@ namespace Vortex
 	private:
 		// A pointer to the user-defined application.
 		IApplication* m_App;
+		// A pointer to the main application window.
+		IWindow* m_Window;
 
 		// Is the application running?
 		bool m_IsTicking;

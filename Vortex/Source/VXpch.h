@@ -2,5 +2,6 @@
 
 #include <Core/Logger.h>
 
-#include <memory.h>
+#include <string>
+#include <memory>
 #include <thread>

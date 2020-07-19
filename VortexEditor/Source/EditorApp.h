@@ -7,11 +7,11 @@ public:
 	EditorApp();
 	virtual ~EditorApp();
 
+	virtual const Vortex::IWindow::Properties& GetWindowProperties() override;
+
 	virtual void Start() override;
 	virtual void Tick(float deltaTime) override;
-};
 
-Vortex::IApplication* CreateApplication()
-{
-	return new EditorApp();
-}
+private:
+	Vortex::IWindow::Properties m_WindowProperties;
+};

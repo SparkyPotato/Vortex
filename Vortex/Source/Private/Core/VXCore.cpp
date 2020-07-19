@@ -1,8 +1,6 @@
 #include <VXpch.h>
 #include <Core/Modules/VXCore.h>
 
-extern Vortex::IApplication* CreateApplication();
-
 namespace Vortex
 {
 	int VXCore::Startup()
@@ -24,9 +22,16 @@ namespace Vortex
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
 		m_App->BindToModule(this);
+		ENG_TRACE("Created Client application.");
 
 		// Starts the user-defined application.
 		m_App->Start();
+		ENG_TRACE("Started Client application");
+
+		// Creates the window according to the application's specification.
+		auto properties = m_App->GetWindowProperties();
+		m_Window = InstantiateWindow(properties);
+		ENG_TRACE("Created window: \"{0}\" ({1}, {2})", properties.name, properties.width, properties.height);
 
 		ENG_TRACE("Started Vortex Core Module.");
 		return 0;
@@ -38,6 +43,9 @@ namespace Vortex
 
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
+
+		// Destroys the window.
+		delete m_Window;
 
 		ENG_TRACE("Shut down Vortex Core Module.");
 		return 0;
@@ -51,6 +59,7 @@ namespace Vortex
 
 	void VXCore::RunTickLoop()
 	{
+		ENG_TRACE("Starting Vortex Core Module Tick.");
 		while (m_IsTicking)
 		{
 			QueryPerformanceCounter(&m_LastTime);
@@ -62,6 +71,7 @@ namespace Vortex
 			m_DeltaTime = (float) (m_CurrentTime.QuadPart - m_LastTime.QuadPart);
 			m_DeltaTime /= m_Frequency.QuadPart;
 		}
+		ENG_TRACE("Ended Vortex Core Module Tick.");
 	}
 
 	void VXCore::Quit()

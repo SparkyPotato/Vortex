@@ -1,11 +1,11 @@
 #include <VXpch.h>
-#include <Core/Modules/VXCore.h>
 
 /*
 	This is the Entry Point of the Engine if we are on Windows.
 	This file is only compiled if we are on Windows.
 */
 #ifdef PLATFORM_WINDOWS
+#include <Core/Modules/VXCore.h>
 
 /*
 	If building as a Console App.
