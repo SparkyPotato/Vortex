@@ -1,4 +1,5 @@
 #include <VXpch.h>
+#include <Core/Modules/VXCore.h>
 
 /*
 	This is the Entry Point of the Engine if we are on Windows.
