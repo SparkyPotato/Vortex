@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/IModule.h>
+#include <Core/IApplication.h>
 
 namespace Vortex
 {
@@ -13,10 +14,13 @@ namespace Vortex
 		~VXCore();
 		/*
 			Starts the Vortex Core Module.
+			Not putting this in a constructor means that we don't have to recreate it when running the application
+			in the editor.
 		*/
 		virtual int Startup() override;
 		/*
 			Shuts down the Vortex Core Module.
+			Not putting this in a destructor means that we don't have to destroy the Module to reset the application
 		*/
 		virtual int Shutdown() override;
 		/*
@@ -34,9 +38,14 @@ namespace Vortex
 		virtual void Quit() override;
 
 	private:
+		// A pointer to the user-defined application.
+		IApplication* m_App;
+
+		// Is the application running?
 		bool m_IsTicking;
 		std::mutex m_RunMutex;
 
+		// The last frame delta.
 		float m_DeltaTime;
 		LARGE_INTEGER m_Frequency;
 		LARGE_INTEGER m_LastTime, m_CurrentTime;

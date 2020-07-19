@@ -19,11 +19,13 @@ namespace Vortex
 	};
 }
 
+// Engine Log macros.
 #define ENG_TRACE(...) Vortex::Logger::GetEngineLogger()->trace(__VA_ARGS__);
 #define ENG_INFO(...)  Vortex::Logger::GetEngineLogger()->info(__VA_ARGS__);
 #define ENG_WARN(...)  Vortex::Logger::GetEngineLogger()->warn(__VA_ARGS__);
 #define ENG_ERROR(...) Vortex::Logger::GetEngineLogger()->error(__VA_ARGS__);
 
+// Client Log macros.
 #define VX_TRACE(...)  Vortex::Logger::GetClientLogger()->trace(__VA_ARGS__);
 #define VX_INFO(...)   Vortex::Logger::GetClientLogger()->info(__VA_ARGS__);
 #define VX_WARN(...)   Vortex::Logger::GetClientLogger()->warn(__VA_ARGS__);

@@ -89,7 +89,8 @@ project "VortexEditor"
 	
 	includedirs
 	{
-		"Vortex/Source"
+		"Vortex/Source",
+		"Vortex/ThirdParty/spdlog/include"
 	}
 	
 	links 

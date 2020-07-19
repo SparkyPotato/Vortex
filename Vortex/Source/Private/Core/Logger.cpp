@@ -8,10 +8,14 @@ namespace Vortex
 
 	void Logger::Init()
 	{
+		// Creating spdlog loggers.
 		s_EngineLogger = spdlog::stdout_color_mt("Engine");
 		s_ClientLogger = spdlog::stdout_color_mt("Client");
+
+		// Setting the log pattern.
 		spdlog::set_pattern("[%I:%M:%S.%e] %n: (%l) %^%v%$");
 
+		// Setting log level based on configuration.
 		#ifdef CFG_DEBUGALL
 
 		s_EngineLogger->set_level(spdlog::level::trace);

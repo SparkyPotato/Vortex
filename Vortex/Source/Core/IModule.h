@@ -5,6 +5,8 @@ namespace Vortex
 	class IModule
 	{
 	public:
+		virtual ~IModule() {}
+
 		/*
 			Startup the Module instance.
 		*/
