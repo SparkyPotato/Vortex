@@ -15,7 +15,7 @@ workspace "Vortex"
 		"MultiProcessorCompile"
 	}
 	
-outputdir = "%{cfg.system}/%{cfg.buildcfg}/"
+outputdir = "%{cfg.buildcfg}/"
 
 project "Vortex"
 	location "Vortex"
@@ -27,8 +27,10 @@ project "Vortex"
 	pchheader "VXpch.h"
 	pchsource "Vortex/Source/VXpch.cpp"
 	
-	targetdir ("Bin/" .. outputdir .. "%{prj.name}")
-	objdir ("Bin/Int/" .. outputdir .. "%{prj.name}")
+	characterset "Unicode"
+	
+	targetdir ("Binaries/" .. outputdir .. "%{prj.name}")
+	objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
 	
 	files
 	{
@@ -44,6 +46,7 @@ project "Vortex"
 	
 	filter "system:windows"
 		systemversion "latest"
+		entrypoint "wmainCRTStartup"
 		defines "PLATFORM_WINDOWS"
 		
 	filter "configurations:DebugAll"
@@ -73,8 +76,10 @@ project "VortexEditor"
 	cppdialect "C++17"
 	staticruntime "on"
 	
-	targetdir ("Bin/" .. outputdir .. "%{prj.name}")
-	objdir ("Bin/Int/" .. outputdir .. "%{prj.name}")
+	characterset "Unicode"
+	
+	targetdir ("Binaries/" .. outputdir .. "%{prj.name}")
+	objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
 	
 	files
 	{
@@ -94,6 +99,7 @@ project "VortexEditor"
 	
 	filter "system:windows"
 		systemversion "latest"
+		entrypoint "wmainCRTStartup"
 		defines "PLATFORM_WINDOWS"
 		
 	filter "configurations:DebugAll"

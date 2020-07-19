@@ -3,5 +3,6 @@
 *.sln
 *.vcxproj*
 
-#Builds
-Bin/*
+# Builds
+Binaries/*
+Intermediate/*

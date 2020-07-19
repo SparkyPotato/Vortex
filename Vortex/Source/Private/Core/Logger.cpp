@@ -10,6 +10,7 @@ namespace Vortex
 	{
 		s_EngineLogger = spdlog::stdout_color_mt("Engine");
 		s_ClientLogger = spdlog::stdout_color_mt("Client");
+		spdlog::set_pattern("[%I:%M:%S.%e] %n: (%l) %^%v%$");
 
 		#ifdef CFG_DEBUGALL
 

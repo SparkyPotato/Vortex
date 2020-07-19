@@ -1,6 +1,6 @@
 #pragma once
 
 #include <Core/Logger.h>
-#include <Core/VXCore.h>
+#include <Core/VXModules/VXCore.h>
 
 #include <memory.h>
