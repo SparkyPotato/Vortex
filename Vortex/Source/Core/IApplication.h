@@ -23,12 +23,6 @@ namespace Vortex
 	{
 	public:
 		virtual ~IApplication() {}
-		
-		/*
-			Gets the window properties desired by the application so that the window can be created.
-		*/
-		virtual const IWindow::Properties& GetWindowProperties() = 0;
-
 		/*
 			Binds the Modules to the Application, so you can use GCore to get a pointer to the Vortex Core Module.
 		*/

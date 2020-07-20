@@ -27,7 +27,12 @@ int wmain(int argc, wchar_t** argv)
 	}
 
 	// Run the blocking Tick Loop of the Vortex Core Module. App execution ends when out of this loop.
-	core->RunTickLoop();
+	errorCode = core->RunTickLoop();
+	if (errorCode != 0)
+	{
+		ENG_ERROR("Failed to run Vortex Core Module tick! Error: {0}. Exiting...", errorCode);
+		return errorCode;
+	}
 
 	// Shutdown the Vortex Core Module, and return the error code passed.
 	errorCode = core->Shutdown();

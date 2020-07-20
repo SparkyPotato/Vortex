@@ -30,7 +30,7 @@ namespace Vortex
 		/*
 			Runs the Tick Loop of the Vortex Core Module.
 		*/
-		virtual void RunTickLoop() override;
+		virtual int RunTickLoop() override;
 
 		/*
 			Requests the Vortex Core Module to quit. This will also cause the application to quit.

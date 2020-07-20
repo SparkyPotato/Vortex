@@ -22,7 +22,7 @@ namespace Vortex
 		/*
 			Run a blocking Tick Loop of the module instance.
 		*/
-		virtual void RunTickLoop() = 0;
+		virtual int RunTickLoop() = 0;
 
 		/*
 			Requests the Module quit after finishing up whatever it is doing. Blocks execution until the Module has quit.

@@ -28,10 +28,10 @@ namespace Vortex
 		m_App->Start();
 		ENG_TRACE("Started Client application");
 
-		// Creates the window according to the application's specification.
-		auto properties = m_App->GetWindowProperties();
+		// Creates the window, using the application class name.
+		std::string name = typeid(*m_App).name();
+		IWindow::Properties properties = { name.c_str() + 6, 1270, 720 };
 		m_Window = InstantiateWindow(properties);
-		ENG_TRACE("Created window: \"{0}\" ({1}, {2})", properties.name, properties.width, properties.height);
 
 		ENG_TRACE("Started Vortex Core Module.");
 		return 0;
@@ -57,20 +57,27 @@ namespace Vortex
 		m_App->Tick(deltaTime);
 	}
 
-	void VXCore::RunTickLoop()
+	int VXCore::RunTickLoop()
 	{
 		ENG_TRACE("Starting Vortex Core Module Tick.");
+		if (!m_IsTicking)
+		{
+			ENG_ERROR("Module has not been started!");
+			return -1;
+		}
 		while (m_IsTicking)
 		{
 			QueryPerformanceCounter(&m_LastTime);
 
 			Tick(m_DeltaTime);
 
-			// Changes the frame delta value to the new one.
+			// Measure frame delta.
 			QueryPerformanceCounter(&m_CurrentTime);
 			m_DeltaTime = (float) (m_CurrentTime.QuadPart - m_LastTime.QuadPart);
 			m_DeltaTime /= m_Frequency.QuadPart;
 		}
+
+		return 0;
 		ENG_TRACE("Ended Vortex Core Module Tick.");
 	}
 
