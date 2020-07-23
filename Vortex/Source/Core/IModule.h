@@ -8,7 +8,7 @@ namespace Vortex
 		virtual ~IModule() {}
 
 		/*
-			Startup the Module instance.
+			Startup the module instance.
 		*/
 		virtual int Startup() = 0;
 		/*
@@ -25,8 +25,13 @@ namespace Vortex
 		virtual int RunTickLoop() = 0;
 
 		/*
-			Requests the Module quit after finishing up whatever it is doing. Blocks execution until the Module has quit.
+			Requests the module quit after finishing up whatever it is doing.
 		*/
 		virtual void Quit() = 0;
+		/*
+			Lets others stop the module from quitting.
+		*/
+		virtual void BlockQuit() = 0;
+		virtual void AllowQuit() = 0;
 	};
 }

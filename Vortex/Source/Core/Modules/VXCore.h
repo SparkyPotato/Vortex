@@ -36,16 +36,28 @@ namespace Vortex
 			Requests the Vortex Core Module to quit. This will also cause the application to quit.
 		*/
 		virtual void Quit() override;
+		/*
+			Makes sure the application won't quit until AllowQuit() is called.
+		*/
+		virtual void BlockQuit() override;
+		/*
+			Allows the application to quit after a BlockQuit() call.
+		*/
+		virtual void AllowQuit() override;
 
 	private:
+		void OnWindowEvent(IWindow* window, IEvent& event);
+
 		// A pointer to the user-defined application.
 		IApplication* m_App;
 		// A pointer to the main application window.
 		IWindow* m_Window;
 
 		// Is the application running?
-		bool m_IsTicking;
-		std::mutex m_RunMutex;
+		bool m_IsTicking = false;
+		bool m_CanQuit = true;
+		bool m_WantsQuit = false;
+		std::mutex m_QuitMutex;
 
 		// The last frame delta.
 		float m_DeltaTime;

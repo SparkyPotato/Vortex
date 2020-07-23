@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <Core/IEvent.h>
 
 namespace Vortex
 {
@@ -12,18 +13,34 @@ namespace Vortex
 	public:
 		/*
 			Describes the properties of a window.
-			Is queried from the application by the Vortex Core Module
 		*/
 		struct Properties 
 		{
-			std::string name;
-			int width;
-			int height;
-		};
-	};
+			Properties()
+			{}
+			Properties(std::string windowName, int windowWidth, int windowHeight)
+				: name(windowName), width(windowWidth), height(windowHeight)
+			{}
 
-	/*
-		Implemented for each platform implementation so that the correct subclass is instantiated.
-	*/
-	extern IWindow* InstantiateWindow(const IWindow::Properties& properties);
+			std::string name = "Vortex Engine Window";
+			int width = 1280;
+			int height = 720;
+			int x = 100;
+			int y = 100;
+
+			bool IsMinimized = false;
+			bool IsMaximized = false;
+			bool IsFullscreen = false;
+		};
+
+		typedef std::function<void(IWindow*, IEvent&)> EventCallback;
+
+		virtual void SetEventCallback(EventCallback callback) = 0;
+		virtual void Update() = 0;
+
+		/*
+			Implemented for each platform implementation so that the correct subclass is instantiated.
+		*/
+		static IWindow* Create(const IWindow::Properties& properties);
+	};
 }

@@ -6,6 +6,7 @@
 */
 #ifdef PLATFORM_WINDOWS
 #include <Core/Modules/VXCore.h>
+#include <Private/Platforms/Windows/WWindow.h>
 
 /*
 	If building as a Console App.
@@ -16,6 +17,9 @@ int wmain(int argc, wchar_t** argv)
 
 	// Initialize the Logger, so we can start logging without depending on VXCore.
 	Logger::Init();
+
+	// Register Window Class.
+	WWindow::RegisterWindowClass();
 
 	// Start the Vortex Core Module.
 	VXCore* core = new VXCore();

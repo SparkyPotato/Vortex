@@ -24,12 +24,16 @@ namespace Vortex
 	public:
 		virtual ~IApplication() {}
 		/*
-			Binds the Modules to the Application, so you can use GCore to get a pointer to the Vortex Core Module.
+			Binds the modules to the application, so you can use GCore to get a pointer to the Vortex Core Module.
 		*/
 		void BindToModule(VXCore* core) { GCore = core; }
+		/*
+			Gets the properties for the window to be created.
+		*/
+		virtual IWindow::Properties GetWindowProperties() { return IWindow::Properties(); }
 
 		/*
-			Called on application Startup.
+			Called on application startup.
 		*/
 		virtual void Start() = 0;
 		/*

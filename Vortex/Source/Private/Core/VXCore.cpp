@@ -1,5 +1,6 @@
 #include <VXpch.h>
 #include <Core/Modules/VXCore.h>
+#include <Core/Events/WindowEvent.h>
 
 namespace Vortex
 {
@@ -24,14 +25,13 @@ namespace Vortex
 		m_App->BindToModule(this);
 		ENG_TRACE("Created Client application.");
 
+		// Creates the window, using the application-defined properties.
+		m_Window = IWindow::Create(m_App->GetWindowProperties());
+		m_Window->SetEventCallback(std::bind(&VXCore::OnWindowEvent, this, std::placeholders::_1, std::placeholders::_2));
+
 		// Starts the user-defined application.
 		m_App->Start();
 		ENG_TRACE("Started Client application");
-
-		// Creates the window, using the application class name.
-		std::string name = typeid(*m_App).name();
-		IWindow::Properties properties = { name.c_str() + 6, 1270, 720 };
-		m_Window = InstantiateWindow(properties);
 
 		ENG_TRACE("Started Vortex Core Module.");
 		return 0;
@@ -53,6 +53,9 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
+		// Updates the application window, getting all window events.
+		m_Window->Update();
+
 		// Calls the application tick.
 		m_App->Tick(deltaTime);
 	}
@@ -67,6 +70,9 @@ namespace Vortex
 		}
 		while (m_IsTicking)
 		{
+			if (m_WantsQuit && m_CanQuit)
+				Quit();
+
 			QueryPerformanceCounter(&m_LastTime);
 
 			Tick(m_DeltaTime);
@@ -83,10 +89,42 @@ namespace Vortex
 
 	void VXCore::Quit()
 	{
-		// Makes sure no other threads are keeping the Module running.
-		m_RunMutex.lock();
-		m_IsTicking = false;
-		m_RunMutex.unlock();
+		// Locks mutex so two threads cannot concurrently quit the application.
+		m_QuitMutex.lock();
+
+		// Makes sure no one else is keeping the Module running.
+		if (m_CanQuit) m_IsTicking = false;
+		else m_WantsQuit = true;
+
+		m_QuitMutex.unlock();
+	}
+
+	void VXCore::BlockQuit()
+	{
+		// Locks mutex so two threads don't concurrently block and allow quitting.
+		m_QuitMutex.lock();
+
+		m_CanQuit = false;
+		m_IsTicking = true;
+
+		m_QuitMutex.unlock();
+	}
+
+	void VXCore::AllowQuit()
+	{
+		// Locks mutex so two threads don't concurrently block and allow quitting.
+		m_QuitMutex.lock();
+
+		m_CanQuit = true;
+
+		m_QuitMutex.unlock();
+	}
+
+	void VXCore::OnWindowEvent(IWindow* window, IEvent& event)
+	{
+		EventDispatcher dispatcher = EventDispatcher(event);
+
+		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&VXCore::Quit, this));
 	}
 
 	VXCore::VXCore()
