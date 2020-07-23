@@ -28,6 +28,8 @@ namespace Vortex
 			int x = 100;
 			int y = 100;
 
+			bool IsActive = false;
+
 			bool IsMinimized = false;
 			bool IsMaximized = false;
 			bool IsFullscreen = false;

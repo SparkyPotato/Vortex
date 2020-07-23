@@ -76,4 +76,20 @@ namespace Vortex
 		int m_X;
 		int m_Y;
 	};
+
+	class WindowActivateEvent : public IEvent
+	{
+	public:
+		WindowActivateEvent() {}
+
+		DEFINETYPES(EventType::WindowActivate);
+	};
+
+	class WindowDeactivateEvent : public IEvent
+	{
+	public:
+		WindowDeactivateEvent() {}
+
+		DEFINETYPES(EventType::WindowDeactivate);
+	};
 }

@@ -114,16 +114,19 @@ namespace Vortex
 		{
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
+			ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 			if (m_Callback) m_Callback(this, WindowResizeEvent(LOWORD(lParam), HIWORD(lParam)));
 
 			if (wParam == SIZE_MAXIMIZED)
 			{
+				ENG_TRACE("Window \"{0}\" maximized.", m_Properties.name);
 				m_Properties.IsMinimized = false;
 				m_Properties.IsMaximized = true;
 				if (m_Callback) m_Callback(this, WindowMaximizeEvent());
 			}
 			else if (wParam == SIZE_MINIMIZED)
 			{
+				ENG_TRACE("Window \"{0}\" minimized.", m_Properties.name)
 				m_Properties.IsMinimized = true;
 				m_Properties.IsMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());
@@ -132,11 +135,13 @@ namespace Vortex
 			{
 				if (m_Properties.IsMaximized)
 				{
+					ENG_TRACE("Window \"{0}\" unmaximized.", m_Properties.name);
 					m_Properties.IsMaximized = false;
 					if (m_Callback) m_Callback(this, WindowUnmaximizeEvent());
 				}
 				else if (m_Properties.IsMinimized)
 				{
+					ENG_TRACE("Window \"{0}\" unminimized", m_Properties.name);
 					m_Properties.IsMinimized = false;
 					if (m_Callback) m_Callback(this, WindowUnminimizeEvent());
 				}
@@ -149,11 +154,26 @@ namespace Vortex
 		{
 			m_Properties.x = LOWORD(lParam);
 			m_Properties.y = HIWORD(lParam);
+			ENG_TRACE("Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
 			if (m_Callback) m_Callback(this, WindowMoveEvent(LOWORD(lParam), HIWORD(lParam)));
 			break;
 		}
+		case WM_ACTIVATE:
+		{
+			if (LOWORD(wParam) != WA_INACTIVE)
+			{
+				m_Properties.IsActive = true;
+				ENG_TRACE("Window \"{0}\" activated.", m_Properties.name);
+				if (m_Callback) m_Callback(this, WindowActivateEvent());
+			}
+			else
+			{
+				m_Properties.IsActive = false;
+				ENG_TRACE("Window \"{0}\" deactivated", m_Properties.name);
+				if (m_Callback) m_Callback(this, WindowDeactivateEvent());
+			}
 		}
-
+		}
 		return DefWindowProc(window, message, wParam, lParam);
 	}
 }

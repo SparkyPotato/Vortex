@@ -6,7 +6,7 @@ namespace Vortex
 	enum struct EventType
 	{
 		WindowClose, WindowMinimize, WindowUnminimize, WindowMaximize, WindowUnmaximize,
-		WindowResize, WindowMove
+		WindowResize, WindowMove, WindowActivate, WindowDeactivate
 	};
 
 	class IEvent
