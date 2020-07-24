@@ -8,6 +8,9 @@ namespace Vortex
 	class Logger
 	{
 	public:
+		/*
+			Initializes the Logger. Is called in the Entry Point so don't you worry about it.
+		*/
 		static void Init();
 
 		static std::shared_ptr<spdlog::logger> GetEngineLogger() { return s_EngineLogger; }
@@ -19,13 +22,13 @@ namespace Vortex
 	};
 }
 
-// Engine Log macros.
+// Engine Log macros. Don't use in your application.
 #define ENG_TRACE(...) Vortex::Logger::GetEngineLogger()->trace(__VA_ARGS__);
 #define ENG_INFO(...)  Vortex::Logger::GetEngineLogger()->info(__VA_ARGS__);
 #define ENG_WARN(...)  Vortex::Logger::GetEngineLogger()->warn(__VA_ARGS__);
 #define ENG_ERROR(...) Vortex::Logger::GetEngineLogger()->error(__VA_ARGS__);
 
-// Client Log macros.
+// Client Log macros. Use in your application.
 #define VX_TRACE(...)  Vortex::Logger::GetClientLogger()->trace(__VA_ARGS__);
 #define VX_INFO(...)   Vortex::Logger::GetClientLogger()->info(__VA_ARGS__);
 #define VX_WARN(...)   Vortex::Logger::GetClientLogger()->warn(__VA_ARGS__);

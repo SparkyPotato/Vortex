@@ -4,6 +4,9 @@
 
 namespace Vortex
 {
+	/*
+		Base class for key events. Stores a key code.
+	*/
 	class KeyEvent : public IEvent
 	{
 	public:
@@ -17,6 +20,9 @@ namespace Vortex
 		int m_Code;
 	};
 
+	/*
+		Generated on key press. Handled by Vortex Input Module.
+	*/
 	class KeyDownEvent : public KeyEvent
 	{
 	public:
@@ -27,6 +33,9 @@ namespace Vortex
 		DEFINETYPES(EventType::KeyDown);
 	};
 
+	/*
+		Generated on key release. Handles by Vortex Input Module.
+	*/
 	class KeyUpEvent : public KeyEvent
 	{
 	public:
@@ -37,6 +46,9 @@ namespace Vortex
 		DEFINETYPES(EventType::KeyUp);
 	};
 
+	/*
+		Generated on mouse move. Handles by Vortex Input Module.
+	*/
 	class MouseMoveEvent : public IEvent
 	{
 	public:
@@ -54,6 +66,9 @@ namespace Vortex
 		int m_Y;
 	};
 
+	/*
+		Generated on mouse button press. Handles by Vortex Input Module.
+	*/
 	class MouseButtonDownEvent : public IEvent
 	{
 	public:
@@ -69,6 +84,9 @@ namespace Vortex
 		int m_MouseButton;
 	};
 
+	/*
+		Generated on mouse button release. Handles by Vortex Input Module.
+	*/
 	class MouseButtonUpEvent : public IEvent
 	{
 	public:
@@ -84,6 +102,9 @@ namespace Vortex
 		int m_MouseButton;
 	};
 
+	/*
+		Generated on mouse button double click. Handles by Vortex Input Module.
+	*/
 	class MouseButtonDoubleClickEvent : public IEvent
 	{
 	public:
@@ -99,6 +120,9 @@ namespace Vortex
 		int m_MouseButton;
 	};
 
+	/*
+		Generated on mouse scroll. Handles by Vortex Input Module.
+	*/
 	class MouseScrollEvent : public IEvent
 	{
 	public:

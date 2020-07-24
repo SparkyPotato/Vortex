@@ -3,6 +3,9 @@
 namespace Vortex
 {
 #ifdef PLATFORM_WINDOWS
+	/*
+		Enum with all input codes.
+	*/
 	enum struct InputCode
 	{
 		LeftButton= 0x01,

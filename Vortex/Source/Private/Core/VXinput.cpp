@@ -5,16 +5,19 @@ namespace Vortex
 {
 	int VXInput::Startup()
 	{
+		ENG_TRACE("Started Vortex Input Module.");
 		return 0;
 	}
 
 	int VXInput::Shutdown()
 	{
+		ENG_TRACE("Shutdown Vortex Input Module.");
 		return 0;
 	}
 
 	void VXInput::Tick(float deltaTime)
 	{
+		// Reset scroll delta.
 		m_MouseState.scrollDelta = 0.f;
 	}
 
@@ -35,18 +38,21 @@ namespace Vortex
 
 	bool VXInput::KDEvent(const KeyDownEvent& event)
 	{
+		// Set the bit to true.
 		m_KeyStates[event.GetKeyCode()] = 1;
 		return true;
 	}
 
 	bool VXInput::KUEvent(const KeyUpEvent& event)
 	{
+		// Set the bit to false.
 		m_KeyStates[event.GetKeyCode()] = 0;
 		return true;
 	}
 
 	bool VXInput::MMEvent(const MouseMoveEvent& event)
 	{
+		// Set the mouse position.
 		m_MouseState.x = event.GetX();
 		m_MouseState.y = event.GetY();
 		return true;
@@ -54,6 +60,7 @@ namespace Vortex
 
 	bool VXInput::MDEvent(const MouseButtonDownEvent& event)
 	{
+		// Set the correct button down based on what was pressed.
 		switch (event.GetButton())
 		{
 		case (int) InputCode::LeftButton:
@@ -73,6 +80,7 @@ namespace Vortex
 
 	bool VXInput::MUEvent(const MouseButtonUpEvent& event)
 	{
+		// Set the correct button up based on what was pressed.
 		switch (event.GetButton())
 		{
 		case (int)InputCode::LeftButton:
@@ -92,12 +100,14 @@ namespace Vortex
 
 	bool VXInput::MDCEvent(const MouseButtonDoubleClickEvent& event)
 	{
+		// Does nothing yet.
 		return true;
 	}
 
 	bool VXInput::MSEvent(const MouseScrollEvent& event)
 	{
-		m_MouseState.scrollDelta = event.GetScrollSteps();
+		// Sets the scroll delta.
+		m_MouseState.scrollDelta += event.GetScrollSteps();
 		return true;
 	}
 

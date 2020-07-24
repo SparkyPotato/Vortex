@@ -9,6 +9,7 @@ namespace Vortex
 {
 	IWindow* IWindow::Create(const IWindow::Properties& properties)
 	{
+		// Create the WWindow.
 		return new WWindow(properties);
 	}
 
@@ -17,6 +18,7 @@ namespace Vortex
 	{
 		ENG_TRACE("Creating window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
+		// Adjust size for window style.
 		RECT windowRect;
 		windowRect.top = 100;
 		windowRect.bottom = 100 + m_Properties.height;
@@ -24,10 +26,12 @@ namespace Vortex
 		windowRect.right = 100 + m_Properties.width;
 		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
+		// Convert name to Unicode.
 		std::string temp = m_Properties.name;
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
 		std::wstring name(size_needed, 0);
 		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &name[0], size_needed);
+		// Create window.
 		m_WindowHandle = CreateWindow
 		(
 			L"Vortex Window",
@@ -41,6 +45,7 @@ namespace Vortex
 			this
 		);
 
+		// Show window on the screen.
 		ShowWindow(m_WindowHandle, SW_SHOWDEFAULT);
 
 		ENG_TRACE("Created window.");
@@ -50,6 +55,7 @@ namespace Vortex
 	{
 		ENG_TRACE("Destroying window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
+		// Remove the window from the screen.
 		DestroyWindow(m_WindowHandle);
 
 		ENG_TRACE("Destroyed window.");
@@ -57,6 +63,7 @@ namespace Vortex
 
 	void WWindow::Update()
 	{
+		// Message loop.
 		MSG message;
 		while (PeekMessage(&message, m_WindowHandle, NULL, NULL, PM_REMOVE))
 		{
@@ -72,6 +79,7 @@ namespace Vortex
 
 	void WWindow::SetName(std::string name)
 	{
+		// Convert name to Unicode.
 		m_Properties.name = name;
 		std::string temp = m_Properties.name;
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
@@ -86,6 +94,7 @@ namespace Vortex
 		m_Properties.width = width;
 		m_Properties.height = height;
 
+		// Adjust window size based on style.
 		RECT windowRect;
 		windowRect.top = 100;
 		windowRect.bottom = 100 + m_Properties.height;
@@ -128,6 +137,7 @@ namespace Vortex
 
 	LRESULT WWindow::BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		// Sets up thunking to the correct window.
 		if (message == WM_NCCREATE)
 		{
 			CREATESTRUCT* createStruct = reinterpret_cast<CREATESTRUCT*>(lParam);
@@ -143,12 +153,14 @@ namespace Vortex
 
 	LRESULT WWindow::WindowThunk(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		// Call the window-specific message handler.
 		WWindow* p_Window = reinterpret_cast<WWindow*>(GetWindowLongPtr(window, GWLP_USERDATA));
 		return p_Window->WindowProc(window, message, wParam, lParam);
 	}
 
 	LRESULT WWindow::WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		// Message handler
 		switch (message)
 		{
 		case WM_CLOSE:

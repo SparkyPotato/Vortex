@@ -3,6 +3,9 @@
 
 namespace Vortex
 {
+	/*
+		Generated on window close.
+	*/
 	class WindowCloseEvent : public IEvent
 	{
 	public:
@@ -11,6 +14,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowClose);
 	};
 
+	/*
+		Generated on window minimize.
+	*/
 	class WindowMinimizeEvent : public IEvent
 	{
 	public:
@@ -19,6 +25,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowMinimize);
 	};
 
+	/*
+		Generated on window unminimize.
+	*/
 	class WindowUnminimizeEvent : public IEvent
 	{
 	public:
@@ -27,6 +36,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowUnminimize);
 	};
 
+	/*
+		Generated on window maximize.
+	*/
 	class WindowMaximizeEvent : public IEvent
 	{
 	public:
@@ -35,6 +47,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowMaximize);
 	};
 
+	/*
+		Generated on window unmaximize.
+	*/
 	class WindowUnmaximizeEvent : public IEvent
 	{
 	public:
@@ -43,6 +58,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowUnmaximize);
 	};
 
+	/*
+		Generated on window resize.
+	*/
 	class WindowResizeEvent : public IEvent
 	{
 	public:
@@ -60,6 +78,9 @@ namespace Vortex
 		int m_Height;
 	};
 
+	/*
+		Generated on window move.
+	*/
 	class WindowMoveEvent : public IEvent
 	{
 	public:
@@ -77,6 +98,9 @@ namespace Vortex
 		int m_Y;
 	};
 
+	/*
+		Generated on window focus gain.
+	*/
 	class WindowActivateEvent : public IEvent
 	{
 	public:
@@ -85,6 +109,9 @@ namespace Vortex
 		DEFINETYPES(EventType::WindowActivate);
 	};
 
+	/*
+		Generated on window focus loss.
+	*/
 	class WindowDeactivateEvent : public IEvent
 	{
 	public:

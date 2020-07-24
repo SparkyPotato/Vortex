@@ -38,7 +38,10 @@ namespace Vortex
 		*/
 		virtual void Tick(float deltaTime) = 0;
 
-		virtual void OnEvent(IEvent& event) = 0;
+		/*
+			Called with all unhandled events in the Vortex Core. Doesn't have to be overriden.
+		*/
+		virtual void OnEvent(IEvent& event) {};
 
 	protected:
 		// Pointer to the Vortex Core Module that owns the application.
@@ -46,4 +49,7 @@ namespace Vortex
 	};
 }
 
+/*
+	Defined in the client to create the application.
+*/
 extern Vortex::IApplication* CreateApplication();

@@ -46,11 +46,19 @@ namespace Vortex
 		*/
 		virtual void AllowQuit() override;
 
+		/*
+			Returns the Vortex Input Module.
+		*/
 		VXInput* GetInput() { return m_Input; }
 
 	private:
+		/*
+			Called back on every window event. 
+			Passes on event to respective modules and then to the application.
+		*/
 		void OnWindowEvent(IWindow* window, IEvent& event);
 
+		// The Vortex Input Module.
 		VXInput* m_Input;
 
 		// A pointer to the user-defined application.

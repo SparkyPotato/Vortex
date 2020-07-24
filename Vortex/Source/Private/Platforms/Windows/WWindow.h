@@ -22,8 +22,14 @@ namespace Vortex
 		virtual void SetSize(int width, int height) override;
 		virtual void SetPosition(int x, int y) override;
 
+		/*
+			Registers window class, called in the Windows Entry Point.
+		*/
 		static void RegisterWindowClass();
 
+		/*
+			Windows message handlers.
+		*/
 		static LRESULT WINAPI BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 		static LRESULT WINAPI WindowThunk(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 
