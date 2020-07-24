@@ -16,6 +16,13 @@ namespace Vortex
 	{
 		ENG_TRACE("Creating window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
+		RECT windowRect;
+		windowRect.top = 100;
+		windowRect.bottom = 100 + m_Properties.height;
+		windowRect.left = 100;
+		windowRect.right = 100 + m_Properties.width;
+		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
 		std::string temp = m_Properties.name;
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
 		std::wstring name(size_needed, 0);
@@ -26,7 +33,7 @@ namespace Vortex
 			name.c_str(),
 			WS_OVERLAPPEDWINDOW,
 			m_Properties.x, m_Properties.y,
-			m_Properties.width, m_Properties.height,
+			windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
 			NULL,
 			NULL,
 			GetModuleHandle(NULL),
@@ -55,6 +62,44 @@ namespace Vortex
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
+	}
+
+	void WWindow::Activate()
+	{
+		SetActiveWindow(m_WindowHandle);
+	}
+
+	void WWindow::SetName(std::string name)
+	{
+		m_Properties.name = name;
+		std::string temp = m_Properties.name;
+		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
+		std::wstring wname (size_needed, 0);
+		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &wname[0], size_needed);
+
+		SetWindowText(m_WindowHandle, wname.c_str());
+	}
+
+	void WWindow::SetSize(int width, int height)
+	{
+		m_Properties.width = width;
+		m_Properties.height = height;
+
+		RECT windowRect;
+		windowRect.top = 100;
+		windowRect.bottom = 100 + m_Properties.height;
+		windowRect.left = 100;
+		windowRect.right = 100 + m_Properties.width;
+		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+		SetWindowPos(m_WindowHandle, HWND_TOP, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOMOVE);
+	}
+
+	void WWindow::SetPosition(int x, int y)
+	{
+		m_Properties.x = x;
+		m_Properties.y = y;
+		SetWindowPos(m_WindowHandle, HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
 	}
 
 	void WWindow::RegisterWindowClass()
@@ -114,8 +159,6 @@ namespace Vortex
 		{
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
-			ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
-			if (m_Callback) m_Callback(this, WindowResizeEvent(LOWORD(lParam), HIWORD(lParam)));
 
 			if (wParam == SIZE_MAXIMIZED)
 			{
@@ -123,6 +166,10 @@ namespace Vortex
 				m_Properties.IsMinimized = false;
 				m_Properties.IsMaximized = true;
 				if (m_Callback) m_Callback(this, WindowMaximizeEvent());
+
+				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
+				m_Properties.IsResizing = false;
 			}
 			else if (wParam == SIZE_MINIMIZED)
 			{
@@ -130,32 +177,58 @@ namespace Vortex
 				m_Properties.IsMinimized = true;
 				m_Properties.IsMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());
+
+				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
+				m_Properties.IsResizing = false;
 			}
 			else if (wParam == SIZE_RESTORED)
 			{
+				m_Properties.IsResizing = true;
 				if (m_Properties.IsMaximized)
 				{
 					ENG_TRACE("Window \"{0}\" unmaximized.", m_Properties.name);
 					m_Properties.IsMaximized = false;
 					if (m_Callback) m_Callback(this, WindowUnmaximizeEvent());
+
+					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
+					m_Properties.IsResizing = false;
 				}
 				else if (m_Properties.IsMinimized)
 				{
 					ENG_TRACE("Window \"{0}\" unminimized", m_Properties.name);
 					m_Properties.IsMinimized = false;
 					if (m_Callback) m_Callback(this, WindowUnminimizeEvent());
+
+					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
+					m_Properties.IsResizing = false;
 				}
 			}
 			else
 				m_Properties.IsMinimized = false;
 			break;
 		}
+		case WM_GETMINMAXINFO:
+		{
+			MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
+
+			RECT windowRect;
+			windowRect.top = 100;
+			windowRect.bottom = 100 + m_Properties.minHeight;
+			windowRect.left = 100;
+			windowRect.right = 100 + m_Properties.minWidth;
+			AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+			info->ptMinTrackSize = { windowRect.right - windowRect.left, windowRect.bottom - windowRect.top };
+			break;
+		}
 		case WM_MOVE:
 		{
+			m_Properties.IsMoving = true;
 			m_Properties.x = LOWORD(lParam);
 			m_Properties.y = HIWORD(lParam);
-			ENG_TRACE("Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
-			if (m_Callback) m_Callback(this, WindowMoveEvent(LOWORD(lParam), HIWORD(lParam)));
 			break;
 		}
 		case WM_ACTIVATE:
@@ -169,9 +242,31 @@ namespace Vortex
 			else
 			{
 				m_Properties.IsActive = false;
-				ENG_TRACE("Window \"{0}\" deactivated", m_Properties.name);
+				ENG_TRACE("Window \"{0}\" deactivated.", m_Properties.name);
 				if (m_Callback) m_Callback(this, WindowDeactivateEvent());
 			}
+			break;
+		}
+		case WM_ENTERSIZEMOVE:
+		{
+			break;
+		}
+		case WM_EXITSIZEMOVE:
+		{
+			if (m_Properties.IsResizing)
+			{
+				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
+				m_Properties.IsResizing = false;
+			}
+
+			if (m_Properties.IsMoving)
+			{
+				ENG_TRACE("Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
+				if (m_Callback) m_Callback(this, WindowMoveEvent(m_Properties.x, m_Properties.y));
+				m_Properties.IsMoving = false;
+			}
+			break;
 		}
 		}
 		return DefWindowProc(window, message, wParam, lParam);

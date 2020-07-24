@@ -6,7 +6,7 @@
 namespace Vortex
 {
 	/*
-		Windows Implementation of a IWindow.
+		Windows Implementation of IWindow.
 	*/
 	class WWindow : public IWindow
 	{
@@ -16,6 +16,11 @@ namespace Vortex
 
 		virtual void SetEventCallback(EventCallback callback) { m_Callback = callback; }
 		virtual void Update() override;
+
+		virtual void Activate() override;
+		virtual void SetName(std::string name) override;
+		virtual void SetSize(int width, int height) override;
+		virtual void SetPosition(int x, int y) override;
 
 		static void RegisterWindowClass();
 

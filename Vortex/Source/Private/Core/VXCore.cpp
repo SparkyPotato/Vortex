@@ -31,7 +31,7 @@ namespace Vortex
 
 		// Starts the user-defined application.
 		m_App->Start();
-		ENG_TRACE("Started Client application");
+		ENG_TRACE("Started Client application.");
 
 		ENG_TRACE("Started Vortex Core Module.");
 		return 0;
