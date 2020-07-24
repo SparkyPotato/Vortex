@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Logger.h>
+#include <Core/InputCode.h>
 
 #include <string>
 #include <vector>

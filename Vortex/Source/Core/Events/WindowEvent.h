@@ -50,8 +50,8 @@ namespace Vortex
 			: m_Width(width), m_Height(height)
 		{}
 
-		int GetWidth() { return m_Width; }
-		int GetHeight() { return m_Height; }
+		int GetWidth() const { return m_Width; }
+		int GetHeight() const { return m_Height; }
 
 		DEFINETYPES(EventType::WindowResize);
 
@@ -67,8 +67,8 @@ namespace Vortex
 			: m_X(x), m_Y(y)
 		{}
 
-		int GetXPosition() { return m_X; }
-		int GetYPosition() { return m_Y; }
+		int GetXPosition() const { return m_X; }
+		int GetYPosition() const { return m_Y; }
 
 		DEFINETYPES(EventType::WindowMove);
 

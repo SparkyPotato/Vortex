@@ -3,6 +3,7 @@
 #ifdef PLATFORM_WINDOWS
 #include <Private/Platforms/Windows/WWindow.h>
 #include <Core/Events/WindowEvent.h>
+#include <Core/Events/InputEvent.h>
 
 namespace Vortex
 {
@@ -227,8 +228,9 @@ namespace Vortex
 		case WM_MOVE:
 		{
 			m_Properties.IsMoving = true;
-			m_Properties.x = LOWORD(lParam);
-			m_Properties.y = HIWORD(lParam);
+			POINTS points = MAKEPOINTS(lParam);
+			m_Properties.x = points.x;
+			m_Properties.y = points.y;
 			break;
 		}
 		case WM_ACTIVATE:
@@ -267,6 +269,61 @@ namespace Vortex
 				m_Properties.IsMoving = false;
 			}
 			break;
+		}
+		case WM_KEYDOWN:
+		{
+			if (m_Callback) m_Callback(this, KeyDownEvent((int) wParam));
+			break;
+		}
+		case WM_KEYUP:
+		{
+			if (m_Callback) m_Callback(this, KeyUpEvent((int) wParam));
+			break;
+		}
+		case WM_MOUSEMOVE:
+		{
+			POINTS points = MAKEPOINTS(lParam);
+			if (m_Callback) m_Callback(this, MouseMoveEvent(points.x, points.y));
+		}
+		case WM_LBUTTONDOWN:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int) InputCode::LeftButton));
+		}
+		case WM_LBUTTONUP:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::LeftButton));
+		}
+		case WM_LBUTTONDBLCLK:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::LeftButton));
+		}
+		case WM_RBUTTONDOWN:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int)InputCode::RightButton));
+		}
+		case WM_RBUTTONUP:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::RightButton));
+		}
+		case WM_RBUTTONDBLCLK:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::RightButton));
+		}
+		case WM_MBUTTONDOWN:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int)InputCode::MiddleButton));
+		}
+		case WM_MBUTTONUP:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::MiddleButton));
+		}
+		case WM_MBUTTONDBLCLK:
+		{
+			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::MiddleButton));
+		}
+		case WM_MOUSEWHEEL:
+		{
+			if (m_Callback) m_Callback(this, MouseScrollEvent((float) GET_WHEEL_DELTA_WPARAM(wParam) / (float) WHEEL_DELTA));
 		}
 		}
 		return DefWindowProc(window, message, wParam, lParam);

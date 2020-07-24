@@ -20,6 +20,9 @@ namespace Vortex
 		QueryPerformanceFrequency(&m_Frequency);
 		m_DeltaTime = 0;
 
+		m_Input = new VXInput();
+		m_Input->Startup();
+
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
 		m_App->BindToModule(this);
@@ -41,6 +44,9 @@ namespace Vortex
 	{
 		ENG_TRACE("Shutting down Vortex Core Module.");
 
+		m_Input->Shutdown();
+		delete m_Input;
+
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
 
@@ -53,6 +59,8 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
+		m_Input->Tick(deltaTime);
+
 		// Updates the application window, getting all window events.
 		m_Window->Update();
 
@@ -124,7 +132,20 @@ namespace Vortex
 	{
 		EventDispatcher dispatcher = EventDispatcher(event);
 
-		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&VXCore::Quit, this));
+		if (event.GetType() == EventType::WindowClose)
+			Quit();
+
+		dispatcher.Dispatch<KeyDownEvent>(std::bind(&VXInput::KDEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<KeyUpEvent>(std::bind(&VXInput::KUEvent, m_Input, std::placeholders::_1));
+
+		dispatcher.Dispatch<MouseMoveEvent>(std::bind(&VXInput::MMEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<MouseButtonDownEvent>(std::bind(&VXInput::MDEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<MouseButtonUpEvent>(std::bind(&VXInput::MUEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(std::bind(&VXInput::MDCEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
+
+		if (!event.IsHandled())
+			m_App->OnEvent(event);
 	}
 
 	VXCore::VXCore()

@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/IModule.h>
+#include <Core/Modules/VXInput.h>
 #include <Core/IApplication.h>
 
 namespace Vortex
@@ -30,7 +31,7 @@ namespace Vortex
 		/*
 			Runs the Tick Loop of the Vortex Core Module.
 		*/
-		virtual int RunTickLoop() override;
+		int RunTickLoop();
 
 		/*
 			Requests the Vortex Core Module to quit. This will also cause the application to quit.
@@ -45,8 +46,12 @@ namespace Vortex
 		*/
 		virtual void AllowQuit() override;
 
+		VXInput* GetInput() { return m_Input; }
+
 	private:
 		void OnWindowEvent(IWindow* window, IEvent& event);
+
+		VXInput* m_Input;
 
 		// A pointer to the user-defined application.
 		IApplication* m_App;

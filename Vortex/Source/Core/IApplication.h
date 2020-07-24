@@ -7,10 +7,7 @@ namespace Vortex
 
 	/*
 		CreateApplication function prototype:-
-		Vortex::IApplication* CreateApplication()
-		{
-			return new YourDerivedClass();
-		}
+		Vortex::IApplication* CreateApplication() { return new YourDerivedClass(); }
 
 		Deletion of the application is handled by the Vortex Core Module.
 	*/
@@ -28,7 +25,7 @@ namespace Vortex
 		*/
 		void BindToModule(VXCore* core) { GCore = core; }
 		/*
-			Gets the properties for the window to be created.
+			Gets the properties for the main window to be created.
 		*/
 		virtual IWindow::Properties GetWindowProperties() { return IWindow::Properties(); }
 
@@ -40,6 +37,8 @@ namespace Vortex
 			Called every frame, with the frame delta of the previous frame (0 for the first frame).
 		*/
 		virtual void Tick(float deltaTime) = 0;
+
+		virtual void OnEvent(IEvent& event) = 0;
 
 	protected:
 		// Pointer to the Vortex Core Module that owns the application.

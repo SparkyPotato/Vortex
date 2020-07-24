@@ -6,7 +6,8 @@ namespace Vortex
 	enum struct EventType
 	{
 		WindowClose, WindowMinimize, WindowUnminimize, WindowMaximize, WindowUnmaximize,
-		WindowResize, WindowMove, WindowActivate, WindowDeactivate
+		WindowResize, WindowMove, WindowActivate, WindowDeactivate,
+		KeyDown, KeyUp, MouseMove, MouseButtonDown, MouseButtonUp, MouseButtonDoubleClick, MouseScroll
 	};
 
 	class IEvent
@@ -18,7 +19,7 @@ namespace Vortex
 		bool IsHandled() { return m_IsHandled; }
 
 	protected:
-		bool m_IsHandled;
+		bool m_IsHandled = false;
 	};
 
 	class EventDispatcher
@@ -29,36 +30,13 @@ namespace Vortex
 		{}
 
 		template<typename T>
-		bool Dispatch(std::function<bool(const T&)> function)
+		bool Dispatch(const std::function<bool(T&)>& function)
 		{
 			if (m_Event.m_IsHandled) return false;
 
-			if (T.GetStaticType() == m_Event.GetType())
-			{
-				m_Event.m_IsHandled = function(static_cast<T>(m_Event));
-				return m_Event.m_IsHandled;
-			}
-			return false;
-		}
-
-		template<typename T>
-		bool Dispatch(std::function<bool(void)> function)
-		{
-			if (T.GetStaticType() == m_Event.GetType())
-			{
-				m_Event.m_IsHandled = function();
-				return m_Event.m_IsHandled;
-			}
-			return false;
-		}
-
-		template<typename T>
-		bool Dispatch(std::function<void(void)> function)
-		{
 			if (T::GetStaticType() == m_Event.GetType())
 			{
-				m_Event.m_IsHandled = false;
-				function();
+				m_Event.m_IsHandled = function(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;

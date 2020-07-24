@@ -24,3 +24,8 @@ void VortexEditor::Tick(float deltaTime)
 {
 	
 }
+
+void VortexEditor::OnEvent(Vortex::IEvent& event)
+{
+
+}

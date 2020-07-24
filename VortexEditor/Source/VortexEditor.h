@@ -12,6 +12,7 @@ public:
 
 	virtual void Start() override;
 	virtual void Tick(float deltaTime) override;
+	virtual void OnEvent(Vortex::IEvent& event) override;
 
 private:
 };
