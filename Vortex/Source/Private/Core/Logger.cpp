@@ -12,6 +12,11 @@ namespace Vortex
 		s_EngineLogger = spdlog::stdout_color_mt("Engine");
 		s_ClientLogger = spdlog::stdout_color_mt("Client");
 
+		if (s_EngineLogger == nullptr)
+			throw std::exception("Failed to create Engine Logger.");
+		if (s_ClientLogger == nullptr)
+			throw std::exception("Failed to create Client Logger.");
+
 		// Setting the log pattern.
 		spdlog::set_pattern("[%I:%M:%S.%e] %n: (%l) %^%v%$");
 

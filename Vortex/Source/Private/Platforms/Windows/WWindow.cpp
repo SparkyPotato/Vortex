@@ -45,8 +45,14 @@ namespace Vortex
 			this
 		);
 
+		if (m_WindowHandle == NULL)
+			throw std::exception("Failed to create window.");
+
 		// Show window on the screen.
 		ShowWindow(m_WindowHandle, SW_SHOWDEFAULT);
+
+		// Create the swap chain.
+		m_SwapChain = GPSwapChain::Create(this);
 
 		ENG_TRACE("Created window.");
 	}
@@ -63,6 +69,9 @@ namespace Vortex
 
 	void WWindow::Update()
 	{
+		// Show the last frame.
+		m_SwapChain->Swap(m_Properties.syncInterval);
+
 		// Message loop.
 		MSG message;
 		while (PeekMessage(&message, m_WindowHandle, NULL, NULL, PM_REMOVE))
@@ -130,7 +139,8 @@ namespace Vortex
 		windowClass.lpszMenuName = NULL;
 		windowClass.lpszClassName = L"Vortex Window";
 
-		RegisterClassEx(&windowClass);
+		if (RegisterClassEx(&windowClass) == 0)
+			throw std::exception("Failed to register window class");
 
 		ENG_TRACE("Registered window class.");
 	}
@@ -170,57 +180,59 @@ namespace Vortex
 		}
 		case WM_SIZE:
 		{
+			// Resize the swap chain.
+			if (m_SwapChain) m_SwapChain->Resize();
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
 
 			if (wParam == SIZE_MAXIMIZED)
 			{
 				ENG_TRACE("Window \"{0}\" maximized.", m_Properties.name);
-				m_Properties.IsMinimized = false;
-				m_Properties.IsMaximized = true;
+				m_Properties.isMinimized = false;
+				m_Properties.isMaximized = true;
 				if (m_Callback) m_Callback(this, WindowMaximizeEvent());
 
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
-				m_Properties.IsResizing = false;
+				m_Properties.isResizing = false;
 			}
 			else if (wParam == SIZE_MINIMIZED)
 			{
 				ENG_TRACE("Window \"{0}\" minimized.", m_Properties.name)
-				m_Properties.IsMinimized = true;
-				m_Properties.IsMaximized = false;
+				m_Properties.isMinimized = true;
+				m_Properties.isMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());
 
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
-				m_Properties.IsResizing = false;
+				m_Properties.isResizing = false;
 			}
 			else if (wParam == SIZE_RESTORED)
 			{
-				m_Properties.IsResizing = true;
-				if (m_Properties.IsMaximized)
+				m_Properties.isResizing = true;
+				if (m_Properties.isMaximized)
 				{
 					ENG_TRACE("Window \"{0}\" unmaximized.", m_Properties.name);
-					m_Properties.IsMaximized = false;
+					m_Properties.isMaximized = false;
 					if (m_Callback) m_Callback(this, WindowUnmaximizeEvent());
 
 					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
-					m_Properties.IsResizing = false;
+					m_Properties.isResizing = false;
 				}
-				else if (m_Properties.IsMinimized)
+				else if (m_Properties.isMinimized)
 				{
 					ENG_TRACE("Window \"{0}\" unminimized", m_Properties.name);
-					m_Properties.IsMinimized = false;
+					m_Properties.isMinimized = false;
 					if (m_Callback) m_Callback(this, WindowUnminimizeEvent());
 
 					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
-					m_Properties.IsResizing = false;
+					m_Properties.isResizing = false;
 				}
 			}
 			else
-				m_Properties.IsMinimized = false;
+				m_Properties.isMinimized = false;
 			break;
 		}
 		case WM_GETMINMAXINFO:
@@ -239,7 +251,7 @@ namespace Vortex
 		}
 		case WM_MOVE:
 		{
-			m_Properties.IsMoving = true;
+			m_Properties.isMoving = true;
 			POINTS points = MAKEPOINTS(lParam);
 			m_Properties.x = points.x;
 			m_Properties.y = points.y;
@@ -249,13 +261,13 @@ namespace Vortex
 		{
 			if (LOWORD(wParam) != WA_INACTIVE)
 			{
-				m_Properties.IsActive = true;
+				m_Properties.isActive = true;
 				ENG_TRACE("Window \"{0}\" activated.", m_Properties.name);
 				if (m_Callback) m_Callback(this, WindowActivateEvent());
 			}
 			else
 			{
-				m_Properties.IsActive = false;
+				m_Properties.isActive = false;
 				ENG_TRACE("Window \"{0}\" deactivated.", m_Properties.name);
 				if (m_Callback) m_Callback(this, WindowDeactivateEvent());
 			}
@@ -267,18 +279,18 @@ namespace Vortex
 		}
 		case WM_EXITSIZEMOVE:
 		{
-			if (m_Properties.IsResizing)
+			if (m_Properties.isResizing)
 			{
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
-				m_Properties.IsResizing = false;
+				m_Properties.isResizing = false;
 			}
 
-			if (m_Properties.IsMoving)
+			if (m_Properties.isMoving)
 			{
 				ENG_TRACE("Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
 				if (m_Callback) m_Callback(this, WindowMoveEvent(m_Properties.x, m_Properties.y));
-				m_Properties.IsMoving = false;
+				m_Properties.isMoving = false;
 			}
 			break;
 		}

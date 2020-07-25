@@ -3,16 +3,14 @@
 
 namespace Vortex
 {
-	int VXInput::Startup()
+	void VXInput::Startup()
 	{
 		ENG_TRACE("Started Vortex Input Module.");
-		return 0;
 	}
 
-	int VXInput::Shutdown()
+	void VXInput::Shutdown()
 	{
 		ENG_TRACE("Shutdown Vortex Input Module.");
-		return 0;
 	}
 
 	void VXInput::Tick(float deltaTime)

@@ -2,6 +2,7 @@
 
 #ifdef PLATFORM_WINDOWS
 #include <Core/IWindow.h>
+#include <Graphics/Primitives/GPSwapChain.h>
 
 namespace Vortex
 {
@@ -28,6 +29,11 @@ namespace Vortex
 		static void RegisterWindowClass();
 
 		/*
+			Returns the native window handle to do stuff with.
+		*/
+		HWND GetWindowHandle() { return m_WindowHandle; }
+
+		/*
 			Windows message handlers.
 		*/
 		static LRESULT WINAPI BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
@@ -39,6 +45,8 @@ namespace Vortex
 		HWND m_WindowHandle;
 		EventCallback m_Callback;
 		Properties m_Properties;
+
+		GPSwapChain* m_SwapChain = nullptr;
 	};
 }
 

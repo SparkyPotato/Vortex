@@ -1,19 +1,17 @@
 #include <VXpch.h>
 #include <Core/Modules/VXCore.h>
 #include <Core/Events/WindowEvent.h>
+#include <Graphics/IGraphicsContext.h>
 
 namespace Vortex
 {
-	int VXCore::Startup()
+	void VXCore::Startup()
 	{
 		ENG_TRACE("Starting Vortex Core Module.");
 
 		// Make sure we can't start the engine twice.
 		if (m_IsTicking)
-		{
-			ENG_ERROR("Vortex Core Module is already started!");
-			return -1;
-		}
+			throw std::exception("Vortex Core already started.");
 
 		// Start the tick, and does frame delta calculation setup.
 		m_IsTicking = true;
@@ -23,6 +21,9 @@ namespace Vortex
 		// Create the Vortex Input Module.
 		m_Input = new VXInput();
 		m_Input->Startup();
+
+		// Create the Graphics Context.
+		IGraphicsContext::Create(GraphicsAPI::DirectX11);
 
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
@@ -38,16 +39,11 @@ namespace Vortex
 		ENG_TRACE("Started Client application.");
 
 		ENG_TRACE("Started Vortex Core Module.");
-		return 0;
 	}
 
-	int VXCore::Shutdown()
+	void VXCore::Shutdown()
 	{
 		ENG_TRACE("Shutting down Vortex Core Module.");
-
-		// Deletes the Vortex Input Module.
-		m_Input->Shutdown();
-		delete m_Input;
 
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
@@ -55,8 +51,13 @@ namespace Vortex
 		// Destroys the window.
 		delete m_Window;
 
+		delete IGraphicsContext::Get();
+
+		// Deletes the Vortex Input Module.
+		m_Input->Shutdown();
+		delete m_Input;
+
 		ENG_TRACE("Shut down Vortex Core Module.");
-		return 0;
 	}
 
 	void VXCore::Tick(float deltaTime)
@@ -71,14 +72,12 @@ namespace Vortex
 		m_App->Tick(deltaTime);
 	}
 
-	int VXCore::RunTickLoop()
+	void VXCore::RunTickLoop()
 	{
 		ENG_TRACE("Starting Vortex Core Module Tick.");
+
 		if (!m_IsTicking)
-		{
-			ENG_ERROR("Module has not been started!");
-			return -1;
-		}
+			throw std::exception("Module has not been started!");
 
 		while (m_IsTicking)
 		{
@@ -97,7 +96,6 @@ namespace Vortex
 			m_DeltaTime /= m_Frequency.QuadPart;
 		}
 
-		return 0;
 		ENG_TRACE("Ended Vortex Core Module Tick.");
 	}
 
@@ -159,8 +157,10 @@ namespace Vortex
 
 	VXCore::VXCore()
 	{
-		// Makes sure that we aren't going to run the tick loop without calling VXCore::Startup.
-		m_IsTicking = false;
+		/*
+			We are replacing constructors and destructor with Startup() and Shutdown() methods 
+			so that we don 't have to keep reallocating memory for the Module if it is being started and stopped many times.
+		*/
 	}
 
 	VXCore::~VXCore()

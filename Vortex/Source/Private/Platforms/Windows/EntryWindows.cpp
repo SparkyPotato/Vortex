@@ -16,40 +16,64 @@ int wmain(int argc, wchar_t** argv)
 	using namespace Vortex;
 
 	// Initialize the Logger, so we can start logging without depending on VXCore.
-	Logger::Init();
-
-	// Register Window Class.
-	WWindow::RegisterWindowClass();
-
-	// Start the Vortex Core Module.
-	VXCore* core = new VXCore();
-	int errorCode = core->Startup();
-	if (errorCode != 0)
+	try { Logger::Init(); }
+	catch (...)
 	{
-		ENG_ERROR("Failed to start Vortex Core Module! Error: {0}. Exiting...", errorCode);
-		return errorCode;
+		// Outputting to Visual Studio debugger because the logger creation failed.
+		OutputDebugStringA("Failed to initialize Logger!");
+		OutputDebugStringA("Sleeping for 10 seconds before exiting...");
+		Sleep(10000);
+		return -1;
+	}
+	
+	// Register Window Class.
+	try { WWindow::RegisterWindowClass(); }
+	catch (std::exception& e)
+	{
+		ENG_ERROR("Failed to initialize Window Class!");
+		ENG_ERROR("Error: {0}", e.what());
+		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		Sleep(10000);
+		return -1;
+	}
+
+	VXCore* core = new VXCore();
+	// Start the Vortex Core Module.
+	try { core->Startup(); }
+	catch (std::exception& e)
+	{
+		ENG_ERROR("Failed to start Vortex Core!");
+		ENG_ERROR("Error: {0}", e.what());
+		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		Sleep(10000);
+		return -1;
 	}
 
 	// Run the blocking Tick Loop of the Vortex Core Module. App execution ends when out of this loop.
-	errorCode = core->RunTickLoop();
-	if (errorCode != 0)
+	try { core->RunTickLoop(); }
+	catch (std::exception& e)
 	{
-		ENG_ERROR("Failed to run Vortex Core Module tick! Error: {0}. Exiting...", errorCode);
-		return errorCode;
+		ENG_ERROR("Failed to run Vortex Core tick loop!");
+		ENG_ERROR("Error: {0}", e.what());
+		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		Sleep(10000);
+		return -1;
 	}
 
 	// Shutdown the Vortex Core Module, and return the error code passed.
-	errorCode = core->Shutdown();
+	try { core->Shutdown(); }
+	catch (std::exception& e)
+	{
+		ENG_ERROR("Failed to shutdown Vortex Core!");
+		ENG_ERROR("Error: {0}", e.what());
+		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		Sleep(10000);
+		return -1;
+	}
+
 	delete core;
-	if (errorCode != 0)
-	{
-		ENG_ERROR("Failed to shut down Vortex Core Module! Error: {0}.", errorCode);
-	}
-	else
-	{
-		ENG_TRACE("Exiting...");
-	}
-	return errorCode;
+	ENG_TRACE("Exiting...");
+	return 0;
 }
 
 /*

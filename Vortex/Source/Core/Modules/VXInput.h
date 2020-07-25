@@ -38,8 +38,8 @@ namespace Vortex
 		/*
 			Does nothing yet.
 		*/
-		virtual int Startup() override;
-		virtual int Shutdown() override;
+		virtual void Startup() override;
+		virtual void Shutdown() override;
 		/*
 			Resets the scroll delta every frame.
 		*/

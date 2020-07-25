@@ -18,12 +18,12 @@ namespace Vortex
 			Not putting this in a constructor means that we don't have to recreate it when running the application
 			in the editor.
 		*/
-		virtual int Startup() override;
+		virtual void Startup() override;
 		/*
 			Shuts down the Vortex Core Module.
 			Not putting this in a destructor means that we don't have to destroy the Module to reset the application
 		*/
-		virtual int Shutdown() override;
+		virtual void Shutdown() override;
 		/*
 			Runs a single Tick of the Vortex Core Module.
 		*/
@@ -31,7 +31,7 @@ namespace Vortex
 		/*
 			Runs the Tick Loop of the Vortex Core Module.
 		*/
-		int RunTickLoop();
+		void RunTickLoop();
 
 		/*
 			Requests the Vortex Core Module to quit. This will also cause the application to quit.
@@ -59,12 +59,12 @@ namespace Vortex
 		void OnWindowEvent(IWindow* window, IEvent& event);
 
 		// The Vortex Input Module.
-		VXInput* m_Input;
+		VXInput* m_Input = nullptr;
 
 		// A pointer to the user-defined application.
-		IApplication* m_App;
+		IApplication* m_App = nullptr;
 		// A pointer to the main application window.
-		IWindow* m_Window;
+		IWindow* m_Window = nullptr;
 
 		// Is the application running?
 		bool m_IsTicking = false;
@@ -73,7 +73,7 @@ namespace Vortex
 		std::mutex m_QuitMutex;
 
 		// The last frame delta.
-		float m_DeltaTime;
+		float m_DeltaTime = 0.f;
 		LARGE_INTEGER m_Frequency;
 		LARGE_INTEGER m_LastTime, m_CurrentTime;
 	};

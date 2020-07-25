@@ -18,12 +18,22 @@ namespace Vortex
 		{
 			Properties()
 			{}
-			Properties(std::string windowName, int windowWidth, int windowHeight)
+			Properties(std::string windowName, int windowWidth, int windowHeight, bool vSync = false)
 				: name(windowName), width(windowWidth), height(windowHeight)
-			{}
-			Properties(std::string windowName, int windowWidth, int windowHeight, int minimumWidth, int minimumHeight)
+			{
+				if (vSync)
+					syncInterval = 1;
+				else
+					syncInterval = 0;
+			}
+			Properties(std::string windowName, int windowWidth, int windowHeight, int minimumWidth = 800, int minimumHeight = 600, bool vSync = false)
 				: name(windowName), width(windowWidth), minWidth(minimumWidth), height(windowHeight), minHeight(minimumHeight)
-			{}
+			{
+				if (vSync)
+					syncInterval = 1;
+				else
+					syncInterval = 0;
+			}
 
 			// The name of the window as shown in the title bar.
 			std::string name = "Vortex Engine Window";
@@ -40,16 +50,23 @@ namespace Vortex
 			int y = 100;
 
 			// Does the window have focus.
-			bool IsActive = false;
+			bool isActive = false;
 
-			bool IsMinimized = false;
-			bool IsMaximized = false;
-			bool IsFullscreen = false;
+			bool isMinimized = false;
+			bool isMaximized = false;
+			bool isFullscreen = false;
 
 			// Is the window currently moving or being resized?
-			bool IsMoving = false;
-			bool IsResizing = false;
+			bool isMoving = false;
+			bool isResizing = false;
+
+			int syncInterval = 0;
 		};
+
+		/*
+			Implemented for each platform implementation so that the correct subclass is instantiated.
+		*/
+		static IWindow* Create(const IWindow::Properties& properties);
 
 		typedef std::function<void(IWindow*, IEvent&)> EventCallback;
 
@@ -79,10 +96,5 @@ namespace Vortex
 			Sets the position of the window in screen-space.
 		*/
 		virtual void SetPosition(int x, int y) = 0;
-
-		/*
-			Implemented for each platform implementation so that the correct subclass is instantiated.
-		*/
-		static IWindow* Create(const IWindow::Properties& properties);
 	};
 }

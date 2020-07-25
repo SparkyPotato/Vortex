@@ -46,7 +46,6 @@ project "Vortex"
 	
 	filter "system:windows"
 		systemversion "latest"
-		entrypoint "wmainCRTStartup"
 		defines "PLATFORM_WINDOWS"
 		
 	filter "configurations:DebugAll"
@@ -100,8 +99,8 @@ project "VortexEditor"
 	
 	filter "system:windows"
 		systemversion "latest"
-		entrypoint "wmainCRTStartup"
 		defines "PLATFORM_WINDOWS"
+		entrypoint "wmainCRTStartup"
 		
 	filter "configurations:DebugAll"
 		defines "CFG_DEBUGALL"

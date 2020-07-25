@@ -14,11 +14,11 @@ namespace Vortex
 		/*
 			Startup the module instance.
 		*/
-		virtual int Startup() = 0;
+		virtual void Startup() = 0;
 		/*
 			Shutdown the module instance.
 		*/
-		virtual int Shutdown() = 0;
+		virtual void Shutdown() = 0;
 		/*
 			Tick the module instance.
 		*/
