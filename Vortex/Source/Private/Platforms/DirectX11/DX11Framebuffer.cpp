@@ -1,6 +1,5 @@
 #include <VXpch.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
-#include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Core/IWindow.h>
 
 namespace Vortex
@@ -9,7 +8,7 @@ namespace Vortex
 	{
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
-		m_Texture = texture;
+		m_Texture = reinterpret_cast<DX11Texture*>(texture);
 
 		Create(m_Texture);
 	}
@@ -21,9 +20,8 @@ namespace Vortex
 		m_Window = window;
 		m_Window->SetFramebuffer(this);
 
-		GPTexture* texture = m_Window->GetSwapChain()->GetBackBuffer();
-		Create(texture);
-		delete texture;
+		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
+		Create(m_Texture);
 	}
 
 	DX11Framebuffer::~DX11Framebuffer()
@@ -43,7 +41,7 @@ namespace Vortex
 
 	void DX11Framebuffer::Recreate()
 	{
-		
+		Create(m_Texture);
 	}
 
 	void DX11Framebuffer::Resize(int width, int height)
@@ -91,7 +89,7 @@ namespace Vortex
 
 	void DX11Framebuffer::Resize()
 	{
-		if (m_Texture)
+		if (!m_Window)
 		{
 			ENG_ERROR("Cannot freely resize texture-based framebuffer. Use Resize(width, height) instead.");
 			return;
@@ -99,11 +97,69 @@ namespace Vortex
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
+		delete m_Texture;
+
 		p_RenderTarget.Reset();
 		p_DepthStencil.Reset();
 		m_Window->GetSwapChain()->Resize();
 
-		DX11Texture* texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
+		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
+
+		ID3D11Texture2D* depthStencil;
+		D3D11_TEXTURE2D_DESC descDepth = { 0 };
+		ZeroMemory(&descDepth, sizeof(D3D11_TEXTURE2D_DESC));
+		descDepth.Width = m_Texture->GetWidth();
+		descDepth.Height = m_Texture->GetHeight();
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		context->GetDevice()->CreateTexture2D(&descDepth, NULL, &depthStencil);
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC dvDesc;
+		ZeroMemory(&dvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		dvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		dvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dvDesc.Texture2D.MipSlice = 0;
+
+		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
+		depthStencil->Release();
+
+		context->GetDevice()->CreateRenderTargetView(m_Texture->GetTexture(), NULL, &p_RenderTarget);
+
+		m_Viewport.Width = (float) m_Texture->GetWidth();
+		m_Viewport.Height = (float) m_Texture->GetHeight();
+	}
+
+	void DX11Framebuffer::Clear(float r, float g, float b, float a)
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+
+		float color[4] = { r, g, b, a };
+
+		context->GetContext()->ClearRenderTargetView(p_RenderTarget.Get(), color);
+	}
+
+	void DX11Framebuffer::Create(DX11Texture* texture)
+	{
+		ENG_TRACE("Creating DirectX 11 Framebuffer.");
+
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+
+		context->GetDevice()->CreateRenderTargetView(texture->GetTexture(), NULL, &p_RenderTarget);
+
+		D3D11_DEPTH_STENCIL_DESC depthDesc = { 0 };
+		ZeroMemory(&depthDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		depthDesc.DepthEnable = TRUE;
+		depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+		ID3D11DepthStencilState* depthState;
+		context->GetDevice()->CreateDepthStencilState(&depthDesc, &depthState);
+		context->GetContext()->OMSetDepthStencilState(depthState, 1);
 
 		ID3D11Texture2D* depthStencil;
 		D3D11_TEXTURE2D_DESC descDepth = { 0 };
@@ -126,68 +182,9 @@ namespace Vortex
 		dvDesc.Texture2D.MipSlice = 0;
 
 		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
-		depthStencil->Release();
-
-		context->GetDevice()->CreateRenderTargetView(texture->GetTexture(), NULL, &p_RenderTarget);
 
 		m_Viewport.Width = (float) texture->GetWidth();
 		m_Viewport.Height = (float) texture->GetHeight();
-
-		delete texture;
-	}
-
-	void DX11Framebuffer::Clear(float r, float g, float b, float a)
-	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
-
-		float color[4] = { r, g, b, a };
-
-		context->GetContext()->ClearRenderTargetView(p_RenderTarget.Get(), color);
-	}
-
-	void DX11Framebuffer::Create(GPTexture* texture)
-	{
-		ENG_TRACE("Creating DirectX 11 Framebuffer.");
-
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
-		DX11Texture* text = reinterpret_cast<DX11Texture*>(texture);
-
-		context->GetDevice()->CreateRenderTargetView(text->GetTexture(), NULL, &p_RenderTarget);
-
-		D3D11_DEPTH_STENCIL_DESC depthDesc = { 0 };
-		ZeroMemory(&depthDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-		depthDesc.DepthEnable = TRUE;
-		depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
-		ID3D11DepthStencilState* depthState;
-		context->GetDevice()->CreateDepthStencilState(&depthDesc, &depthState);
-		context->GetContext()->OMSetDepthStencilState(depthState, 1);
-
-		ID3D11Texture2D* depthStencil;
-		D3D11_TEXTURE2D_DESC descDepth = { 0 };
-		ZeroMemory(&descDepth, sizeof(D3D11_TEXTURE2D_DESC));
-		descDepth.Width = text->GetWidth();
-		descDepth.Height = text->GetHeight();
-		descDepth.MipLevels = 1;
-		descDepth.ArraySize = 1;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-		descDepth.SampleDesc.Count = 1;
-		descDepth.SampleDesc.Quality = 0;
-		descDepth.Usage = D3D11_USAGE_DEFAULT;
-		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		context->GetDevice()->CreateTexture2D(&descDepth, NULL, &depthStencil);
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dvDesc;
-		ZeroMemory(&dvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-		dvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		dvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dvDesc.Texture2D.MipSlice = 0;
-
-		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
-
-		m_Viewport.Width = (float) text->GetWidth();
-		m_Viewport.Height = (float) text->GetHeight();
 		m_Viewport.MinDepth = 0;
 		m_Viewport.MaxDepth = 1;
 		m_Viewport.TopLeftX = 0;

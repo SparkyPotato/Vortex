@@ -1,5 +1,6 @@
 #pragma once
 #include <Graphics/Primitives/GPFramebuffer.h>
+#include <Private/Platforms/DirectX11/DX11Texture.h>
 
 namespace Vortex
 {
@@ -19,13 +20,13 @@ namespace Vortex
 		virtual void Clear(float r, float g, float b, float a) override;
 
 	private:
-		void Create(GPTexture* texture);
+		void Create(DX11Texture* texture);
 
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_RenderTarget;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_DepthStencil;
 		D3D11_VIEWPORT m_Viewport;
 
-		GPTexture* m_Texture = nullptr;
+		DX11Texture* m_Texture = nullptr;
 		IWindow* m_Window = nullptr;
 	};
 }

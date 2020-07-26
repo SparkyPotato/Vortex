@@ -52,13 +52,13 @@ namespace Vortex
 
 	void IGraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
 	{
-		ENG_TRACE("Registering primitive.");
+		ENG_TRACE("Registered primitive.");
 		m_Primitives.push_back(primitive);
 	}
 
 	void IGraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
 	{
-		ENG_TRACE("Unregistering primitive.");
+		ENG_TRACE("Unregistered primitive.");
 		auto i = std::find(s_Context->m_Primitives.begin(), s_Context->m_Primitives.end(), primitive);
 		if (i != m_Primitives.end())
 			s_Context->m_Primitives.erase(i);
