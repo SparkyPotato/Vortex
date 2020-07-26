@@ -53,10 +53,13 @@ project "Vortex"
 	
 	filter "system:windows"
 		systemversion "latest"
-		defines "PLATFORM_WINDOWS"
 		
 	filter "configurations:DebugAll"
-		defines "CFG_DEBUGALL"
+		defines 
+		{ 
+			"CFG_DEBUGENG",
+			"CFG_DEBUGAPP"
+		}
 		runtime "Debug"
 		symbols "on"
 		
@@ -107,11 +110,15 @@ project "VortexEditor"
 	
 	filter "system:windows"
 		systemversion "latest"
-		defines "PLATFORM_WINDOWS"
 		entrypoint "wmainCRTStartup"
 		
 	filter "configurations:DebugAll"
-		defines "CFG_DEBUGALL"
+		defines 
+		{ 
+			"CFG_DEBUGENG",
+			"CFG_DEBUGAPP"
+		}
+		
 		runtime "Debug"
 		symbols "on"
 		

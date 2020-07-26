@@ -4,10 +4,10 @@
 	Contains minimal functionality to create an application with Vortex.
 */
 
-// Input Codes for application input.
-#include <Core/InputCode.h>
 // Logging functionality.
 #include <Core/Logger.h>
+// Input Codes for application input.
+#include <Core/InputCode.h>
 
 // Vortex Core Module
 #include <Core/Modules/VXCore.h>

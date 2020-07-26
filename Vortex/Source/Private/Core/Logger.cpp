@@ -21,26 +21,20 @@ namespace Vortex
 		spdlog::set_pattern("[%I:%M:%S.%e] %n: (%l) %^%v%$");
 
 		// Setting log level based on configuration.
-		#ifdef CFG_DEBUGALL
-
+		#ifdef CFG_DEBUGENG
 		s_EngineLogger->set_level(spdlog::level::trace);
+		#endif
+
+		#ifdef CFG_DEBUGAPP
 		s_ClientLogger->set_level(spdlog::level::trace);
+		#endif
 
-		#elif CFG_DEBUGENG
-
-		s_EngineLogger->set_level(spdlog::level::trace);
-		s_ClientLogger->set_level(spdlog::level::warn);
-
-		#elif CFG_DEBUGAPP
-
+		#ifndef CFG_DEBUGENG
 		s_EngineLogger->set_level(spdlog::level::warn);
-		s_ClientLogger->set_level(spdlog::level::trace);
+		#endif
 
-		#else
-
-		s_EngineLogger->set_level(spdlog::level::warn);
+		#ifndef CFG_DEBUGAPP
 		s_ClientLogger->set_level(spdlog::level::warn);
-
 		#endif
 	}
 }
