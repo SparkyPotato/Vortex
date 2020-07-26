@@ -26,6 +26,6 @@ namespace Vortex
 
 		int m_Width, m_Height;
 		TextureUsage m_Usage;
-		ID3D11Texture2D* p_Texture;
+		ID3D11Texture2D* p_Texture = nullptr;
 	};
 }

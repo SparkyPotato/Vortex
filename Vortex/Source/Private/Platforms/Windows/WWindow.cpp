@@ -62,9 +62,9 @@ namespace Vortex
 	{
 		ENG_TRACE("Destroying window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
+		delete m_SwapChain;
 		// Remove the window from the screen.
 		DestroyWindow(m_WindowHandle);
-		delete m_SwapChain;
 
 		ENG_TRACE("Destroyed window.");
 	}

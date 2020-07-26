@@ -16,5 +16,5 @@ public:
 	virtual void OnEvent(Vortex::IEvent& event) override;
 
 private:
-
+	
 };

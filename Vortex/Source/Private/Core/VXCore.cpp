@@ -47,11 +47,12 @@ namespace Vortex
 
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
+		m_App = nullptr;
 
 		// Destroys the window.
 		delete m_Window;
 
-		delete IGraphicsContext::Get();
+		IGraphicsContext::Destroy();
 
 		// Deletes the Vortex Input Module.
 		m_Input->Shutdown();
@@ -151,7 +152,7 @@ namespace Vortex
 		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
 
 		// Passes the event to the app if it hasn't been handled already.
-		if (!event.IsHandled())
+		if (!event.IsHandled() && m_App)
 			m_App->OnEvent(event);
 	}
 

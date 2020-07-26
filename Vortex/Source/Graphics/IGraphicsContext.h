@@ -14,6 +14,7 @@ namespace Vortex
 		virtual ~IGraphicsContext() {}
 
 		static void Create(GraphicsAPI api);
+		static void Destroy();
 		static void Recreate();
 		static IGraphicsContext* Get() { return s_Context; }
 

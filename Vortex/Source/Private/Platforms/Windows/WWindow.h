@@ -12,7 +12,7 @@ namespace Vortex
 	{
 	public:
 		WWindow(const Properties& properties);
-		~WWindow();
+		virtual ~WWindow();
 
 		virtual void SetEventCallback(EventCallback callback) { m_Callback = callback; }
 		virtual void Update() override;

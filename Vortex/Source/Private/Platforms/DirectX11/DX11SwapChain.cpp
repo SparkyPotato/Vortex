@@ -15,6 +15,8 @@ namespace Vortex
 	DX11SwapChain::~DX11SwapChain()
 	{
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
+
+		delete m_BackBuffer;
 		p_SwapChain->Release();
 	}
 
@@ -30,6 +32,7 @@ namespace Vortex
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
 		if (p_SwapChain) p_SwapChain->Release();
+		p_SwapChain = nullptr;
 
 		DXGI_SWAP_CHAIN_DESC desc;
 		desc.BufferCount = 2;
@@ -72,12 +75,12 @@ namespace Vortex
 
 	void DX11SwapChain::Resize()
 	{
-		if (m_BackBuffer) delete m_BackBuffer;
+		delete m_BackBuffer;
 
 		HRESULT hr = p_SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
 		ID3D11Texture2D* texture;
-		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&texture);
+		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &texture);
 		m_BackBuffer = new DX11Texture(texture);
 		texture->Release();
 

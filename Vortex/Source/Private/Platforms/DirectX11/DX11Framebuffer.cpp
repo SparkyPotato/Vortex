@@ -31,7 +31,6 @@ namespace Vortex
 		p_RenderTarget->Release();
 		p_DepthStencil->Release();
 
-		if (m_Texture && !m_Window) delete m_Texture;
 		if (m_Window) m_Window->SetFramebuffer(nullptr);
 	}
 
@@ -89,6 +88,8 @@ namespace Vortex
 
 		m_Viewport.Width = (float) width;
 		m_Viewport.Height = (float) height;
+
+		context->GetContext()->Flush();
 	}
 
 	void DX11Framebuffer::Resize()
@@ -134,6 +135,8 @@ namespace Vortex
 
 		m_Viewport.Width = (float) m_Texture->GetWidth();
 		m_Viewport.Height = (float) m_Texture->GetHeight();
+
+		context->GetContext()->Flush();
 	}
 
 	void DX11Framebuffer::Clear(float r, float g, float b, float a)
@@ -162,6 +165,7 @@ namespace Vortex
 		ID3D11DepthStencilState* depthState;
 		context->GetDevice()->CreateDepthStencilState(&depthDesc, &depthState);
 		context->GetContext()->OMSetDepthStencilState(depthState, 1);
+		depthState->Release();
 
 		ID3D11Texture2D* depthStencil;
 		D3D11_TEXTURE2D_DESC descDepth = { 0 };
@@ -184,6 +188,7 @@ namespace Vortex
 		dvDesc.Texture2D.MipSlice = 0;
 
 		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
+		depthStencil->Release();
 
 		m_Viewport.Width = (float) texture->GetWidth();
 		m_Viewport.Height = (float) texture->GetHeight();

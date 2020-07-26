@@ -41,12 +41,14 @@ namespace Vortex
 
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
+		texture->AddRef();
 		p_Texture = texture;
 	}
 
 	DX11Texture::~DX11Texture()
 	{
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		p_Texture->Release();
 	}
 
 	void DX11Texture::Bind()
@@ -57,6 +59,7 @@ namespace Vortex
 	void DX11Texture::Recreate()
 	{
 		if (p_Texture) p_Texture->Release();
+		p_Texture = nullptr;
 
 		Create(m_Width, m_Height, m_Usage);
 	}

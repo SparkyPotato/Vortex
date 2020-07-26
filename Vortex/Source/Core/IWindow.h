@@ -66,6 +66,8 @@ namespace Vortex
 			int syncInterval = 0;
 		};
 
+		virtual ~IWindow() {}
+
 		/*
 			Implemented for each platform implementation so that the correct subclass is instantiated.
 		*/

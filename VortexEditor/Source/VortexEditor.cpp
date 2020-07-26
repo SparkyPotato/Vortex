@@ -12,7 +12,7 @@ VortexEditor::VortexEditor()
 
 VortexEditor::~VortexEditor()
 {
-
+	
 }
 
 void VortexEditor::Start()

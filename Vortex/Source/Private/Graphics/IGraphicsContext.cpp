@@ -33,6 +33,11 @@ namespace Vortex
 		}
 	}
 
+	void IGraphicsContext::Destroy()
+	{
+		delete s_Context;
+	}
+
 	void IGraphicsContext::Recreate()
 	{
 		GraphicsAPI api = s_Context->GetAPI();

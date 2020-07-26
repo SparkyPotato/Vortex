@@ -35,6 +35,31 @@ namespace Vortex
 
 		ENG_TRACE("Created DirectX 11 Context.");
 	}
+
+	DX11GraphicsContext::~DX11GraphicsContext()
+	{
+		p_Context->ClearState();
+		p_Context->Flush();
+
+		p_Factory->Release();
+		p_Factory = nullptr;
+		p_Context->Release();
+		p_Context = nullptr;
+
+		PrintDebugInfo();
+
+		p_Device->Release();
+		p_Device = nullptr;
+	}
+
+	void DX11GraphicsContext::PrintDebugInfo()
+	{
+		ID3D11Debug* debug;
+		p_Device->QueryInterface(__uuidof(ID3D11Debug), (void**)&debug);
+		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+
+		debug->Release();
+	}
 }
 
 #endif
