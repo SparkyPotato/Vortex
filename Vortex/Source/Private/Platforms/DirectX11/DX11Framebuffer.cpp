@@ -28,14 +28,18 @@ namespace Vortex
 	{
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
 
-		if (m_Texture) delete m_Texture;
+		p_RenderTarget->Release();
+		p_DepthStencil->Release();
+
+		if (m_Texture && !m_Window) delete m_Texture;
+		if (m_Window) m_Window->SetFramebuffer(nullptr);
 	}
 
 	void DX11Framebuffer::Bind()
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
-		context->GetContext()->OMSetRenderTargets(1, p_RenderTarget.GetAddressOf(), p_DepthStencil.Get());
+		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, p_DepthStencil);
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
 	}
 
@@ -97,14 +101,12 @@ namespace Vortex
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
-		delete m_Texture;
-
-		p_RenderTarget.Reset();
-		p_DepthStencil.Reset();
+		p_RenderTarget->Release();
 		m_Window->GetSwapChain()->Resize();
 
 		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
 
+		p_DepthStencil->Release();
 		ID3D11Texture2D* depthStencil;
 		D3D11_TEXTURE2D_DESC descDepth = { 0 };
 		ZeroMemory(&descDepth, sizeof(D3D11_TEXTURE2D_DESC));
@@ -140,7 +142,7 @@ namespace Vortex
 
 		float color[4] = { r, g, b, a };
 
-		context->GetContext()->ClearRenderTargetView(p_RenderTarget.Get(), color);
+		context->GetContext()->ClearRenderTargetView(p_RenderTarget, color);
 	}
 
 	void DX11Framebuffer::Create(DX11Texture* texture)

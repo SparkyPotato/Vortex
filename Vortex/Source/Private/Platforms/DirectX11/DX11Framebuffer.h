@@ -22,8 +22,8 @@ namespace Vortex
 	private:
 		void Create(DX11Texture* texture);
 
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_RenderTarget;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_DepthStencil;
+		ID3D11RenderTargetView* p_RenderTarget;
+		ID3D11DepthStencilView* p_DepthStencil;
 		D3D11_VIEWPORT m_Viewport;
 
 		DX11Texture* m_Texture = nullptr;

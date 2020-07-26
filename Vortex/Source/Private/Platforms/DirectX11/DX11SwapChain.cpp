@@ -15,6 +15,7 @@ namespace Vortex
 	DX11SwapChain::~DX11SwapChain()
 	{
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		p_SwapChain->Release();
 	}
 
 	void DX11SwapChain::Bind()
@@ -27,6 +28,8 @@ namespace Vortex
 		ENG_TRACE("Creating DirectX 11 Swap Chain.");
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+
+		if (p_SwapChain) p_SwapChain->Release();
 
 		DXGI_SWAP_CHAIN_DESC desc;
 		desc.BufferCount = 2;
@@ -53,20 +56,30 @@ namespace Vortex
 		if (FAILED(hr))
 			throw std::exception("Failed to create DirectX 11 Swap Chain.");
 
+		if (m_BackBuffer) delete m_BackBuffer;
+		ID3D11Texture2D* texture;
+		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&texture);
+		m_BackBuffer = new DX11Texture(texture);
+		texture->Release();
+
 		ENG_TRACE("Created DirectX 11 Swap Chain.");
 	}
 
 	GPTexture* DX11SwapChain::GetBackBuffer()
 	{
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &texture);
-
-		return new DX11Texture(texture.Get());
+		return m_BackBuffer;
 	}
 
 	void DX11SwapChain::Resize()
 	{
+		if (m_BackBuffer) delete m_BackBuffer;
+
 		HRESULT hr = p_SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+		ID3D11Texture2D* texture;
+		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&texture);
+		m_BackBuffer = new DX11Texture(texture);
+		texture->Release();
 
 		if (FAILED(hr))
 			ENG_WARN("Failed to resize swap chain.");

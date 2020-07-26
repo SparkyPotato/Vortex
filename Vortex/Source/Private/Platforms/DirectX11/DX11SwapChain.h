@@ -22,6 +22,7 @@ namespace Vortex
 	private:
 		WWindow* m_Window = nullptr;
 
-		Microsoft::WRL::ComPtr<IDXGISwapChain> p_SwapChain = nullptr;
+		IDXGISwapChain* p_SwapChain = nullptr;
+		GPTexture* m_BackBuffer = nullptr;
 	};
 }

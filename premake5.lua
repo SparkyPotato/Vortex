@@ -17,6 +17,12 @@ workspace "Vortex"
 	
 outputdir = "%{cfg.buildcfg}/"
 
+Includes = {}
+Includes["spdlog"] = "Vortex/ThirdParty/spdlog/include"
+Includes["imgui"] = "Vortex/ThirdParty/imgui"
+
+include "Vortex/ThirdParty/imgui"
+
 project "Vortex"
 	location "Vortex"
 	kind "StaticLib"
@@ -41,7 +47,8 @@ project "Vortex"
 	includedirs
 	{
 		"Vortex/Source",
-		"Vortex/ThirdParty/spdlog/include"
+		"%{Includes.spdlog}",
+		"%{Includes.imgui}"
 	}
 	
 	filter "system:windows"
@@ -89,7 +96,8 @@ project "VortexEditor"
 	includedirs
 	{
 		"Vortex/Source",
-		"Vortex/ThirdParty/spdlog/include"
+		"%{Includes.spdlog}",
+		"%{Includes.imgui}"
 	}
 	
 	links 
