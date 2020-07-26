@@ -1,5 +1,6 @@
 #pragma once
 #include <VortexMinimal.h>
+#include <Graphics/Primitives/GPFramebuffer.h>
 
 class VortexEditor : public Vortex::IApplication
 {
@@ -15,4 +16,5 @@ public:
 	virtual void OnEvent(Vortex::IEvent& event) override;
 
 private:
+	
 };

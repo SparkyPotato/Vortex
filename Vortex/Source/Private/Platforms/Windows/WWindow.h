@@ -2,7 +2,6 @@
 
 #ifdef PLATFORM_WINDOWS
 #include <Core/IWindow.h>
-#include <Graphics/Primitives/GPSwapChain.h>
 
 namespace Vortex
 {
@@ -22,6 +21,9 @@ namespace Vortex
 		virtual void SetName(std::string name) override;
 		virtual void SetSize(int width, int height) override;
 		virtual void SetPosition(int x, int y) override;
+
+		virtual GPSwapChain* GetSwapChain() { return m_SwapChain; }
+		virtual void SetFramebuffer(GPFramebuffer* framebuffer) { m_Framebuffer = framebuffer; }
 
 		/*
 			Registers window class, called in the Windows Entry Point.
@@ -47,6 +49,7 @@ namespace Vortex
 		Properties m_Properties;
 
 		GPSwapChain* m_SwapChain = nullptr;
+		GPFramebuffer* m_Framebuffer = nullptr;
 	};
 }
 

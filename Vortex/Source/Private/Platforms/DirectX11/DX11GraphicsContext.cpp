@@ -35,13 +35,6 @@ namespace Vortex
 
 		ENG_TRACE("Created DirectX 11 Context.");
 	}
-
-	DX11GraphicsContext::~DX11GraphicsContext()
-	{
-		if(p_Device)   p_Device->Release();
-		if (p_Context) p_Context->Release();
-		if (p_Factory) p_Factory->Release();
-	}
 }
 
 #endif

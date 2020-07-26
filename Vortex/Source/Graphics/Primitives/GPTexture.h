@@ -8,7 +8,6 @@ namespace Vortex
 	{
 		ShaderResource ,
 		Framebuffer,
-		DepthStencil,
 		ColorTexture
 	};
 
@@ -21,5 +20,10 @@ namespace Vortex
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;
+
+		virtual int GetWidth() = 0;
+		virtual int GetHeight() = 0;
+
+		virtual void Resize(int width, int height) = 0;
 	};
 }

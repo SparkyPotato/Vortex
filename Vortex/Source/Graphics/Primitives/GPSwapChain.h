@@ -5,6 +5,7 @@
 namespace Vortex
 {
 	class IWindow;
+	class GPFramebuffer;
 
 	class GPSwapChain : public GraphicsPrimitive
 	{

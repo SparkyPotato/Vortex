@@ -1,6 +1,7 @@
 #include <VXpch.h>
 #include <Private/Platforms/DirectX11/DX11SwapChain.h>
 #include <Private/Platforms/DirectX11/DX11Texture.h>
+#include <Private/Platforms/DirectX11/DX11Framebuffer.h>
 
 namespace Vortex
 {
@@ -13,7 +14,6 @@ namespace Vortex
 
 	DX11SwapChain::~DX11SwapChain()
 	{
-		if (p_SwapChain) p_SwapChain->Release();
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
 	}
 
@@ -24,9 +24,7 @@ namespace Vortex
 
 	void DX11SwapChain::Recreate()
 	{
-		ENG_TRACE("Creating DirectX 11.1 Swap Chain.");
-
-		if (p_SwapChain) p_SwapChain->Release();
+		ENG_TRACE("Creating DirectX 11 Swap Chain.");
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
@@ -53,17 +51,17 @@ namespace Vortex
 		);
 
 		if (FAILED(hr))
-			throw std::exception("Failed to create DirectX 11.1 Swap Chain.");
+			throw std::exception("Failed to create DirectX 11 Swap Chain.");
 
-		ENG_TRACE("Created DirectX 11.1 Swap Chain.");
+		ENG_TRACE("Created DirectX 11 Swap Chain.");
 	}
 
 	GPTexture* DX11SwapChain::GetBackBuffer()
 	{
-		ID3D11Texture2D* texture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 		p_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &texture);
 
-		return new DX11Texture(texture);
+		return new DX11Texture(texture.Get());
 	}
 
 	void DX11SwapChain::Resize()

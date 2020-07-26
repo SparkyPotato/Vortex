@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
 #include <Core/IEvent.h>
+#include <Graphics/Primitives/GPSwapChain.h>
 
 namespace Vortex
 {
+	class GPFramebuffer;
+
 	/*
 		Class that defines the basic Window Interface.
 		Implementation details vary per platform.
@@ -96,5 +99,8 @@ namespace Vortex
 			Sets the position of the window in screen-space.
 		*/
 		virtual void SetPosition(int x, int y) = 0;
+
+		virtual GPSwapChain* GetSwapChain() = 0;
+		virtual void SetFramebuffer(GPFramebuffer* framebuffer) = 0;
 	};
 }

@@ -14,13 +14,18 @@ namespace Vortex
 		virtual void Bind() override;
 		virtual void Recreate() override;
 
-		ID3D11Texture2D* GetTexture() { return p_Texture; }
+		virtual int GetWidth() override { return m_Width; }
+		virtual int GetHeight() override { return m_Height; }
+
+		virtual void Resize(int width, int height) override;
+
+		ID3D11Texture2D* GetTexture() { return p_Texture.Get(); }
 
 	private:
 		void Create(int width, int height, TextureUsage usage);
 
 		int m_Width, m_Height;
 		TextureUsage m_Usage;
-		ID3D11Texture2D* p_Texture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> p_Texture;
 	};
 }

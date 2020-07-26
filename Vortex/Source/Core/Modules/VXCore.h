@@ -51,6 +51,8 @@ namespace Vortex
 		*/
 		VXInput* GetInput() { return m_Input; }
 
+		IWindow* GetWindow() { return m_Window; }
+
 	private:
 		/*
 			Called back on every window event. 

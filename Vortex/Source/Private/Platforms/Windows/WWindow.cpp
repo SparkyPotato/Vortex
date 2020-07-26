@@ -4,6 +4,7 @@
 #include <Private/Platforms/Windows/WWindow.h>
 #include <Core/Events/WindowEvent.h>
 #include <Core/Events/InputEvent.h>
+#include <Graphics/Primitives/GPFramebuffer.h>
 
 namespace Vortex
 {
@@ -63,6 +64,7 @@ namespace Vortex
 
 		// Remove the window from the screen.
 		DestroyWindow(m_WindowHandle);
+		delete m_SwapChain;
 
 		ENG_TRACE("Destroyed window.");
 	}
@@ -181,7 +183,8 @@ namespace Vortex
 		case WM_SIZE:
 		{
 			// Resize the swap chain.
-			if (m_SwapChain) m_SwapChain->Resize();
+			if (m_Framebuffer) m_Framebuffer->Resize();
+			else if (m_SwapChain) m_SwapChain->Resize();
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
 
