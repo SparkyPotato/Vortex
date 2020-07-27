@@ -2,7 +2,10 @@
 
 namespace Vortex
 {
-#ifdef PLATFORM_WINDOWS
+	/*
+		Input codes vary per platform.
+	*/
+	#ifdef PLATFORM_WINDOWS
 	/*
 		Enum with all input codes.
 	*/
@@ -108,5 +111,5 @@ namespace Vortex
 		LeftAlt = 0xA4,
 		RightAlt = 0xA5
 	};
-#endif
+	#endif
 }

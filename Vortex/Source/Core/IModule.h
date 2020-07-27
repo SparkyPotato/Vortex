@@ -8,7 +8,9 @@ namespace Vortex
 	class IModule
 	{
 	public:
-		// Virtual destructor so we can have a list of Modules and make sure they're deleted properly.
+		/* 
+			Virtual destructor so we can have a list of Modules and make sure they're deleted properly.
+		*/
 		virtual ~IModule() {}
 
 		/*

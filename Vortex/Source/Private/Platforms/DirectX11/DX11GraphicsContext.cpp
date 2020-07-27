@@ -9,20 +9,30 @@ namespace Vortex
 		ENG_TRACE("Creating DirectX 11 Graphics Context.");
 
 		D3D_FEATURE_LEVEL level = D3D_FEATURE_LEVEL_11_1;
+		D3D_FEATURE_LEVEL levelGot;
+		D3D11_CREATE_DEVICE_FLAG createFlags = static_cast<D3D11_CREATE_DEVICE_FLAG>(NULL);
+
+		// Create the device on the debug layer if we're debugging the engine.
+		#ifdef CFG_DEBUGENG
+		createFlags = D3D11_CREATE_DEVICE_DEBUG;
+		#endif
+
 		HRESULT hr = D3D11CreateDevice
 		(
 			NULL,
 			D3D_DRIVER_TYPE_HARDWARE,
 			NULL,
-			D3D11_CREATE_DEVICE_DEBUG,
+			createFlags,
 			&level,
 			1,
 			D3D11_SDK_VERSION,
 			&p_Device,
-			NULL,
+			&levelGot,
 			&p_Context
 		);
-		if (FAILED(hr))
+
+		// If we failed to create the Device, or didn't get it with feature level 11.1, throw an exception.
+		if (FAILED(hr) || levelGot != D3D_FEATURE_LEVEL_11_1)
 			throw std::exception("Failed to create DirectX 11.1 Context.");
 
 		hr = CreateDXGIFactory
@@ -30,6 +40,8 @@ namespace Vortex
 			__uuidof(IDXGIFactory),
 			(void**) &p_Factory
 		);
+
+		// If we failed to create the DXGI Factory, throw an exception.
 		if (FAILED(hr))
 			throw std::exception("Failed to create DXGI 1.1 Factory.");
 
@@ -38,6 +50,7 @@ namespace Vortex
 
 	DX11GraphicsContext::~DX11GraphicsContext()
 	{
+		// Make sure we delete everything.
 		p_Context->ClearState();
 		p_Context->Flush();
 
@@ -46,7 +59,10 @@ namespace Vortex
 		p_Context->Release();
 		p_Context = nullptr;
 
+		// If we're debugging the engine, print live objects.
+		#ifdef CFG_DEBUGENG
 		PrintDebugInfo();
+		#endif
 
 		p_Device->Release();
 		p_Device = nullptr;
@@ -55,7 +71,9 @@ namespace Vortex
 	void DX11GraphicsContext::PrintDebugInfo()
 	{
 		ID3D11Debug* debug;
+		// Get the debug device from the device.
 		p_Device->QueryInterface(__uuidof(ID3D11Debug), (void**)&debug);
+		// Report all live objects with all details.
 		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 
 		debug->Release();

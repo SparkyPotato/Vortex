@@ -44,6 +44,13 @@ int wmain(int argc, wchar_t** argv)
 	{
 		ENG_ERROR("Failed to start Vortex Core!");
 		ENG_ERROR("Error: {0}", e.what());
+
+		// If we have created the Graphics Context, make sure to clean everything up before exiting.
+		if (IGraphicsContext::Get())
+		{
+			IGraphicsContext::Destroy();
+		}
+
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
@@ -53,8 +60,15 @@ int wmain(int argc, wchar_t** argv)
 	try { core->RunTickLoop(); }
 	catch (std::exception& e)
 	{
-		ENG_ERROR("Failed to run Vortex Core tick loop!");
+		ENG_ERROR("Error while running Vortex Core Module Tick!");
 		ENG_ERROR("Error: {0}", e.what());
+
+		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
+		if (IGraphicsContext::Get())
+		{
+			IGraphicsContext::Destroy();
+		}
+
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
@@ -66,6 +80,13 @@ int wmain(int argc, wchar_t** argv)
 	{
 		ENG_ERROR("Failed to shutdown Vortex Core!");
 		ENG_ERROR("Error: {0}", e.what());
+
+		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
+		if (IGraphicsContext::Get())
+		{
+			IGraphicsContext::Destroy();
+		}
+
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;

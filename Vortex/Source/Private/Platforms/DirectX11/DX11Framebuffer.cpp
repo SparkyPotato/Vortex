@@ -18,6 +18,7 @@ namespace Vortex
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
 		m_Window = window;
+		// Sets the framebuffer on the window so Resize() will be called on resize.
 		m_Window->SetFramebuffer(this);
 
 		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
@@ -32,6 +33,7 @@ namespace Vortex
 		p_DepthStencil->Release();
 
 		if (m_Window) m_Window->SetFramebuffer(nullptr);
+		// If not on a window, delete the texture.
 		if (!m_Window) delete m_Texture;
 	}
 
@@ -39,6 +41,7 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
+		// Bind the Render Target and make sure the viewport dimensions are correct.
 		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, p_DepthStencil);
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
 	}
@@ -58,6 +61,7 @@ namespace Vortex
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
+		// Recreate Depth Stencil from width and height.
 		p_DepthStencil->Release();
 		ID3D11Texture2D* depthStencil;
 		D3D11_TEXTURE2D_DESC descDepth = { 0 };
@@ -82,14 +86,20 @@ namespace Vortex
 		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
 		depthStencil->Release();
 
+		// Recreate Render Target from width and height.
 		p_RenderTarget->Release();
+		// Resize the base texture.
 		m_Texture->Resize(width, height);
 
 		context->GetDevice()->CreateRenderTargetView(reinterpret_cast<DX11Texture*>(m_Texture)->GetTexture(), NULL, &p_RenderTarget);
 
+		// Resize the viewport.
 		m_Viewport.Width = (float) width;
 		m_Viewport.Height = (float) height;
 
+		// Flush all commands so that deletion is forced.
+		// This is done since Resize is called many times on resizing.
+		// If not done, the application starts gobbling up memory (From 20 MB up to 200 MB!).
 		context->GetContext()->Flush();
 	}
 
@@ -103,11 +113,14 @@ namespace Vortex
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
+		// Remove references to the back buffer.
 		p_RenderTarget->Release();
+		// Resize back buffer.
 		m_Window->GetSwapChain()->Resize();
 
 		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
 
+		// Recreate Depth Stencil.
 		p_DepthStencil->Release();
 		ID3D11Texture2D* depthStencil;
 		D3D11_TEXTURE2D_DESC descDepth = { 0 };
@@ -132,16 +145,22 @@ namespace Vortex
 		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
 		depthStencil->Release();
 
+		// Create Render Target.
 		context->GetDevice()->CreateRenderTargetView(m_Texture->GetTexture(), NULL, &p_RenderTarget);
 
+		// Resize the viewport.
 		m_Viewport.Width = (float) m_Texture->GetWidth();
 		m_Viewport.Height = (float) m_Texture->GetHeight();
 
+		// Flush all commands so that deletion is forced.
+		// This is done since Resize is called many times on resizing.
+		// If not done, the application starts gobbling up memory (From 20 MB up to 200 MB!).
 		context->GetContext()->Flush();
 	}
 
 	void DX11Framebuffer::SetWindow(IWindow* window)
 	{
+		// Set the framebuffer on the current window to nullptr, or delete the current texture.
 		if (m_Window)
 			m_Window->SetFramebuffer(nullptr);
 		else
@@ -149,6 +168,7 @@ namespace Vortex
 
 		m_Window = window;
 
+		// If window is not nullptr, recreate.
 		if (m_Window)
 		{
 			m_Window->SetFramebuffer(this);
@@ -163,7 +183,10 @@ namespace Vortex
 
 		float color[4] = { r, g, b, a };
 
+		// Clear Render Target to the color.
 		context->GetContext()->ClearRenderTargetView(p_RenderTarget, color);
+		// Set the Depth Stencil to infinity.
+		context->GetContext()->ClearDepthStencilView(p_DepthStencil, NULL, 1.f, NULL);
 	}
 
 	void DX11Framebuffer::Create(DX11Texture* texture)
@@ -172,8 +195,10 @@ namespace Vortex
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
+		// Create Render Target.
 		context->GetDevice()->CreateRenderTargetView(texture->GetTexture(), NULL, &p_RenderTarget);
 
+		// Create Depth Stencil.
 		D3D11_DEPTH_STENCIL_DESC depthDesc = { 0 };
 		ZeroMemory(&depthDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 		depthDesc.DepthEnable = TRUE;
@@ -208,6 +233,7 @@ namespace Vortex
 		context->GetDevice()->CreateDepthStencilView(depthStencil, &dvDesc, &p_DepthStencil);
 		depthStencil->Release();
 
+		// Create the viewport.
 		m_Viewport.Width = (float) texture->GetWidth();
 		m_Viewport.Height = (float) texture->GetHeight();
 		m_Viewport.MinDepth = 0;

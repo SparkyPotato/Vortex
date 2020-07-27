@@ -11,6 +11,9 @@ namespace Vortex
 
 	void IGraphicsContext::Create(GraphicsAPI api)
 	{
+		// Throw an exception if the Context has already been created.
+		if (s_Context) throw std::exception("Graphics context has already been created!");
+
 		switch (api)
 		{
 		case GraphicsAPI::None:
@@ -35,26 +38,28 @@ namespace Vortex
 
 	void IGraphicsContext::Destroy()
 	{
-		delete s_Context;
-	}
-
-	IGraphicsContext::~IGraphicsContext()
-	{
-		if (m_Primitives.size() != 0)
+		// If all primitives have not been deleted...
+		if (s_Context->m_Primitives.size() != 0)
 		{
-			ENG_WARN("{0} Graphics Primitives have not been deleted.", m_Primitives.size());
+			// ... Throw a warning...
+			ENG_WARN("{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
 			ENG_WARN("Deleting...");
 
-			int size = m_Primitives.size();
+			// ... And delete them.
+			size_t size = s_Context->m_Primitives.size();
 
 			for (int i = 0; i < size; i++)
 			{
-				delete m_Primitives[0];
+				delete s_Context->m_Primitives[0];
 			}
 
+			// Sleep for 10 seconds so the user knows something is wrong and has time to read the warnings.
 			ENG_WARN("Sleeping for 10 seconds before continuing...");
 			Sleep(10000);
 		}
+
+		delete s_Context;
+		s_Context = nullptr;
 	}
 
 	void IGraphicsContext::Recreate()
@@ -65,12 +70,14 @@ namespace Vortex
 
 		Create(api);
 		s_Context->m_Primitives = primitives;
+
+		// Recreate all primitives in the list.
 		for (GraphicsPrimitive* primitive : s_Context->m_Primitives)
 		{
 			if (primitive)
 				primitive->Recreate();
 			else
-				s_Context->UnregisterPrimitive(primitive);
+				ENG_ERROR("Primitive has not been registered!");
 		}
 	}
 

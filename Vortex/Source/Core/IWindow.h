@@ -62,7 +62,8 @@ namespace Vortex
 			// Is the window currently moving or being resized?
 			bool isMoving = false;
 			bool isResizing = false;
-
+			
+			// VSync interval. If VSync is on this should usually be set to 1.
 			int syncInterval = 0;
 		};
 
