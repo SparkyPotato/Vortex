@@ -1,7 +1,9 @@
 #pragma once
 #include <Core/IModule.h>
 #include <Core/Modules/VXInput.h>
+#include <Core/Modules/VXGui.h>
 #include <Core/IApplication.h>
+#include <Core/Layers/LayerStack.h>
 
 namespace Vortex
 {
@@ -47,10 +49,23 @@ namespace Vortex
 		virtual void AllowQuit() override;
 
 		/*
+			Returns the application owned by the Vortex Core. You shouldn't be needing this.
+		*/
+		IApplication* GetApplication() { return m_App; }
+
+		/*
 			Returns the Vortex Input Module.
 		*/
 		VXInput* GetInput() { return m_Input; }
 
+		/*
+			Returns the layer stack.
+		*/
+		LayerStack* GetLayerStack() { return m_LayerStack; }
+
+		/*
+			Returns the window.
+		*/
 		IWindow* GetWindow() { return m_Window; }
 
 	private:
@@ -62,9 +77,13 @@ namespace Vortex
 
 		// The Vortex Input Module.
 		VXInput* m_Input = nullptr;
+		// The Vortex GUI Module.
+		VXGui* m_Gui = nullptr;
 
 		// A pointer to the user-defined application.
 		IApplication* m_App = nullptr;
+		// A pointer to the application layer stack.
+		LayerStack* m_LayerStack = nullptr;
 		// A pointer to the main application window.
 		IWindow* m_Window = nullptr;
 

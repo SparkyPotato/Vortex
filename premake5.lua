@@ -38,6 +38,11 @@ project "Vortex"
 	targetdir ("Binaries/" .. outputdir .. "%{prj.name}")
 	objdir ("Intermediate/" .. outputdir .. "%{prj.name}")
 	
+	links
+	{
+		"imgui"
+	}
+	
 	files
 	{
 		"%{prj.name}/Source/**.h",
@@ -98,6 +103,7 @@ project "VortexEditor"
 	
 	includedirs
 	{
+		"VortexEditor/Source",
 		"Vortex/Source",
 		"%{Includes.spdlog}",
 		"%{Includes.imgui}"
@@ -105,7 +111,8 @@ project "VortexEditor"
 	
 	links 
 	{
-		"Vortex"
+		"Vortex",
+		"imgui"
 	}
 	
 	filter "system:windows"

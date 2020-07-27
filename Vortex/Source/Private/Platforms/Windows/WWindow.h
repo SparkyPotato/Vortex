@@ -17,13 +17,15 @@ namespace Vortex
 		virtual void SetEventCallback(EventCallback callback) { m_Callback = callback; }
 		virtual void Update() override;
 
+		virtual const Properties& GetProperties() override { return m_Properties; }
+
 		virtual void Activate() override;
 		virtual void SetName(std::string name) override;
 		virtual void SetSize(int width, int height) override;
 		virtual void SetPosition(int x, int y) override;
 
-		virtual GPSwapChain* GetSwapChain() { return m_SwapChain; }
-		virtual void SetFramebuffer(GPFramebuffer* framebuffer) { m_Framebuffer = framebuffer; }
+		virtual GPSwapChain* GetSwapChain() override { return m_SwapChain; }
+		virtual GPFramebuffer* GetFramebuffer() override { return m_Framebuffer; }
 
 		/*
 			Registers window class, called in the Windows Entry Point.

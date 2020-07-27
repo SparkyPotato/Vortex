@@ -18,8 +18,6 @@ namespace Vortex
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
 		m_Window = window;
-		// Sets the framebuffer on the window so Resize() will be called on resize.
-		m_Window->SetFramebuffer(this);
 
 		m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
 		Create(m_Texture);
@@ -32,7 +30,6 @@ namespace Vortex
 		p_RenderTarget->Release();
 		p_DepthStencil->Release();
 
-		if (m_Window) m_Window->SetFramebuffer(nullptr);
 		// If not on a window, delete the texture.
 		if (!m_Window) delete m_Texture;
 	}
@@ -156,25 +153,6 @@ namespace Vortex
 		// This is done since Resize is called many times on resizing.
 		// If not done, the application starts gobbling up memory (From 20 MB up to 200 MB!).
 		context->GetContext()->Flush();
-	}
-
-	void DX11Framebuffer::SetWindow(IWindow* window)
-	{
-		// Set the framebuffer on the current window to nullptr, or delete the current texture.
-		if (m_Window)
-			m_Window->SetFramebuffer(nullptr);
-		else
-			delete m_Texture;
-
-		m_Window = window;
-
-		// If window is not nullptr, recreate.
-		if (m_Window)
-		{
-			m_Window->SetFramebuffer(this);
-			m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
-			Create(m_Texture);
-		}
 	}
 
 	void DX11Framebuffer::Clear(float r, float g, float b, float a)

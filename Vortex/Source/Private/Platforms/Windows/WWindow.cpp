@@ -6,6 +6,9 @@
 #include <Core/Events/InputEvent.h>
 #include <Graphics/Primitives/GPFramebuffer.h>
 
+#include <examples/imgui_impl_win32.h>
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace Vortex
 {
 	IWindow* IWindow::Create(const IWindow::Properties& properties)
@@ -54,6 +57,8 @@ namespace Vortex
 
 		// Create the swap chain.
 		m_SwapChain = GPSwapChain::Create(this);
+		// Create the framebuffer.
+		m_Framebuffer = GPFramebuffer::Create(this);
 
 		ENG_TRACE("Created window.");
 	}
@@ -62,7 +67,7 @@ namespace Vortex
 	{
 		ENG_TRACE("Destroying window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
-		if (m_Framebuffer) m_Framebuffer->SetWindow(nullptr);
+		if (m_Framebuffer) delete m_Framebuffer;
 		delete m_SwapChain;
 
 		// Remove the window from the screen.
@@ -83,6 +88,8 @@ namespace Vortex
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
+
+		m_Framebuffer->Clear(0.f, 0.f, 0.f, 1.f);
 	}
 
 	void WWindow::Activate()
@@ -151,6 +158,8 @@ namespace Vortex
 
 	LRESULT WWindow::BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam);
+
 		// Sets up thunking to the correct window.
 		if (message == WM_NCCREATE)
 		{
@@ -167,6 +176,8 @@ namespace Vortex
 
 	LRESULT WWindow::WindowThunk(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam);
+
 		// Call the window-specific message handler.
 		WWindow* p_Window = reinterpret_cast<WWindow*>(GetWindowLongPtr(window, GWLP_USERDATA));
 		return p_Window->WindowProc(window, message, wParam, lParam);
@@ -186,7 +197,6 @@ namespace Vortex
 		{
 			// Resize the swap chain.
 			if (m_Framebuffer) m_Framebuffer->Resize();
-			else if (m_SwapChain) m_SwapChain->Resize();
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
 

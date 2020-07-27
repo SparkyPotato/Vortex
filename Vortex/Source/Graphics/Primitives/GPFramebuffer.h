@@ -38,12 +38,6 @@ namespace Vortex
 		virtual void Resize(int width, int height) = 0;
 
 		/*
-			Sets the new window for the framebuffer if it was created from a window.
-			Deletes the texture if the framebuffer was created from a texture.
-		*/
-		virtual void SetWindow(IWindow* window) = 0;
-
-		/*
 			Clears the Render Target with the specified color.
 			Clears the Depth Stencil to 1.f (infinity).
 		*/

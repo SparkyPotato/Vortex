@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/IWindow.h>
+#include <imgui.h>
 
 namespace Vortex
 {
@@ -23,7 +24,10 @@ namespace Vortex
 		/*
 			Binds the modules to the application, so you can use GCore to get a pointer to the Vortex Core Module.
 		*/
-		void BindToModule(VXCore* core) { GCore = core; }
+		void BindToModule(VXCore* core) 
+		{ 
+			GCore = core;
+		}
 		/*
 			Gets the properties for the main window to be created.
 		*/
@@ -39,7 +43,12 @@ namespace Vortex
 		virtual void Tick(float deltaTime) = 0;
 
 		/*
-			Called with all unhandled events in the Vortex Core. Doesn't have to be overriden.
+			Called every frame when ImGui is being rendered. ImGui functions will only work here. Doesn't have to be overriden.
+		*/
+		virtual void OnGuiRender() {}
+
+		/*
+			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overriden.
 		*/
 		virtual void OnEvent(IEvent& event) {};
 

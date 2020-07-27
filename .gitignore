@@ -6,3 +6,6 @@
 # Builds
 **/Binaries/*
 **/Intermediate/*
+
+# Config Files
+*.ini

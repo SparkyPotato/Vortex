@@ -15,5 +15,9 @@
 
 // Vortex Core Module
 #include <Core/Modules/VXCore.h>
+
 // Application from which to derive.
 #include <Core/IApplication.h>
+
+// Application layers
+#include <Core/Layers/ILayer.h>

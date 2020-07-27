@@ -86,10 +86,13 @@ namespace Vortex
 		*/
 		virtual void Update() = 0;
 
+		virtual const Properties& GetProperties() = 0;
+
 		/*
 			Moves the window to the top and activates it.
 		*/
 		virtual void Activate() = 0;
+
 		/*
 			Sets the name of the window.
 		*/
@@ -102,8 +105,14 @@ namespace Vortex
 			Sets the position of the window in screen-space.
 		*/
 		virtual void SetPosition(int x, int y) = 0;
-
+		
+		/*
+			Returns the swap chain owned by the window.
+		*/
 		virtual GPSwapChain* GetSwapChain() = 0;
-		virtual void SetFramebuffer(GPFramebuffer* framebuffer) = 0;
+		/*
+			Gets the framebuffer of the window.
+		*/
+		virtual GPFramebuffer* GetFramebuffer() = 0;
 	};
 }

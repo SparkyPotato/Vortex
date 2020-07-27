@@ -30,9 +30,15 @@ namespace Vortex
 		m_App->BindToModule(this);
 		ENG_TRACE("Created Client application.");
 
+		// Creates the layer stack.
+		m_LayerStack = new LayerStack();
+
 		// Creates the window, using the application-defined properties.
 		m_Window = IWindow::Create(m_App->GetWindowProperties());
 		m_Window->SetEventCallback(std::bind(&VXCore::OnWindowEvent, this, std::placeholders::_1, std::placeholders::_2));
+
+		m_Gui = new VXGui(this);
+		m_Gui->Startup();
 
 		// Starts the user-defined application.
 		m_App->Start();
@@ -49,9 +55,17 @@ namespace Vortex
 		delete m_App;
 		m_App = nullptr;
 
+		// Deletes the Vortex GUI Module.
+		m_Gui->Shutdown();
+		delete m_Gui;
+
+		// Destroys the layer stack.
+		delete m_LayerStack;
+
 		// Destroys the window.
 		delete m_Window;
 
+		// Destroys Graphics Context.
 		IGraphicsContext::Destroy();
 
 		// Deletes the Vortex Input Module.
@@ -71,6 +85,11 @@ namespace Vortex
 
 		// Calls the application tick.
 		m_App->Tick(deltaTime);
+
+		// Calls the layer stack tick.
+		m_LayerStack->Tick(deltaTime);
+
+		m_Gui->Tick(deltaTime);
 	}
 
 	void VXCore::RunTickLoop()
@@ -106,7 +125,11 @@ namespace Vortex
 		m_QuitMutex.lock();
 
 		// Makes sure no one else is keeping the Module running.
-		if (m_CanQuit) m_IsTicking = false;
+		if (m_CanQuit)
+		{
+			m_IsTicking = false;
+			m_Input->Quit();
+		}
 		else m_WantsQuit = true;
 
 		m_QuitMutex.unlock();
@@ -151,6 +174,8 @@ namespace Vortex
 		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(std::bind(&VXInput::MDCEvent, m_Input, std::placeholders::_1));
 		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
 
+		m_LayerStack->PassEvent(event);
+
 		// Passes the event to the app if it hasn't been handled already.
 		if (!event.IsHandled() && m_App)
 			m_App->OnEvent(event);
@@ -159,13 +184,13 @@ namespace Vortex
 	VXCore::VXCore()
 	{
 		/*
-			We are replacing constructors and destructor with Startup() and Shutdown() methods 
+			We are replacing constructors and destructors with Startup() and Shutdown() methods 
 			so that we don 't have to keep reallocating memory for the Module if it is being started and stopped many times.
 		*/
 	}
 
 	VXCore::~VXCore()
 	{
-
+		
 	}
 }
