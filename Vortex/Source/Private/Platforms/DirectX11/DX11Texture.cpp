@@ -49,6 +49,7 @@ namespace Vortex
 	{
 		IGraphicsContext::Get()->UnregisterPrimitive(this);
 		p_Texture->Release();
+		if (p_ShaderResource) p_ShaderResource->Release();
 	}
 
 	void DX11Texture::Bind()
@@ -61,12 +62,16 @@ namespace Vortex
 		if (p_Texture) p_Texture->Release();
 		p_Texture = nullptr;
 
+		if (p_ShaderResource) p_ShaderResource->Release();
+		p_ShaderResource = nullptr;
+
 		Create(m_Width, m_Height, m_Usage);
 	}
 
 	void DX11Texture::Resize(int width, int height)
 	{
 		p_Texture->Release();
+		p_ShaderResource->Release();
 
 		Create(width, height, m_Usage);
 	}
@@ -113,6 +118,8 @@ namespace Vortex
 		desc.MiscFlags = NULL;
 
 		context->GetDevice()->CreateTexture2D(&desc, NULL, &p_Texture);
+
+		context->GetDevice()->CreateShaderResourceView(p_Texture, NULL, &p_ShaderResource);
 
 		ENG_TRACE("Created texture.");
 	}

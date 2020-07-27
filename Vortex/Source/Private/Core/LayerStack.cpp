@@ -10,9 +10,12 @@ namespace Vortex
 
 	LayerStack::~LayerStack()
 	{
-		for (ILayer* layer : m_Layers)
+		size_t size = m_Layers.size();
+
+		for (int i = 0; i < size; i++)
 		{
-			delete layer;
+			delete m_Layers[0];
+			m_Layers[0] = nullptr;
 		}
 	}
 
@@ -49,6 +52,8 @@ namespace Vortex
 
 		for (ILayer* layer : m_Layers)
 		{
+			if (!layer) return;
+
 			layer->OnEvent(event);
 			if (event.IsHandled()) break;
 		}

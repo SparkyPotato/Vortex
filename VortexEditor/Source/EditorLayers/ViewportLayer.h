@@ -1,11 +1,10 @@
 #pragma once
 #include <VortexMinimal.h>
 
-
 class ViewportLayer : public Vortex::ILayer 
 {
 public:
-	ViewportLayer();
+	ViewportLayer(bool* isViewportCurrentlyOpen);
 	~ViewportLayer();
 
 	virtual void OnAttach() override;
@@ -15,5 +14,5 @@ public:
 	virtual void OnGuiRender() override;
 
 private:
-	
+	bool* m_IsOpen;
 };

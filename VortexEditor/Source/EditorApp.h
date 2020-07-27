@@ -19,5 +19,10 @@ public:
 	virtual void OnEvent(Vortex::IEvent& event) override;
 
 private:
-	
+	bool m_IsShortcutPressed = false;
+
+	bool m_IsViewportOpen = true;
+
+	bool m_ShowStats = false;
+	float m_DeltaTime = 0.f;
 };
