@@ -32,6 +32,7 @@ namespace Vortex
 		p_DepthStencil->Release();
 
 		if (m_Window) m_Window->SetFramebuffer(nullptr);
+		if (!m_Window) delete m_Texture;
 	}
 
 	void DX11Framebuffer::Bind()
@@ -137,6 +138,23 @@ namespace Vortex
 		m_Viewport.Height = (float) m_Texture->GetHeight();
 
 		context->GetContext()->Flush();
+	}
+
+	void DX11Framebuffer::SetWindow(IWindow* window)
+	{
+		if (m_Window)
+			m_Window->SetFramebuffer(nullptr);
+		else
+			delete m_Texture;
+
+		m_Window = window;
+
+		if (m_Window)
+		{
+			m_Window->SetFramebuffer(this);
+			m_Texture = reinterpret_cast<DX11Texture*>(m_Window->GetSwapChain()->GetBackBuffer());
+			Create(m_Texture);
+		}
 	}
 
 	void DX11Framebuffer::Clear(float r, float g, float b, float a)

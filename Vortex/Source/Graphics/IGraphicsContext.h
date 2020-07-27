@@ -11,7 +11,7 @@ namespace Vortex
 	class IGraphicsContext
 	{
 	public:
-		virtual ~IGraphicsContext() {}
+		virtual ~IGraphicsContext();
 
 		static void Create(GraphicsAPI api);
 		static void Destroy();

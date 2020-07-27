@@ -38,6 +38,25 @@ namespace Vortex
 		delete s_Context;
 	}
 
+	IGraphicsContext::~IGraphicsContext()
+	{
+		if (m_Primitives.size() != 0)
+		{
+			ENG_WARN("{0} Graphics Primitives have not been deleted.", m_Primitives.size());
+			ENG_WARN("Deleting...");
+
+			int size = m_Primitives.size();
+
+			for (int i = 0; i < size; i++)
+			{
+				delete m_Primitives[0];
+			}
+
+			ENG_WARN("Sleeping for 10 seconds before continuing...");
+			Sleep(10000);
+		}
+	}
+
 	void IGraphicsContext::Recreate()
 	{
 		GraphicsAPI api = s_Context->GetAPI();

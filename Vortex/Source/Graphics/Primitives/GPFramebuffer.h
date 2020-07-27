@@ -1,6 +1,6 @@
 #pragma once
 #include <Graphics/Primitives/GraphicsPrimitive.h>
-#include <Graphics/Primitives/GPSwapChain.h>
+#include <Core/IWindow.h>
 
 namespace Vortex
 {
@@ -14,6 +14,8 @@ namespace Vortex
 
 		virtual void Resize() = 0;
 		virtual void Resize(int width, int height) = 0;
+
+		virtual void SetWindow(IWindow* window) = 0;
 
 		virtual void Clear(float r, float g, float b, float a) = 0;
 
