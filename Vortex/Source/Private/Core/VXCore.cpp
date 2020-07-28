@@ -158,10 +158,6 @@ namespace Vortex
 
 	void VXCore::OnWindowEvent(IWindow* window, IEvent& event)
 	{
-		// Quit the application if the window was closed.
-		if (event.GetType() == EventType::WindowClose)
-			Quit();
-
 		EventDispatcher dispatcher = EventDispatcher(event);
 
 		// Dispatches all Input related events to the Vortex Input Module.
@@ -179,6 +175,10 @@ namespace Vortex
 		// Passes the event to the app if it hasn't been handled already.
 		if (!event.IsHandled() && m_App)
 			m_App->OnEvent(event);
+
+		// Quit the application if the window was closed. Doing it after everything so they have a chance to block the quit.
+		if (event.GetType() == EventType::WindowClose)
+			Quit();
 	}
 
 	VXCore::VXCore()

@@ -34,10 +34,24 @@ namespace Vortex
 
 	}
 
+	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType)
+	{
+		m_Binders.emplace_back(keyFunction, key, bindingType);
+	}
+
 	bool VXInput::KDEvent(const KeyDownEvent& event)
 	{
 		// Set the bit to true.
 		m_KeyStates[event.GetKeyCode()] = 1;
+
+		for (auto binder : m_Binders)
+		{
+			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Pressed)
+			{
+				binder.function();
+			}
+		}
+
 		return true;
 	}
 
@@ -45,6 +59,15 @@ namespace Vortex
 	{
 		// Set the bit to false.
 		m_KeyStates[event.GetKeyCode()] = 0;
+
+		for (auto binder : m_Binders)
+		{
+			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Released)
+			{
+				binder.function();
+			}
+		}
+
 		return true;
 	}
 

@@ -20,7 +20,7 @@ private:
 	void LoadPrefs(std::string file);
 	void SavePrefs(std::string file);
 
-	bool m_IsShortcutPressed = false;
+	bool m_IsClosing = false;
 
 	bool m_IsViewportOpen = true;
 

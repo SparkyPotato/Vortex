@@ -23,8 +23,8 @@ EditorApp::~EditorApp()
 
 void EditorApp::Start()
 {
-	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
+	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 }
 
 void EditorApp::Tick(float deltaTime)
@@ -104,7 +104,10 @@ void EditorApp::OnGuiRender()
 
 void EditorApp::OnEvent(Vortex::IEvent& event)
 {
-	
+	if (event.GetType() == EventType::WindowClose)
+	{
+		m_IsClosing = true;
+	}
 }
 
 void EditorApp::LoadPrefs(std::string file)

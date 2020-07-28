@@ -24,6 +24,12 @@ namespace Vortex
 		float scrollDelta = 0.f;
 	};
 
+	enum class Binding
+	{
+		Pressed,
+		Released
+	};
+
 	/*
 		Vortex Module that handles all Input Events.
 	*/
@@ -61,7 +67,20 @@ namespace Vortex
 		*/
 		bool IsKeyDown(InputCode keyCode) { return m_KeyStates[(int) keyCode]; }
 
+		void AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType);
+
 	private:
+		struct Binder
+		{
+			Binder(std::function<void(void)> fn, InputCode iCode, Binding bnding)
+				: function(fn), code(iCode), binding(bnding)
+			{}
+
+			std::function<void(void)> function;
+			InputCode code;
+			Binding binding;
+		};
+
 		/*
 			Messily named functions that deal with getting events from the Vortex Core.
 		*/
@@ -76,5 +95,7 @@ namespace Vortex
 		// Key states and mouse state.
 		std::bitset<256> m_KeyStates;
 		MouseState m_MouseState;
+
+		std::vector<Binder> m_Binders;
 	};
 }

@@ -158,8 +158,6 @@ namespace Vortex
 
 	LRESULT WWindow::BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam);
-
 		// Sets up thunking to the correct window.
 		if (message == WM_NCCREATE)
 		{
@@ -176,8 +174,6 @@ namespace Vortex
 
 	LRESULT WWindow::WindowThunk(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam);
-
 		// Call the window-specific message handler.
 		WWindow* p_Window = reinterpret_cast<WWindow*>(GetWindowLongPtr(window, GWLP_USERDATA));
 		return p_Window->WindowProc(window, message, wParam, lParam);
@@ -185,6 +181,8 @@ namespace Vortex
 
 	LRESULT WWindow::WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam);
+
 		// Message handler
 		switch (message)
 		{
