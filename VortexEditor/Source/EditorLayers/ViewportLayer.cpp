@@ -37,14 +37,19 @@ void ViewportLayer::OnGuiRender()
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.f, 0.f, 0.f, 1.f });
 	if (*m_IsOpen)
 	{
-		ImGui::Begin("Viewport", m_IsOpen, windowFlags);
-
-		if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+		if (ImGui::Begin("Viewport", m_IsOpen, windowFlags))
 		{
-			ImGui::Text("The viewport doesn't really do anything yet...");
-		}
+			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			{
+				ImGui::Text("The viewport doesn't really do anything yet...");
+			}
 
-		ImGui::End();
+			ImGui::End();
+		}
+		else
+		{
+			ImGui::End();
+		}
 	}
 	ImGui::PopStyleVar(1);
 	ImGui::PopStyleColor(1);

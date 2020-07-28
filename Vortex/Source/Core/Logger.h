@@ -18,14 +18,21 @@ namespace Vortex
 			Error = 3
 		};
 
+		enum class LogLoc
+		{
+			Engine,
+			Client
+		};
+
 		struct Log
 		{
-			Log(std::string msg, LogLevel lvl)
-				: message(msg), level(lvl)
+			Log(std::string msg, LogLevel lvl, LogLoc loc)
+				: message(msg), level(lvl), location(loc)
 			{}
 
 			std::string message;
 			LogLevel level;
+			LogLoc location;
 		};
 
 		EditorSink() {}
@@ -41,6 +48,7 @@ namespace Vortex
 			
 			// Extremely crappy code to find the error message.
 			LogLevel logLevel = LogLevel::Trace;
+			LogLoc logLocation = LogLoc::Engine;
 			std::string string = fmt::to_string(formatted);
 
 			if (*(string.c_str() + 36) == 'i')
@@ -50,7 +58,10 @@ namespace Vortex
 			else if (*(string.c_str() + 36) == 'e')
 				logLevel = LogLevel::Error;
 
-			m_Logs.emplace_back(string, logLevel);
+			if (*(string.c_str() + 27) == 'C')
+				logLocation = LogLoc::Client;
+
+			m_Logs.emplace_back(string, logLevel, logLocation);
 		}
 
 		void flush_() override

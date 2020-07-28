@@ -1,4 +1,6 @@
 #include <EditorApp.h>
+#include <fstream>
+#include <filesystem>
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
 
@@ -11,12 +13,12 @@ IApplication* CreateApplication()
 
 EditorApp::EditorApp()
 {
-
+	LoadPrefs("Preferences/Editor.vxprefs");
 }
 
 EditorApp::~EditorApp()
 {
-	
+	SavePrefs("Preferences/Editor.vxprefs");
 }
 
 void EditorApp::Start()
@@ -72,7 +74,7 @@ void EditorApp::OnGuiRender()
 			ImGui::MenuItem("Viewport", "", &m_IsViewportOpen, true);
 			ImGui::Separator();
 			ImGui::MenuItem("Log", "", &m_IsLogOpen, true);
-			ImGui::MenuItem("Profiler", "", &m_ShowStats, true);
+			ImGui::MenuItem("Profiler", "", &m_ShowProfiler, true);
 
 			ImGui::EndMenu();
 		}
@@ -82,10 +84,10 @@ void EditorApp::OnGuiRender()
 	ImGui::End();
 
 	// Draw profiler window.
-	if (m_ShowStats)
+	if (m_ShowProfiler)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 200.f, 100.f });
-		if (ImGui::Begin("Profiler", &m_ShowStats))
+		if (ImGui::Begin("Profiler", &m_ShowProfiler))
 		{
 			ImGui::Text("Delta Time: %.3f ms", GCore->GetLastDeltaTime() * 1000.f);
 			ImGui::Text("FPS: %.1f", 1 / GCore->GetLastDeltaTime());
@@ -103,4 +105,61 @@ void EditorApp::OnGuiRender()
 void EditorApp::OnEvent(Vortex::IEvent& event)
 {
 	
+}
+
+void EditorApp::LoadPrefs(std::string file)
+{
+	std::ifstream prefsFile(file);
+
+	if (prefsFile.is_open())
+	{
+		std::string line;
+
+		getline(prefsFile, line);
+		line.erase(0, 8);
+		if (line == "1")
+			m_IsViewportOpen = true;
+		else
+			m_IsViewportOpen = false;
+
+		getline(prefsFile, line);
+		line.erase(0, 9);
+		if (line == "1")
+			m_IsLogOpen = true;
+		else
+			m_IsLogOpen = false;
+
+		getline(prefsFile, line);
+		line.erase(0, 10);
+		if (line == "1")
+			m_ShowProfiler = true;
+		else
+			m_ShowProfiler = false;
+
+		prefsFile.close();
+	}
+	else
+	{
+		VX_WARN("Couldn't open preferences file. Using default settings...");
+		auto path = std::filesystem::path("Preferences/");
+		std::filesystem::create_directory(path);
+	}
+}
+
+void EditorApp::SavePrefs(std::string file)
+{
+	std::ofstream prefsFile(file);
+
+	if (prefsFile.is_open())
+	{
+		prefsFile << "vpstate " << m_IsViewportOpen << "\n";
+		prefsFile << "logstate " << m_IsLogOpen << "\n";
+		prefsFile << "profstate " << m_ShowProfiler << "\n";
+
+		prefsFile.close();
+	}
+	else
+	{
+		VX_ERROR("Failed to write to preferences file! Not saving preferences.");
+	}
 }

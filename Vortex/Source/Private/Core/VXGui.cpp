@@ -15,6 +15,7 @@ namespace Vortex
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		io.DisplaySize = ImVec2((float) GCore->GetWindow()->GetProperties().width, (float) GCore->GetWindow()->GetProperties().height);
+		io.IniFilename = "Preferences/UILayout.vxprefs";
 
 		ImGui::StyleColorsDark();
 

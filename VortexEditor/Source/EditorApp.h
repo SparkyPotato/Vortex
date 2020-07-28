@@ -17,11 +17,14 @@ public:
 	virtual void OnEvent(Vortex::IEvent& event) override;
 
 private:
+	void LoadPrefs(std::string file);
+	void SavePrefs(std::string file);
+
 	bool m_IsShortcutPressed = false;
 
 	bool m_IsViewportOpen = true;
 
 	bool m_IsLogOpen = false;
 
-	bool m_ShowStats = false;
+	bool m_ShowProfiler = false;
 };

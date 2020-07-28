@@ -13,6 +13,8 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void OnGuiRender() override;
 
+	void ShowLogText();
+
 private:
 	bool* m_IsOpen;
 

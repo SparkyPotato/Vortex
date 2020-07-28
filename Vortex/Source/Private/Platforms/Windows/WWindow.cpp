@@ -195,8 +195,6 @@ namespace Vortex
 		}
 		case WM_SIZE:
 		{
-			// Resize the swap chain.
-			if (m_Framebuffer) m_Framebuffer->Resize();
 			m_Properties.width = LOWORD(lParam);
 			m_Properties.height = HIWORD(lParam);
 
@@ -207,6 +205,8 @@ namespace Vortex
 				m_Properties.isMaximized = true;
 				if (m_Callback) m_Callback(this, WindowMaximizeEvent());
 
+				// Resize the framebuffer.
+				if (m_Framebuffer) m_Framebuffer->Resize();
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;
@@ -218,6 +218,8 @@ namespace Vortex
 				m_Properties.isMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());
 
+				// Resize the framebuffer.
+				if (m_Framebuffer) m_Framebuffer->Resize();
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;
@@ -231,6 +233,8 @@ namespace Vortex
 					m_Properties.isMaximized = false;
 					if (m_Callback) m_Callback(this, WindowUnmaximizeEvent());
 
+					// Resize the framebuffer.
+					if (m_Framebuffer) m_Framebuffer->Resize();
 					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 					m_Properties.isResizing = false;
@@ -241,6 +245,8 @@ namespace Vortex
 					m_Properties.isMinimized = false;
 					if (m_Callback) m_Callback(this, WindowUnminimizeEvent());
 
+					// Resize the framebuffer.
+					if (m_Framebuffer) m_Framebuffer->Resize();
 					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 					m_Properties.isResizing = false;
@@ -296,6 +302,8 @@ namespace Vortex
 		{
 			if (m_Properties.isResizing)
 			{
+				// Resize the framebuffer.
+				if (m_Framebuffer) m_Framebuffer->Resize();
 				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;

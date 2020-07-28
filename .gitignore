@@ -7,5 +7,10 @@
 **/Binaries/*
 **/Intermediate/*
 
-# Config Files
+# Preferences
 *.ini
+**/Preferences/*
+*.vxprefs
+
+# Temporaries
+**/Temp/*
