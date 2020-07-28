@@ -49,6 +49,11 @@ namespace Vortex
 		virtual void AllowQuit() override;
 
 		/*
+			Returns the last frame delta.
+		*/
+		float GetLastDeltaTime() { return m_DeltaTime; }
+
+		/*
 			Returns the application owned by the Vortex Core. You shouldn't be needing this.
 		*/
 		IApplication* GetApplication() { return m_App; }

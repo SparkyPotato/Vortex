@@ -5,6 +5,9 @@
 namespace Vortex
 {
 	class VXCore;
+	class VXInput;
+	class LayerStack;
+	class IWindow;
 
 	/*
 		CreateApplication function prototype:-
@@ -24,9 +27,11 @@ namespace Vortex
 		/*
 			Binds the modules to the application, so you can use GCore to get a pointer to the Vortex Core Module.
 		*/
-		void BindToModule(VXCore* core) 
+		void BindToModule(VXCore* core, VXInput* input, LayerStack* layerStack) 
 		{ 
 			GCore = core;
+			GInput = input;
+			GLayerStack = layerStack;
 		}
 		/*
 			Gets the properties for the main window to be created.
@@ -55,6 +60,10 @@ namespace Vortex
 	protected:
 		// Pointer to the Vortex Core Module that owns the application.
 		VXCore* GCore;
+		// Pointer to Vortex Input Module.
+		VXInput* GInput;
+		// Pointer to the layer stack.
+		LayerStack* GLayerStack;
 	};
 }
 

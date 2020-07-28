@@ -1,8 +1,6 @@
 #pragma once
 #include <VortexMinimal.h>
 
-#include <EditorLayers/ViewportLayer.h>
-
 class EditorApp : public Vortex::IApplication
 {
 public:
@@ -23,6 +21,7 @@ private:
 
 	bool m_IsViewportOpen = true;
 
+	bool m_IsLogOpen = false;
+
 	bool m_ShowStats = false;
-	float m_DeltaTime = 0.f;
 };

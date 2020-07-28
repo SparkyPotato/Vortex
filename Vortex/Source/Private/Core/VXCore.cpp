@@ -22,16 +22,16 @@ namespace Vortex
 		m_Input = new VXInput();
 		m_Input->Startup();
 
-		// Create the Graphics Context.
-		IGraphicsContext::Create(GraphicsAPI::DirectX11);
+		// Creates the layer stack.
+		m_LayerStack = new LayerStack();
 
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
-		m_App->BindToModule(this);
+		m_App->BindToModule(this, m_Input, m_LayerStack);
 		ENG_TRACE("Created Client application.");
 
-		// Creates the layer stack.
-		m_LayerStack = new LayerStack();
+		// Create the Graphics Context.
+		IGraphicsContext::Create(GraphicsAPI::DirectX11);
 
 		// Creates the window, using the application-defined properties.
 		m_Window = IWindow::Create(m_App->GetWindowProperties());

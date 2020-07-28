@@ -10,18 +10,17 @@ namespace Vortex
 
 	LayerStack::~LayerStack()
 	{
-		size_t size = m_Layers.size();
-
-		for (int i = 0; i < size; i++)
+		for (auto layer : m_Layers)
 		{
-			delete m_Layers[0];
-			m_Layers[0] = nullptr;
+			layer->OnDetach();
+			delete layer;
 		}
 	}
 
 	void LayerStack::PushLayer(ILayer* layer)
 	{
-		m_Layers.push_back(layer);
+		m_Layers.emplace_back(layer);
+		layer->OnAttach();
 	}
 
 	void LayerStack::PopLayer(ILayer* layer)

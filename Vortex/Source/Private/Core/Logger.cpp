@@ -5,12 +5,20 @@ namespace Vortex
 {
 	std::shared_ptr<spdlog::logger> Logger::s_EngineLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
+	std::shared_ptr<EditorSink_mt> Logger::s_EditorSink;
 
 	void Logger::Init()
 	{
+		// Creating spdlog sinks.
+		s_EditorSink = std::make_shared<EditorSink_mt>();
+
+		std::vector<spdlog::sink_ptr> sinks;
+		sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+		sinks.push_back(s_EditorSink);
+
 		// Creating spdlog loggers.
-		s_EngineLogger = spdlog::stdout_color_mt("Engine");
-		s_ClientLogger = spdlog::stdout_color_mt("Client");
+		s_EngineLogger = std::make_shared<spdlog::logger>("Engine", begin(sinks), end(sinks));
+		s_ClientLogger = std::make_shared<spdlog::logger>("Client", begin(sinks), end(sinks));
 
 		if (s_EngineLogger == nullptr)
 			throw std::exception("Failed to create Engine Logger.");

@@ -21,6 +21,9 @@ project "ImGui"
 		"imgui_demo.cpp"
 	}
 	
+	optimize "on"
+	symbols "off"
+	
 	filter "system:windows"
 		systemversion "latest"
 		

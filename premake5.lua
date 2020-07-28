@@ -85,7 +85,7 @@ project "Vortex"
 		
 project "VortexEditor"
 	location "VortexEditor"
-	kind "ConsoleApp"
+	kind "WindowedApp"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
