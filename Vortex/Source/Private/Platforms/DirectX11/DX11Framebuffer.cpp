@@ -39,8 +39,8 @@ namespace Vortex
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
 		// Bind the Render Target and make sure the viewport dimensions are correct.
-		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, p_DepthStencil);
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
+		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, p_DepthStencil);
 	}
 
 	void DX11Framebuffer::Recreate()
@@ -164,7 +164,7 @@ namespace Vortex
 		// Clear Render Target to the color.
 		context->GetContext()->ClearRenderTargetView(p_RenderTarget, color);
 		// Set the Depth Stencil to infinity.
-		context->GetContext()->ClearDepthStencilView(p_DepthStencil, NULL, 1.f, NULL);
+		context->GetContext()->ClearDepthStencilView(p_DepthStencil, D3D11_CLEAR_DEPTH, 1.f, 0);
 	}
 
 	void DX11Framebuffer::Create(DX11Texture* texture)

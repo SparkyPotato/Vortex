@@ -34,7 +34,7 @@ void EditorApp::Tick(float deltaTime)
 
 void EditorApp::OnGuiRender()
 {
-	// Create main ImGui window.
+	//Create main ImGui window.
 	bool showMainWindow = true;
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;

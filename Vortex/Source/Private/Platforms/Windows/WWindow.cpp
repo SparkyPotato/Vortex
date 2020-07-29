@@ -211,7 +211,7 @@ namespace Vortex
 			}
 			else if (wParam == SIZE_MINIMIZED)
 			{
-				ENG_TRACE("Window \"{0}\" minimized.", m_Properties.name)
+				ENG_TRACE("Window \"{0}\" minimized.", m_Properties.name);
 				m_Properties.isMinimized = true;
 				m_Properties.isMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());

@@ -3,8 +3,9 @@
 #include <Graphics/IGraphicsContext.h>
 
 #include <d3d11.h>
-#include <wrl.h>
+#include <d3dcompiler.h>
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "DXGI.lib")
 
 namespace Vortex
@@ -14,6 +15,8 @@ namespace Vortex
 	public:
 		DX11GraphicsContext();
 		virtual ~DX11GraphicsContext();
+
+		virtual void Draw(int drawSize) override;
 
 		ID3D11Device* GetDevice() { return p_Device; }
 		ID3D11DeviceContext* GetContext() { return p_Context; }

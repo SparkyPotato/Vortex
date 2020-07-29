@@ -45,6 +45,8 @@ namespace Vortex
 		if (FAILED(hr))
 			throw std::exception("Failed to create DXGI 1.1 Factory.");
 
+		p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 		ENG_TRACE("Created DirectX 11 Context.");
 	}
 
@@ -60,23 +62,29 @@ namespace Vortex
 		p_Context = nullptr;
 
 		// If we're debugging the engine, print live objects.
-		#ifdef CFG_DEBUGENG
 		PrintDebugInfo();
-		#endif
 
 		p_Device->Release();
 		p_Device = nullptr;
 	}
 
+	void DX11GraphicsContext::Draw(int drawSize)
+	{
+		p_Context->DrawIndexed(drawSize, 0, 0);
+	}
+
 	void DX11GraphicsContext::PrintDebugInfo()
 	{
+		#ifdef CFG_DEBUGENG
 		ID3D11Debug* debug;
 		// Get the debug device from the device.
-		p_Device->QueryInterface(__uuidof(ID3D11Debug), (void**)&debug);
+		p_Device->QueryInterface(__uuidof(ID3D11Debug), (void**) &debug);
+
 		// Report all live objects with all details.
 		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 
 		debug->Release();
+		#endif
 	}
 }
 

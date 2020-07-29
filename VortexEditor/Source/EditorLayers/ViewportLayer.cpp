@@ -19,17 +19,55 @@ void ViewportLayer::OnAttach()
 {
 	m_Texture = GPTexture::Create(300, 300);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
+
+	unsigned int indices[] = { 0, 1, 2 };
+	m_IBuffer = GPIndexBuffer::Create(indices, 3);
+
+	struct Vertex
+	{
+		float x, y, z;
+	};
+
+	Vertex vertices[] =
+	{
+		{ -0.5f, -0.5f, 0.5f },
+		{ 0.f, 0.5f, 0.5f },
+		{ 0.5f, -0.5f, 0.5f }
+	};
+	VertexLayout layout =
+	{
+		VertexElement("POSITION", ShaderDataType::float3),
+	};
+
+	m_VBuffer = GPVertexBuffer::Create(vertices, 3, layout);
+
+	m_VShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl");
+
+	m_PShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/BasicPixelShader.hlsl");
 }
 
 void ViewportLayer::OnDetach()
 {
 	delete m_Framebuffer;
+	delete m_VBuffer;
+	delete m_IBuffer;
+
+	delete m_VShader;
+	delete m_PShader;
 }
 
 void ViewportLayer::Tick(float deltaTime)
 {
 	m_Framebuffer->Bind();
-	m_Framebuffer->Clear(0, 0, 0, 1);
+	m_Framebuffer->Clear(0, 0.5, 0.5, 1);
+
+	m_VShader->Bind();
+	m_PShader->Bind();
+
+	m_VBuffer->Bind();
+	m_IBuffer->Bind();
+
+	IGraphicsContext::Get()->Draw(3);
 }
 
 void ViewportLayer::OnGuiRender()

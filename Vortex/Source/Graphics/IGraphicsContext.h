@@ -50,6 +50,8 @@ namespace Vortex
 		void RegisterPrimitive(GraphicsPrimitive* primitive);
 		void UnregisterPrimitive(GraphicsPrimitive* primitive);
 
+		virtual void Draw(int drawSize) = 0;
+
 	private:
 		static IGraphicsContext* s_Context;
 
