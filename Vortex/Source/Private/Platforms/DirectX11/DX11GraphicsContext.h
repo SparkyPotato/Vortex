@@ -10,6 +10,9 @@
 
 namespace Vortex
 {
+	class DX11VertexBuffer;
+	class DX11VertexShader;
+
 	class DX11GraphicsContext : public IGraphicsContext
 	{
 	public:
@@ -24,10 +27,18 @@ namespace Vortex
 
 		void PrintDebugInfo();
 
+		void SetVertexBuffer(DX11VertexBuffer* buffer);
+		void SetVertexShader(DX11VertexShader* shader);
+
+		void GenerateInputLayout();
+
 	private:
 		ID3D11Device* p_Device;
 		ID3D11DeviceContext* p_Context;
 		IDXGIFactory1* p_Factory;
+
+		DX11VertexBuffer* m_CurrentVertexBuffer = nullptr;
+		DX11VertexShader* m_CurrentVertexShader = nullptr;
 	};
 }
 

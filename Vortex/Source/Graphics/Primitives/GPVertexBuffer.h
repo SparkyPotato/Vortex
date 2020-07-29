@@ -12,7 +12,6 @@ namespace Vortex
 		float3 = sizeof(float) * 3,
 		float4 = sizeof(float) * 4,
 
-		float2x2 = sizeof(float) * 2 * 2,
 		float3x3 = sizeof(float) * 3 * 3,
 		float4x4 = sizeof(float) * 4 * 4,
 	};
@@ -25,6 +24,12 @@ namespace Vortex
 
 		int GetSize() { return (int) dataType; }
 
+		bool operator==(const VertexElement& other) const
+		{
+			if (semantic == other.semantic && dataType == other.dataType) return true;
+			return false;
+		}
+
 		std::string semantic;
 		ShaderDataType dataType;
 		size_t offset;
@@ -36,7 +41,29 @@ namespace Vortex
 			: m_Elements(elements)
 		{ Calculate(); }
 
-		int GetStride() { return m_Size; }
+		int GetStride() const { return m_Size; }
+		int GetElementCount() const
+		{
+			int i = 0;
+			for (auto element : m_Elements)
+			{
+				if ((int) element.dataType < sizeof(float) * 3 * 3)
+					i++;
+				else if (element.dataType == ShaderDataType::float3x3)
+					i += 3;
+				else
+					i += 4;
+			}
+			return i;
+		}
+
+		const std::vector<VertexElement>& GetElements() const { return m_Elements; }
+
+		bool operator!=(const VertexLayout& other) const
+		{
+			if (other.m_Elements == m_Elements) return false;
+			return true;
+		}
 
 	private:
 		void Calculate()
@@ -64,5 +91,7 @@ namespace Vortex
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;
+
+		virtual const VertexLayout& GetLayout() = 0;
 	};
 }

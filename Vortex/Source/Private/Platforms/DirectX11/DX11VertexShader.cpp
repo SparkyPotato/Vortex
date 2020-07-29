@@ -23,17 +23,9 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
 
-		D3D11_INPUT_ELEMENT_DESC desc[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-
-		ID3D11InputLayout* layout;
-		context->GetDevice()->CreateInputLayout(desc, 1, (void*) m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(), &layout);
-		context->GetContext()->IASetInputLayout(layout);
-		layout->Release();
-
 		context->GetContext()->VSSetShader(m_Shader, NULL, 0);
+
+		context->SetVertexShader(this);
 	}
 
 	void DX11VertexShader::Recreate()
@@ -54,7 +46,7 @@ namespace Vortex
 		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &wfile[0], size_needed);
 
 		HRESULT hr = D3DCompileFromFile(wfile.c_str(), NULL, NULL, "main", "vs_5_0", NULL, NULL, &m_Blob, NULL);
-		if (FAILED(hr))
+		if (hr == E_FAIL)
 		{
 			throw std::exception("Failed to compile shader!");
 		}

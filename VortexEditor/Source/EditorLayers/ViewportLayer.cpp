@@ -26,17 +26,19 @@ void ViewportLayer::OnAttach()
 	struct Vertex
 	{
 		float x, y, z;
+		float r, g, b, a;
 	};
 
 	Vertex vertices[] =
 	{
-		{ -0.5f, -0.5f, 0.5f },
-		{ 0.f, 0.5f, 0.5f },
-		{ 0.5f, -0.5f, 0.5f }
+		{ -0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f },
+		{ 0.f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f },
+		{ 0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f }
 	};
 	VertexLayout layout =
 	{
 		VertexElement("POSITION", ShaderDataType::float3),
+		VertexElement("COLOR", ShaderDataType::float4)
 	};
 
 	m_VBuffer = GPVertexBuffer::Create(vertices, 3, layout);

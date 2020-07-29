@@ -25,6 +25,8 @@ namespace Vortex
 		UINT stride = m_Layout.GetStride();
 		UINT offset = 0;
 		context->GetContext()->IASetVertexBuffers(0, 1, &m_Buffer, &stride, &offset);
+
+		context->SetVertexBuffer(this);
 	}
 
 	void DX11VertexBuffer::Recreate()

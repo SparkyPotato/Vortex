@@ -13,6 +13,8 @@ namespace Vortex
 		virtual void Bind() override;
 		virtual void Recreate() override;
 
+		virtual const VertexLayout& GetLayout() override { return m_Layout; }
+
 	private:
 		void Create(void* vertices, int count);
 

@@ -1,6 +1,8 @@
 #include <VXpch.h>
 #ifdef PLATFORM_WINDOWS
 #include <Private/Platforms/DirectX11/DX11GraphicsContext.h>
+#include <Private/Platforms/DirectX11/DX11VertexBuffer.h>
+#include <Private/Platforms/DirectX11/DX11VertexShader.h>
 
 namespace Vortex
 {
@@ -85,6 +87,123 @@ namespace Vortex
 
 		debug->Release();
 		#endif
+	}
+
+	void DX11GraphicsContext::SetVertexBuffer(DX11VertexBuffer* buffer)
+	{
+		if (m_CurrentVertexBuffer)
+		{
+			if (buffer->GetLayout() != m_CurrentVertexBuffer->GetLayout())
+			{
+				m_CurrentVertexBuffer = buffer;
+				GenerateInputLayout();
+			}
+		}
+		else
+		{
+			m_CurrentVertexBuffer = buffer;
+			GenerateInputLayout();
+		}
+	}
+
+	void DX11GraphicsContext::SetVertexShader(DX11VertexShader* shader)
+	{
+		m_CurrentVertexShader = shader;
+	}
+
+	void DX11GraphicsContext::GenerateInputLayout()
+	{
+		int size = m_CurrentVertexBuffer->GetLayout().GetElementCount();
+		D3D11_INPUT_ELEMENT_DESC* desc = new D3D11_INPUT_ELEMENT_DESC[size];
+		std::string* semantics = new std::string[size];
+
+		int i = 0;
+		for (auto element : m_CurrentVertexBuffer->GetLayout().GetElements())
+		{
+			switch (element.dataType)
+			{
+			case ShaderDataType::float1:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R32_FLOAT;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				break;
+			case ShaderDataType::float2:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R32G32_FLOAT;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				i++;
+				break;
+			case ShaderDataType::float3:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				i++;
+				break;
+			case ShaderDataType::float4:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				i++;
+				break;
+			case ShaderDataType::float3x3:
+				for (int j = 0; j < 3; j++)
+				{
+					semantics[i] = element.semantic;
+					desc[i].SemanticName = semantics[i].c_str();
+					desc[i].SemanticIndex = j;
+					desc[i].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+					desc[i].InputSlot = 0;
+					desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+					desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+					desc[i].InstanceDataStepRate = 0;
+					i++;
+				}
+				break;
+			case ShaderDataType::float4x4:
+				for (int j = 0; j < 4; j++)
+				{
+					semantics[i] = element.semantic;
+					desc[i].SemanticName = semantics[i].c_str();
+					desc[i].SemanticIndex = j;
+					desc[i].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+					desc[i].InputSlot = 0;
+					desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+					desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+					desc[i].InstanceDataStepRate = 0;
+					i++;
+				}
+				break;
+			}
+		}
+
+		ID3D11InputLayout* layout;
+		p_Device->CreateInputLayout(desc, size, m_CurrentVertexShader->GetBlob()->GetBufferPointer(),
+			m_CurrentVertexShader->GetBlob()->GetBufferSize(), &layout);
+		p_Context->IASetInputLayout(layout);
+		layout->Release();
+
+		delete[] desc;
+		delete[] semantics;
 	}
 }
 

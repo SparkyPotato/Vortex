@@ -31,7 +31,9 @@ namespace Vortex
 		p_DepthStencil->Release();
 
 		// If not on a window, delete the texture.
-		if (!m_Window) delete m_Texture;
+		if (!m_Window && m_Texture) delete m_Texture;
+
+		m_Texture = nullptr;
 	}
 
 	void DX11Framebuffer::Bind()

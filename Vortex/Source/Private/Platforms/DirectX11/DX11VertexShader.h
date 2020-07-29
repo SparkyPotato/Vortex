@@ -13,6 +13,8 @@ namespace Vortex
 		virtual void Bind() override;
 		virtual void Recreate() override;
 
+		ID3DBlob* GetBlob() { return m_Blob; }
+
 	private:
 		void Create(std::string file);
 
