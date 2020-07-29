@@ -13,11 +13,14 @@
 // Logging functionality.
 #include <Core/Logger.h>
 
+// Profiling functionality
+#include <Core/Profiler.h>
+
 // Vortex Core Module
 #include <Core/Modules/VXCore.h>
 
 // Application from which to derive.
-#include <Core/IApplication.h>
+#include <Core/Application.h>
 
 // Application layers
-#include <Core/Layers/ILayer.h>
+#include <Core/Layers/Layer.h>

@@ -6,7 +6,7 @@
 
 using namespace Vortex;
 
-IApplication* CreateApplication()
+Application* CreateApplication()
 {
 	return new EditorApp();
 }
@@ -94,6 +94,11 @@ void EditorApp::OnGuiRender()
 
 			ImGui::Separator();
 
+			for (auto profile : Profiler::GetProfiles())
+			{
+				ImGui::Text("%s: %.3f ms", profile.first.c_str(), profile.second);
+			}
+
 			ImGui::End();
 		}
 		else
@@ -104,7 +109,7 @@ void EditorApp::OnGuiRender()
 	}
 }
 
-void EditorApp::OnEvent(Vortex::IEvent& event)
+void EditorApp::OnEvent(Vortex::Event& event)
 {
 	if (event.GetType() == EventType::WindowClose)
 	{

@@ -1,12 +1,12 @@
 #pragma once
-#include <Core/IModule.h>
+#include <Core/Module.h>
 
 namespace Vortex
 {
 	class VXCore;
-	class IWindow;
+	class Window;
 
-	class VXGui : public IModule
+	class VXGui : public Module
 	{
 	public:
 		VXGui(VXCore* core);
@@ -24,6 +24,6 @@ namespace Vortex
 	private:
 		VXCore* GCore;
 
-		IWindow* m_Window;
+		Window* m_Window;
 	};
 }

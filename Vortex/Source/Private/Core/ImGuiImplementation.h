@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/IWindow.h>
+#include <Core/Window.h>
 #ifdef PLATFORM_WINDOWS
 #include <Private/Platforms/Windows/WWindow.h>
 #include <Private/Platforms/DirectX11/DX11GraphicsContext.h>
@@ -14,22 +14,22 @@ namespace Vortex
 	class ImGuiImplementation
 	{
 	public:
-		static void Init(IWindow* window)
+		static void Init(Window* window)
 		{
 			#ifdef PLATFORM_WINDOWS
 			ImGui_ImplWin32_Init(reinterpret_cast<WWindow*>(window)->GetWindowHandle());
 			#endif
 
-			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
-				DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+				DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 				ImGui_ImplDX11_Init(context->GetDevice(), context->GetContext());
 			}
 		}
 
 		static void NewFrame()
 		{
-			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				ImGui_ImplDX11_NewFrame();
 			}
@@ -41,7 +41,7 @@ namespace Vortex
 
 		static void Draw(ImDrawData* data)
 		{
-			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				ImGui_ImplDX11_RenderDrawData(data);
 			}
@@ -53,7 +53,7 @@ namespace Vortex
 			ImGui_ImplWin32_Shutdown();
 			#endif
 
-			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				ImGui_ImplDX11_Shutdown();
 			}

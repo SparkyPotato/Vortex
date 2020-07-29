@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <Core/IEvent.h>
+#include <Core/Event.h>
 #include <Graphics/Primitives/GPSwapChain.h>
 
 namespace Vortex
@@ -11,7 +11,7 @@ namespace Vortex
 		Class that defines the basic Window Interface.
 		Implementation details vary per platform.
 	*/
-	class IWindow
+	class Window
 	{
 	public:
 		/*
@@ -67,14 +67,14 @@ namespace Vortex
 			int syncInterval = 0;
 		};
 
-		virtual ~IWindow() {}
+		virtual ~Window() {}
 
 		/*
 			Implemented for each platform implementation so that the correct subclass is instantiated.
 		*/
-		static IWindow* Create(const IWindow::Properties& properties);
+		static Window* Create(const Window::Properties& properties);
 
-		typedef std::function<void(IWindow*, IEvent&)> EventCallback;
+		typedef std::function<void(Window*, Event&)> EventCallback;
 
 		/*
 			Sets the callback for window events.

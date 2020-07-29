@@ -1,8 +1,8 @@
 #pragma once
-#include <Core/IModule.h>
+#include <Core/Module.h>
 #include <Core/Modules/VXInput.h>
 #include <Core/Modules/VXGui.h>
-#include <Core/IApplication.h>
+#include <Core/Application.h>
 #include <Core/Layers/LayerStack.h>
 
 namespace Vortex
@@ -10,7 +10,7 @@ namespace Vortex
 	/*
 		The Core Vortex Module. It starts all other Modules and deals with Window Management.
 	*/
-	class VXCore : public IModule
+	class VXCore : public Module
 	{
 	public:
 		VXCore();
@@ -56,7 +56,7 @@ namespace Vortex
 		/*
 			Returns the application owned by the Vortex Core. You shouldn't be needing this.
 		*/
-		IApplication* GetApplication() { return m_App; }
+		Application* GetApplication() { return m_App; }
 
 		/*
 			Returns the Vortex Input Module.
@@ -71,14 +71,14 @@ namespace Vortex
 		/*
 			Returns the window.
 		*/
-		IWindow* GetWindow() { return m_Window; }
+		Window* GetWindow() { return m_Window; }
 
 	private:
 		/*
 			Called back on every window event. 
 			Passes on event to respective modules and then to the application.
 		*/
-		void OnWindowEvent(IWindow* window, IEvent& event);
+		void OnWindowEvent(Window* window, Event& event);
 
 		// The Vortex Input Module.
 		VXInput* m_Input = nullptr;
@@ -86,11 +86,11 @@ namespace Vortex
 		VXGui* m_Gui = nullptr;
 
 		// A pointer to the user-defined application.
-		IApplication* m_App = nullptr;
+		Application* m_App = nullptr;
 		// A pointer to the application layer stack.
 		LayerStack* m_LayerStack = nullptr;
 		// A pointer to the main application window.
-		IWindow* m_Window = nullptr;
+		Window* m_Window = nullptr;
 
 		// Is the application running?
 		bool m_IsTicking = false;

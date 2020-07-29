@@ -1,12 +1,12 @@
 #pragma once
-#include <Core/IEvent.h>
+#include <Core/Event.h>
 
 namespace Vortex
 {
 	/*
 		Generated on window close.
 	*/
-	class WindowCloseEvent : public IEvent
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() {}
@@ -17,7 +17,7 @@ namespace Vortex
 	/*
 		Generated on window minimize.
 	*/
-	class WindowMinimizeEvent : public IEvent
+	class WindowMinimizeEvent : public Event
 	{
 	public:
 		WindowMinimizeEvent() {}
@@ -28,7 +28,7 @@ namespace Vortex
 	/*
 		Generated on window unminimize.
 	*/
-	class WindowUnminimizeEvent : public IEvent
+	class WindowUnminimizeEvent : public Event
 	{
 	public:
 		WindowUnminimizeEvent() {}
@@ -39,7 +39,7 @@ namespace Vortex
 	/*
 		Generated on window maximize.
 	*/
-	class WindowMaximizeEvent : public IEvent
+	class WindowMaximizeEvent : public Event
 	{
 	public:
 		WindowMaximizeEvent() {}
@@ -50,7 +50,7 @@ namespace Vortex
 	/*
 		Generated on window unmaximize.
 	*/
-	class WindowUnmaximizeEvent : public IEvent
+	class WindowUnmaximizeEvent : public Event
 	{
 	public:
 		WindowUnmaximizeEvent() {}
@@ -61,7 +61,7 @@ namespace Vortex
 	/*
 		Generated on window resize.
 	*/
-	class WindowResizeEvent : public IEvent
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(int width, int height)
@@ -81,7 +81,7 @@ namespace Vortex
 	/*
 		Generated on window move.
 	*/
-	class WindowMoveEvent : public IEvent
+	class WindowMoveEvent : public Event
 	{
 	public:
 		WindowMoveEvent(int x, int y) 
@@ -101,7 +101,7 @@ namespace Vortex
 	/*
 		Generated on window focus gain.
 	*/
-	class WindowActivateEvent : public IEvent
+	class WindowActivateEvent : public Event
 	{
 	public:
 		WindowActivateEvent() {}
@@ -112,7 +112,7 @@ namespace Vortex
 	/*
 		Generated on window focus loss.
 	*/
-	class WindowDeactivateEvent : public IEvent
+	class WindowDeactivateEvent : public Event
 	{
 	public:
 		WindowDeactivateEvent() {}

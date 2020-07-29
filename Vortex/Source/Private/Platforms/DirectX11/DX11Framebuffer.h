@@ -8,7 +8,7 @@ namespace Vortex
 	{
 	public:
 		DX11Framebuffer(GPTexture* texture);
-		DX11Framebuffer(IWindow* window);
+		DX11Framebuffer(Window* window);
 		virtual ~DX11Framebuffer();
 
 		virtual void Bind() override;
@@ -27,6 +27,6 @@ namespace Vortex
 		D3D11_VIEWPORT m_Viewport;
 
 		DX11Texture* m_Texture = nullptr;
-		IWindow* m_Window = nullptr;
+		Window* m_Window = nullptr;
 	};
 }

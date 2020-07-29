@@ -6,21 +6,21 @@ namespace Vortex
 	DX11VertexBuffer::DX11VertexBuffer(void* vertices, int count, const VertexLayout& layout)
 		: m_Layout(layout)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(vertices, count);
 	}
 
 	DX11VertexBuffer::~DX11VertexBuffer()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Buffer->Release();
 	}
 
 	void DX11VertexBuffer::Bind()
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		UINT stride = m_Layout.GetStride();
 		UINT offset = 0;
@@ -36,7 +36,7 @@ namespace Vortex
 
 	void DX11VertexBuffer::Create(void* vertices, int count)
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));

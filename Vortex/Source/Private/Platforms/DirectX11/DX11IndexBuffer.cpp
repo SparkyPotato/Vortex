@@ -5,21 +5,21 @@ namespace Vortex
 {
 	DX11IndexBuffer::DX11IndexBuffer(unsigned int* indices, int count)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(indices, count);
 	}
 
 	DX11IndexBuffer::~DX11IndexBuffer()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Buffer->Release();
 	}
 
 	void DX11IndexBuffer::Bind()
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		context->GetContext()->IASetIndexBuffer(m_Buffer, DXGI_FORMAT_R32_UINT, 0);
 	}
@@ -31,7 +31,7 @@ namespace Vortex
 
 	void DX11IndexBuffer::Create(unsigned int* indices, int count)
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));

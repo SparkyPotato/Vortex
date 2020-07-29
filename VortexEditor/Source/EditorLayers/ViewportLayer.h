@@ -5,7 +5,7 @@
 #include <Graphics/Primitives/GPVertexShader.h>
 #include <Graphics/Primitives/GPPixelShader.h>
 
-class ViewportLayer : public Vortex::ILayer 
+class ViewportLayer : public Vortex::Layer 
 {
 public:
 	ViewportLayer(bool* isViewportCurrentlyOpen);

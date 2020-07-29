@@ -6,14 +6,14 @@ namespace Vortex
 	DX11VertexShader::DX11VertexShader(std::string file)
 		: m_File(file)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(m_File);
 	}
 
 	DX11VertexShader::~DX11VertexShader()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Shader->Release();
 		m_Blob->Release();
@@ -21,7 +21,7 @@ namespace Vortex
 
 	void DX11VertexShader::Bind()
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		context->GetContext()->VSSetShader(m_Shader, NULL, 0);
 
@@ -38,7 +38,7 @@ namespace Vortex
 
 	void DX11VertexShader::Create(std::string file)
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		std::string temp = file;
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);

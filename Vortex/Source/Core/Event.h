@@ -17,7 +17,7 @@ namespace Vortex
 	/*
 		Base class of all events. 
 	*/
-	class IEvent
+	class Event
 	{
 	public:
 		friend class EventDispatcher;
@@ -45,7 +45,7 @@ namespace Vortex
 		/*
 			Create on and event to be dispatched.
 		*/
-		EventDispatcher(IEvent& event)
+		EventDispatcher(Event& event)
 			: m_Event(event)
 		{}
 
@@ -74,7 +74,7 @@ namespace Vortex
 		}
 
 	private:
-		IEvent& m_Event;
+		Event& m_Event;
 	};
 
 	/*

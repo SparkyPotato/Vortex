@@ -4,7 +4,7 @@
 
 namespace Vortex
 {
-	class IWindow;
+	class Window;
 
 	/*
 		A swap chain. Is created by every window, and swapped when IWindow::Update is called.
@@ -17,7 +17,7 @@ namespace Vortex
 		/*
 			Creates a swap chain on the specified window.
 		*/
-		static GPSwapChain* Create(IWindow* window);
+		static GPSwapChain* Create(Window* window);
 
 		/*
 			Binding a swap chain does nothing yet!

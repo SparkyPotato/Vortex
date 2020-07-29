@@ -1,5 +1,5 @@
 #include <VXpch.h>
-#include <Graphics/IGraphicsContext.h>
+#include <Graphics/GraphicsContext.h>
 #ifdef PLATFORM_WINDOWS
 #include <Private/Platforms/DirectX11/DX11GraphicsContext.h>
 #endif
@@ -7,9 +7,9 @@
 
 namespace Vortex
 {
-	IGraphicsContext* IGraphicsContext::s_Context = nullptr;
+	GraphicsContext* GraphicsContext::s_Context = nullptr;
 
-	void IGraphicsContext::Create(GraphicsAPI api)
+	void GraphicsContext::Create(GraphicsAPI api)
 	{
 		// Throw an exception if the Context has already been created.
 		if (s_Context) throw std::exception("Graphics context has already been created!");
@@ -36,7 +36,7 @@ namespace Vortex
 		}
 	}
 
-	void IGraphicsContext::Destroy()
+	void GraphicsContext::Destroy()
 	{
 		// If all primitives have not been deleted...
 		if (s_Context->m_Primitives.size() != 0)
@@ -62,7 +62,7 @@ namespace Vortex
 		s_Context = nullptr;
 	}
 
-	void IGraphicsContext::Recreate()
+	void GraphicsContext::Recreate()
 	{
 		GraphicsAPI api = s_Context->GetAPI();
 		std::vector<GraphicsPrimitive*> primitives = s_Context->m_Primitives;
@@ -81,13 +81,13 @@ namespace Vortex
 		}
 	}
 
-	void IGraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
+	void GraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
 	{
 		ENG_TRACE("Registered primitive.");
 		m_Primitives.push_back(primitive);
 	}
 
-	void IGraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
+	void GraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
 	{
 		ENG_TRACE("Unregistered primitive.");
 		auto i = std::find(s_Context->m_Primitives.begin(), s_Context->m_Primitives.end(), primitive);

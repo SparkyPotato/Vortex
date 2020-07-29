@@ -5,16 +5,16 @@
 
 namespace Vortex
 {
-	DX11SwapChain::DX11SwapChain(IWindow* window)
+	DX11SwapChain::DX11SwapChain(Window* window)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 		m_Window = reinterpret_cast<WWindow*>(window);
 		Recreate();
 	}
 
 	DX11SwapChain::~DX11SwapChain()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		delete m_BackBuffer;
 		p_SwapChain->Release();
@@ -29,7 +29,7 @@ namespace Vortex
 	{
 		ENG_TRACE("Creating DirectX 11 Swap Chain.");
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		if (p_SwapChain) p_SwapChain->Release();
 		p_SwapChain = nullptr;
@@ -98,7 +98,7 @@ namespace Vortex
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			ENG_WARN("Device removed. Driver probably crashed. Recreating graphics device.");
-			IGraphicsContext::Recreate();
+			GraphicsContext::Recreate();
 		}
 	}
 }

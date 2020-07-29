@@ -1,6 +1,6 @@
 #pragma once
 #ifdef PLATFORM_WINDOWS
-#include <Graphics/IGraphicsContext.h>
+#include <Graphics/GraphicsContext.h>
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -13,7 +13,7 @@ namespace Vortex
 	class DX11VertexBuffer;
 	class DX11VertexShader;
 
-	class DX11GraphicsContext : public IGraphicsContext
+	class DX11GraphicsContext : public GraphicsContext
 	{
 	public:
 		DX11GraphicsContext();

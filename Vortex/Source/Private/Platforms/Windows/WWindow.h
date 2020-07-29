@@ -1,14 +1,14 @@
 #pragma once
 
 #ifdef PLATFORM_WINDOWS
-#include <Core/IWindow.h>
+#include <Core/Window.h>
 
 namespace Vortex
 {
 	/*
 		Windows Implementation of IWindow.
 	*/
-	class WWindow : public IWindow
+	class WWindow : public Window
 	{
 	public:
 		WWindow(const Properties& properties);

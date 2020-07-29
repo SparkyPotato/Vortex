@@ -8,7 +8,7 @@ namespace Vortex
 {
 	GPIndexBuffer* GPIndexBuffer::Create(unsigned int* indices, int count)
 	{
-		switch (IGraphicsContext::Get()->GetAPI())
+		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case GraphicsAPI::DirectX11:
 			return new DX11IndexBuffer(indices, count);

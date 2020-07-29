@@ -8,7 +8,7 @@ namespace Vortex
 	class DX11SwapChain : public GPSwapChain
 	{
 	public:
-		DX11SwapChain(IWindow* window);
+		DX11SwapChain(Window* window);
 		virtual ~DX11SwapChain();
 
 		virtual void Bind() override;

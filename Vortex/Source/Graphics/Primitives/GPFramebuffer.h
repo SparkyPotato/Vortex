@@ -1,6 +1,6 @@
 #pragma once
 #include <Graphics/Primitives/GraphicsPrimitive.h>
-#include <Core/IWindow.h>
+#include <Core/Window.h>
 
 namespace Vortex
 {
@@ -52,6 +52,6 @@ namespace Vortex
 			Creates a framebuffer from a window.
 			The framebuffer does not own the window, but instead works together with it for resizing.
 		*/
-		static GPFramebuffer* Create(IWindow* window);
+		static GPFramebuffer* Create(Window* window);
 	};
 }

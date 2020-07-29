@@ -6,7 +6,7 @@ namespace Vortex
 {
 	GPFramebuffer* GPFramebuffer::Create(GPTexture* texture)
 	{
-		switch (IGraphicsContext::Get()->GetAPI())
+		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case  GraphicsAPI::DirectX11:
 			return new DX11Framebuffer(texture);
@@ -15,9 +15,9 @@ namespace Vortex
 		}
 	}
 
-	GPFramebuffer* GPFramebuffer::Create(IWindow* window)
+	GPFramebuffer* GPFramebuffer::Create(Window* window)
 	{
-		switch (IGraphicsContext::Get()->GetAPI())
+		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case  GraphicsAPI::DirectX11:
 			return new DX11Framebuffer(window);

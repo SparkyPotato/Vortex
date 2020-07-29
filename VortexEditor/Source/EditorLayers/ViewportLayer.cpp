@@ -31,9 +31,9 @@ void ViewportLayer::OnAttach()
 
 	Vertex vertices[] =
 	{
-		{ -0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f },
-		{ 0.f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f },
-		{ 0.5f, -0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f }
+		{ -0.5f, -0.5f, 0.5f, 0.976f, 0.521f, 0.545f, 1.f },
+		{ 0.f, 0.5f, 0.5f, 0.827f, 0.207f, 0.058f, 1.f },
+		{ 0.5f, -0.5f, 0.5f, 0.38f, 0.074f, 0.027f, 1.f }
 	};
 	VertexLayout layout =
 	{
@@ -69,7 +69,7 @@ void ViewportLayer::Tick(float deltaTime)
 	m_VBuffer->Bind();
 	m_IBuffer->Bind();
 
-	IGraphicsContext::Get()->Draw(3);
+	GraphicsContext::Get()->Draw(3);
 }
 
 void ViewportLayer::OnGuiRender()
@@ -84,7 +84,7 @@ void ViewportLayer::OnGuiRender()
 		{
 			HandleResize((int) ImGui::GetContentRegionAvail().x, (int) ImGui::GetContentRegionAvail().y);
 
-			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
+			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				DX11Texture* texture = reinterpret_cast<DX11Texture*>(m_Texture);
 				ImGui::Image((void*)texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() });

@@ -5,13 +5,13 @@ namespace Vortex
 	/*
 		Base class of all Vortex Modules. 
 	*/
-	class IModule
+	class Module
 	{
 	public:
 		/* 
 			Virtual destructor so we can have a list of Modules and make sure they're deleted properly.
 		*/
-		virtual ~IModule() {}
+		virtual ~Module() {}
 
 		/*
 			Startup the module instance.

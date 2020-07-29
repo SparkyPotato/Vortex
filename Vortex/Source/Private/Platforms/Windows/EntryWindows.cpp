@@ -25,6 +25,8 @@ int wmain(int argc, wchar_t** argv)
 		Sleep(10000);
 		return -1;
 	}
+
+	Profiler::Init();
 	
 	// Register Window Class.
 	try { WWindow::RegisterWindowClass(); }
@@ -46,9 +48,9 @@ int wmain(int argc, wchar_t** argv)
 		ENG_ERROR("Error: {0}", e.what());
 
 		// If we have created the Graphics Context, make sure to clean everything up before exiting.
-		if (IGraphicsContext::Get())
+		if (GraphicsContext::Get())
 		{
-			IGraphicsContext::Destroy();
+			GraphicsContext::Destroy();
 		}
 
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
@@ -64,9 +66,9 @@ int wmain(int argc, wchar_t** argv)
 		ENG_ERROR("Error: {0}", e.what());
 
 		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
-		if (IGraphicsContext::Get())
+		if (GraphicsContext::Get())
 		{
-			IGraphicsContext::Destroy();
+			GraphicsContext::Destroy();
 		}
 
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
@@ -82,15 +84,17 @@ int wmain(int argc, wchar_t** argv)
 		ENG_ERROR("Error: {0}", e.what());
 
 		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
-		if (IGraphicsContext::Get())
+		if (GraphicsContext::Get())
 		{
-			IGraphicsContext::Destroy();
+			GraphicsContext::Destroy();
 		}
 
 		ENG_ERROR("Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
 	}
+
+	Profiler::Shutdown();
 
 	delete core;
 	ENG_TRACE("Exiting...");

@@ -17,13 +17,13 @@ namespace Vortex
 		}
 	}
 
-	void LayerStack::PushLayer(ILayer* layer)
+	void LayerStack::PushLayer(Layer* layer)
 	{
 		m_Layers.emplace_back(layer);
 		layer->OnAttach();
 	}
 
-	void LayerStack::PopLayer(ILayer* layer)
+	void LayerStack::PopLayer(Layer* layer)
 	{
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
 
@@ -45,11 +45,11 @@ namespace Vortex
 		}
 	}
 
-	void LayerStack::PassEvent(IEvent& event)
+	void LayerStack::PassEvent(Event& event)
 	{
 		if (event.IsHandled()) return;
 
-		for (ILayer* layer : m_Layers)
+		for (Layer* layer : m_Layers)
 		{
 			if (!layer) return;
 

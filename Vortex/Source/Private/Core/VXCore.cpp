@@ -1,7 +1,7 @@
 #include <VXpch.h>
 #include <Core/Modules/VXCore.h>
 #include <Core/Events/WindowEvent.h>
-#include <Graphics/IGraphicsContext.h>
+#include <Graphics/GraphicsContext.h>
 
 namespace Vortex
 {
@@ -31,10 +31,10 @@ namespace Vortex
 		ENG_TRACE("Created Client application.");
 
 		// Create the Graphics Context.
-		IGraphicsContext::Create(GraphicsAPI::DirectX11);
+		GraphicsContext::Create(GraphicsAPI::DirectX11);
 
 		// Creates the window, using the application-defined properties.
-		m_Window = IWindow::Create(m_App->GetWindowProperties());
+		m_Window = Window::Create(m_App->GetWindowProperties());
 		m_Window->SetEventCallback(std::bind(&VXCore::OnWindowEvent, this, std::placeholders::_1, std::placeholders::_2));
 
 		m_Gui = new VXGui(this);
@@ -66,7 +66,7 @@ namespace Vortex
 		delete m_Window;
 
 		// Destroys Graphics Context.
-		IGraphicsContext::Destroy();
+		GraphicsContext::Destroy();
 
 		// Deletes the Vortex Input Module.
 		m_Input->Shutdown();
@@ -77,6 +77,7 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
+		ENG_PROFILE("Tick");
 		// Ticks the Vortex Input module.
 		m_Input->Tick(deltaTime);
 
@@ -156,7 +157,7 @@ namespace Vortex
 		m_QuitMutex.unlock();
 	}
 
-	void VXCore::OnWindowEvent(IWindow* window, IEvent& event)
+	void VXCore::OnWindowEvent(Window* window, Event& event)
 	{
 		EventDispatcher dispatcher = EventDispatcher(event);
 

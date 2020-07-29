@@ -1,12 +1,12 @@
 #pragma once
-#include <Core/IEvent.h>
+#include <Core/Event.h>
 
 namespace Vortex
 {
-	class ILayer
+	class Layer
 	{
 	public:
-		virtual ~ILayer() {}
+		virtual ~Layer() {}
 
 		/*
 			Called when the layer is attached to a layer stack.
@@ -29,6 +29,6 @@ namespace Vortex
 			Called on all unhandled events from layers above it on the layer stack.
 			Doesn't recieve events handled by the Vortex Core.
 		*/
-		virtual void OnEvent(IEvent& event) {}
+		virtual void OnEvent(Event& event) {}
 	};
 }

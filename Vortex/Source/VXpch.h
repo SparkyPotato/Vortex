@@ -2,9 +2,10 @@
 
 #include <Core/Core.h>
 
-// So that logging and input can be accessed from anywhere in the engine.
+// So that logging, input, and profiling can be accessed from anywhere in the engine.
 #include <Core/InputCode.h>
 #include <Core/Logger.h>
+#include <Core/Profiler.h>
 
 #include <string>
 #include <vector>

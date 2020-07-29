@@ -1,7 +1,7 @@
 #pragma once
 #include <VortexMinimal.h>
 
-class LogLayer : public Vortex::ILayer
+class LogLayer : public Vortex::Layer
 {
 public:
 	LogLayer(bool* isLogCurrentlyOpen);

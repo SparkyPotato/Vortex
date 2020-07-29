@@ -10,7 +10,7 @@ namespace Vortex
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
 
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(width, height, TextureUsage::ColorTexture);
 
@@ -24,7 +24,7 @@ namespace Vortex
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
 
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(width, height, usage);
 
@@ -49,7 +49,7 @@ namespace Vortex
 		else
 			throw std::exception("Tried to create texture with an illegal D3D11 Texture.");
 
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		texture->AddRef();
 		p_Texture = texture;
@@ -59,7 +59,7 @@ namespace Vortex
 
 	DX11Texture::~DX11Texture()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 		p_Texture->Release();
 		if (p_ShaderResource) p_ShaderResource->Release();
 	}
@@ -87,7 +87,7 @@ namespace Vortex
 
 		Create(width, height, m_Usage);
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 		context->GetContext()->Flush();
 	}
 
@@ -114,7 +114,7 @@ namespace Vortex
 			format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		}
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		D3D11_TEXTURE2D_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));

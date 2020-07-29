@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/IWindow.h>
+#include <Core/Window.h>
 #include <imgui.h>
 
 namespace Vortex
@@ -7,7 +7,7 @@ namespace Vortex
 	class VXCore;
 	class VXInput;
 	class LayerStack;
-	class IWindow;
+	class Window;
 
 	/*
 		CreateApplication function prototype:-
@@ -20,10 +20,10 @@ namespace Vortex
 		Defines the application and its functionality.
 		Create a derived class, and a CreateApplication function.
 	*/
-	class IApplication
+	class Application
 	{
 	public:
-		virtual ~IApplication() {}
+		virtual ~Application() {}
 		/*
 			Binds the modules to the application, so you can use GCore to get a pointer to the Vortex Core Module.
 		*/
@@ -36,7 +36,7 @@ namespace Vortex
 		/*
 			Gets the properties for the main window to be created.
 		*/
-		virtual IWindow::Properties GetWindowProperties() { return IWindow::Properties(); }
+		virtual Window::Properties GetWindowProperties() { return Window::Properties(); }
 
 		/*
 			Called on application startup.
@@ -55,7 +55,7 @@ namespace Vortex
 		/*
 			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overriden.
 		*/
-		virtual void OnEvent(IEvent& event) {};
+		virtual void OnEvent(Event& event) {};
 
 	protected:
 		// Pointer to the Vortex Core Module that owns the application.
@@ -70,4 +70,4 @@ namespace Vortex
 /*
 	Defined in the client to create the application.
 */
-extern Vortex::IApplication* CreateApplication();
+extern Vortex::Application* CreateApplication();

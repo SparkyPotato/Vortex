@@ -1,13 +1,13 @@
 #pragma once
 #include <Core/InputCode.h>
-#include <Core/IEvent.h>
+#include <Core/Event.h>
 
 namespace Vortex
 {
 	/*
 		Base class for key events. Stores a key code.
 	*/
-	class KeyEvent : public IEvent
+	class KeyEvent : public Event
 	{
 	public:
 		int GetKeyCode() const { return m_Code; }
@@ -49,7 +49,7 @@ namespace Vortex
 	/*
 		Generated on mouse move. Handles by Vortex Input Module.
 	*/
-	class MouseMoveEvent : public IEvent
+	class MouseMoveEvent : public Event
 	{
 	public:
 		MouseMoveEvent(int x, int y)
@@ -69,7 +69,7 @@ namespace Vortex
 	/*
 		Generated on mouse button press. Handles by Vortex Input Module.
 	*/
-	class MouseButtonDownEvent : public IEvent
+	class MouseButtonDownEvent : public Event
 	{
 	public:
 		MouseButtonDownEvent(int mouseButton)
@@ -87,7 +87,7 @@ namespace Vortex
 	/*
 		Generated on mouse button release. Handles by Vortex Input Module.
 	*/
-	class MouseButtonUpEvent : public IEvent
+	class MouseButtonUpEvent : public Event
 	{
 	public:
 		MouseButtonUpEvent(int mouseButton)
@@ -105,7 +105,7 @@ namespace Vortex
 	/*
 		Generated on mouse button double click. Handles by Vortex Input Module.
 	*/
-	class MouseButtonDoubleClickEvent : public IEvent
+	class MouseButtonDoubleClickEvent : public Event
 	{
 	public:
 		MouseButtonDoubleClickEvent(int mouseButton)
@@ -123,7 +123,7 @@ namespace Vortex
 	/*
 		Generated on mouse scroll. Handles by Vortex Input Module.
 	*/
-	class MouseScrollEvent : public IEvent
+	class MouseScrollEvent : public Event
 	{
 	public:
 		MouseScrollEvent(float scrollSteps)

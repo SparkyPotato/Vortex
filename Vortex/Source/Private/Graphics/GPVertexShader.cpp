@@ -8,7 +8,7 @@ namespace Vortex
 {
 	GPVertexShader* GPVertexShader::Create(std::string file)
 	{
-		switch (IGraphicsContext::Get()->GetAPI())
+		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case GraphicsAPI::DirectX11:
 			return new DX11VertexShader(file);

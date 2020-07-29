@@ -15,10 +15,10 @@ namespace Vortex
 		Singleton base class for all API-specific implementations. 
 		All GraphicsPrimitives have to be written for each API as well.
 	*/
-	class IGraphicsContext
+	class GraphicsContext
 	{
 	public:
-		virtual ~IGraphicsContext() {}
+		virtual ~GraphicsContext() {}
 		/*
 			Creates the singleton with the API given.
 		*/
@@ -36,7 +36,7 @@ namespace Vortex
 			Getter for the singleton. 
 			Can be nullptr if the Context wasn't created yet!
 		*/
-		static IGraphicsContext* Get() { return s_Context; }
+		static GraphicsContext* Get() { return s_Context; }
 
 		/*
 			Returns the current Render API.
@@ -53,7 +53,7 @@ namespace Vortex
 		virtual void Draw(int drawSize) = 0;
 
 	private:
-		static IGraphicsContext* s_Context;
+		static GraphicsContext* s_Context;
 
 		GraphicsAPI m_API;
 		// Holds every primitive currently registered with the Graphics Context.

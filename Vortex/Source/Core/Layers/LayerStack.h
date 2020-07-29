@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <Core/Layers/ILayer.h>
+#include <Core/Layers/Layer.h>
 
 namespace Vortex
 {
@@ -14,12 +14,12 @@ namespace Vortex
 			Pushes a layer onto the bottom of the layer stack.
 			Once pushed in, the layer stack owns all layers and will delete it on destruction.
 		*/
-		void PushLayer(ILayer* layer);
+		void PushLayer(Layer* layer);
 		/*
 			Pops a layer from the layer stack.
 			Once popped, it's the application's responsibility to manage the layer.
 		*/
-		void PopLayer(ILayer* layer);
+		void PopLayer(Layer* layer);
 
 		/*
 			Ticks all owned layers.
@@ -28,13 +28,13 @@ namespace Vortex
 		/*
 			Passes the event through all layers if it isn't handled.
 		*/
-		void PassEvent(IEvent& event);
+		void PassEvent(Event& event);
 		/*
 			Renders ImGui for all layers.
 		*/
 		void RenderGui();
 
 	private:
-		std::vector<ILayer*> m_Layers;
+		std::vector<Layer*> m_Layers;
 	};
 }

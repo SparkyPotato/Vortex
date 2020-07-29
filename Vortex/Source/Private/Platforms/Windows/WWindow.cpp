@@ -11,13 +11,13 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace Vortex
 {
-	IWindow* IWindow::Create(const IWindow::Properties& properties)
+	Window* Window::Create(const Window::Properties& properties)
 	{
 		// Create the WWindow.
 		return new WWindow(properties);
 	}
 
-	WWindow::WWindow(const IWindow::Properties& properties)
+	WWindow::WWindow(const Window::Properties& properties)
 		: m_Properties(properties)
 	{
 		ENG_TRACE("Creating window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);

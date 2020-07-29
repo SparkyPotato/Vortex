@@ -1,21 +1,21 @@
 #include <VXpch.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
-#include <Core/IWindow.h>
+#include <Core/Window.h>
 
 namespace Vortex
 {
 	DX11Framebuffer::DX11Framebuffer(GPTexture* texture)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		m_Texture = reinterpret_cast<DX11Texture*>(texture);
 
 		Create(m_Texture);
 	}
 
-	DX11Framebuffer::DX11Framebuffer(IWindow* window)
+	DX11Framebuffer::DX11Framebuffer(Window* window)
 	{
-		IGraphicsContext::Get()->RegisterPrimitive(this);
+		GraphicsContext::Get()->RegisterPrimitive(this);
 
 		m_Window = window;
 
@@ -25,7 +25,7 @@ namespace Vortex
 
 	DX11Framebuffer::~DX11Framebuffer()
 	{
-		IGraphicsContext::Get()->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		p_RenderTarget->Release();
 		p_DepthStencil->Release();
@@ -38,7 +38,7 @@ namespace Vortex
 
 	void DX11Framebuffer::Bind()
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		// Bind the Render Target and make sure the viewport dimensions are correct.
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
@@ -58,7 +58,7 @@ namespace Vortex
 			return;
 		}
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		// Recreate Depth Stencil from width and height.
 		p_DepthStencil->Release();
@@ -110,7 +110,7 @@ namespace Vortex
 			return;
 		}
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		// Remove references to the back buffer.
 		p_RenderTarget->Release();
@@ -159,7 +159,7 @@ namespace Vortex
 
 	void DX11Framebuffer::Clear(float r, float g, float b, float a)
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		float color[4] = { r, g, b, a };
 
@@ -173,7 +173,7 @@ namespace Vortex
 	{
 		ENG_TRACE("Creating DirectX 11 Framebuffer.");
 
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		// Create Render Target.
 		context->GetDevice()->CreateRenderTargetView(texture->GetTexture(), NULL, &p_RenderTarget);

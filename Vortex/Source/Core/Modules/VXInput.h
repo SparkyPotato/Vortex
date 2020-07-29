@@ -1,6 +1,6 @@
 #pragma once
 #include <bitset>
-#include <Core/IModule.h>
+#include <Core/Module.h>
 #include <Core/Events/InputEvent.h>
 
 namespace Vortex
@@ -33,7 +33,7 @@ namespace Vortex
 	/*
 		Vortex Module that handles all Input Events.
 	*/
-	class VXInput : public IModule
+	class VXInput : public Module
 	{
 	public:
 		friend class VXCore;
