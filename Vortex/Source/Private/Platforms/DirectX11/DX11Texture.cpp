@@ -5,26 +5,36 @@ namespace Vortex
 {
 	DX11Texture::DX11Texture(int width, int height)
 	{
+		ENG_TRACE("Creating texture.");
+
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
 
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(width, height, TextureUsage::ColorTexture);
+
+		ENG_TRACE("Created texture.");
 	}
 
 	DX11Texture::DX11Texture(int width, int height, TextureUsage usage)
 	{
+		ENG_TRACE("Creating texture.");
+
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
 
 		IGraphicsContext::Get()->RegisterPrimitive(this);
 
 		Create(width, height, usage);
+
+		ENG_TRACE("Created texture.");
 	}
 
 	DX11Texture::DX11Texture(ID3D11Texture2D* texture)
 	{
+		ENG_TRACE("Creating texture.");
+
 		D3D11_TEXTURE2D_DESC desc;
 		texture->GetDesc(&desc);
 		m_Width = desc.Width;
@@ -43,6 +53,8 @@ namespace Vortex
 
 		texture->AddRef();
 		p_Texture = texture;
+
+		ENG_TRACE("Created texture.");
 	}
 
 	DX11Texture::~DX11Texture()
@@ -74,12 +86,13 @@ namespace Vortex
 		p_ShaderResource->Release();
 
 		Create(width, height, m_Usage);
+
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(IGraphicsContext::Get());
+		context->GetContext()->Flush();
 	}
 
 	void DX11Texture::Create(int width, int height, TextureUsage usage)
 	{
-		ENG_TRACE("Creating texture.");
-
 		m_Width = width;
 		m_Height = height;
 		m_Usage = usage;
@@ -120,7 +133,5 @@ namespace Vortex
 		context->GetDevice()->CreateTexture2D(&desc, NULL, &p_Texture);
 
 		context->GetDevice()->CreateShaderResourceView(p_Texture, NULL, &p_ShaderResource);
-
-		ENG_TRACE("Created texture.");
 	}
 }

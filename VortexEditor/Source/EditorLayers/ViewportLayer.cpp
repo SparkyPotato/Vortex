@@ -1,4 +1,6 @@
 #include <EditorLayers/ViewportLayer.h>
+#include <Private/Platforms/DirectX11/DX11Texture.h>
+#include <Private/Platforms/DirectX11/DX11Framebuffer.h>
 
 using namespace Vortex;
 
@@ -15,33 +17,37 @@ ViewportLayer::~ViewportLayer()
 
 void ViewportLayer::OnAttach()
 {
-
+	m_Texture = GPTexture::Create(300, 300);
+	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 }
 
 void ViewportLayer::OnDetach()
 {
-
+	delete m_Framebuffer;
 }
 
 void ViewportLayer::Tick(float deltaTime)
 {
-
+	m_Framebuffer->Bind();
+	m_Framebuffer->Clear(0, 0, 0, 1);
 }
 
 void ViewportLayer::OnGuiRender()
 {
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse;
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 
 	// Create viewport.
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 400.f, 400.f });
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.f, 0.f, 0.f, 1.f });
 	if (*m_IsOpen)
 	{
 		if (ImGui::Begin("Viewport", m_IsOpen, windowFlags))
 		{
+			HandleResize((int) ImGui::GetContentRegionAvail().x, (int) ImGui::GetContentRegionAvail().y);
+
 			if (IGraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
-				ImGui::Text("The viewport doesn't really do anything yet...");
+				DX11Texture* texture = reinterpret_cast<DX11Texture*>(m_Texture);
+				ImGui::Image((void*)texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() });
 			}
 
 			ImGui::End();
@@ -52,5 +58,15 @@ void ViewportLayer::OnGuiRender()
 		}
 	}
 	ImGui::PopStyleVar(1);
-	ImGui::PopStyleColor(1);
 }
+
+void ViewportLayer::HandleResize(int width, int height)
+{
+	if (width <= 0 || height <= 0)
+		return;
+	else if (width != m_Texture->GetWidth() || height != m_Texture->GetHeight())
+	{
+		m_Framebuffer->Resize(width, height);
+	}
+}
+

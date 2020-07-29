@@ -14,9 +14,8 @@ namespace Vortex
 		s_EditorSink = std::make_shared<EditorSink_mt>();
 
 		std::vector<spdlog::sink_ptr> sinks;
-		sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
 		sinks.push_back(s_EditorSink);
-		sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt"));
+		sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true));
 
 		// Creating spdlog loggers.
 		s_EngineLogger = std::make_shared<spdlog::logger>("Engine", begin(sinks), end(sinks));

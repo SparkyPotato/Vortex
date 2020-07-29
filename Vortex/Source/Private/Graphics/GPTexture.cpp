@@ -17,4 +17,15 @@ namespace Vortex
 			return nullptr;
 		}
 	}
+
+	GPTexture* GPTexture::Create(int width, int height, TextureUsage usage)
+	{
+		switch (IGraphicsContext::Get()->GetAPI())
+		{
+		case GraphicsAPI::DirectX11:
+			return new DX11Texture(width, height, usage);
+		default:
+			return nullptr;
+		}
+	}
 }

@@ -92,6 +92,8 @@ void EditorApp::OnGuiRender()
 			ImGui::Text("Delta Time: %.3f ms", GCore->GetLastDeltaTime() * 1000.f);
 			ImGui::Text("FPS: %.1f", 1 / GCore->GetLastDeltaTime());
 
+			ImGui::Separator();
+
 			ImGui::End();
 		}
 		else
@@ -116,6 +118,8 @@ void EditorApp::LoadPrefs(std::string file)
 
 	if (prefsFile.is_open())
 	{
+		auto temp = std::filesystem::path("Temp/Log.txt");
+
 		std::string line;
 
 		getline(prefsFile, line);

@@ -35,12 +35,13 @@ void LogLayer::OnGuiRender()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 400.f, 150.f });
 		if (ImGui::Begin("Log", m_IsOpen))
 		{
-			const char* levels[] = { "Trace", "Info", "Warn", "Error" };
+			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
 
+			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x / 3.f);
 			// Engine log level dropdown.
 			if (ImGui::BeginCombo("Engine Log Level", levels[m_EngineLogLevel]))
 			{
-				for (int n = 0; n < 4; n++)
+				for (int n = 0; n < 5; n++)
 				{
 					const bool isSelected = (m_EngineLogLevel == n);
 					if (ImGui::Selectable(levels[n], isSelected))
@@ -53,10 +54,12 @@ void LogLayer::OnGuiRender()
 				ImGui::EndCombo();
 			}
 
+			ImGui::SameLine(ImGui::GetContentRegionAvail().x / 2.f);
+
 			// Client log level dropdown.
 			if (ImGui::BeginCombo("Client Log Level", levels[m_ClientLogLevel]))
 			{
-				for (int n = 0; n < 4; n++)
+				for (int n = 0; n < 5; n++)
 				{
 					const bool isSelected = (m_ClientLogLevel == n);
 					if (ImGui::Selectable(levels[n], isSelected))
@@ -68,6 +71,7 @@ void LogLayer::OnGuiRender()
 
 				ImGui::EndCombo();
 			}
+			ImGui::PopItemWidth();
 
 			// Clear log button.
 			if (ImGui::Button("Clear")) Logger::GetEditorSink()->Clear();
@@ -96,14 +100,17 @@ void LogLayer::OnGuiRender()
 
 void LogLayer::ShowLogText()
 {
-	std::vector<const EditorSink_mt::Log*> logs;
-	for (size_t i = 0; i < Logger::GetEditorSink()->GetLog().size(); i++)
-	{
-		const EditorSink_mt::Log* log = &(Logger::GetEditorSink()->GetLog()[i]);
+	std::vector<const Log*> logs;
+	Logger::GetEditorSink()->Shrink(250);
 
-		if (log->location == EditorSink_mt::LogLoc::Engine && (int) log->level >= m_EngineLogLevel)
+	size_t size = Logger::GetEditorSink()->GetLog().size();
+	for (int i = 0; i < size; i++)
+	{
+		const Log* log = &(Logger::GetEditorSink()->GetLog()[i]);
+
+		if (log->location == LoggerName::Engine && (int) log->level >= m_EngineLogLevel)
 			logs.push_back(log);
-		else if (log->location == EditorSink_mt::LogLoc::Client && (int) log->level >= m_ClientLogLevel)
+		else if (log->location == LoggerName::Client && (int) log->level >= m_ClientLogLevel)
 			logs.push_back(log);
 	}
 
@@ -116,11 +123,13 @@ void LogLayer::ShowLogText()
 		{
 			auto log = *logs[i];
 
-			if (log.level == EditorSink_mt::LogLevel::Trace)
+			if (log.level == spdlog::level::trace)
 				ImGui::TextColored({ 0.7f, 0.7f, 0.7f, 1.f }, log.message.c_str());
-			else if (log.level == EditorSink_mt::LogLevel::Info)
+			else if (log.level == spdlog::level::debug)
+				ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, log.message.c_str());
+			else if (log.level == spdlog::level::info)
 				ImGui::TextColored({ 0.f, 1.f, 0.f, 1.f }, log.message.c_str());
-			else if (log.level == EditorSink_mt::LogLevel::Warn)
+			else if (log.level == spdlog::level::warn)
 				ImGui::TextColored({ 1.f, 1.f, 0.f, 1.f }, log.message.c_str());
 			else
 				ImGui::TextColored({ 1.f, 0.f, 0.f, 1.f }, log.message.c_str());

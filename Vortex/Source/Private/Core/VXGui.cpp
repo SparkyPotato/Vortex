@@ -26,6 +26,57 @@ namespace Vortex
 			style.Colors[ImGuiCol_WindowBg].w = 1.f;
 		}
 
+		style.ChildRounding = 0.f;
+		style.GrabRounding = 3.f;
+		style.WindowRounding = 3.f;
+		style.ScrollbarRounding = 3.f;
+		style.FrameRounding = 3.f;
+		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+
+		ImVec4* colors = style.Colors;
+
+		colors[ImGuiCol_WindowBg] = { 0.f, 0.f, 0.f, 1.f };
+
+		colors[ImGuiCol_TitleBg] = { 0.f, 0.f, 0.f, 1.f };
+		colors[ImGuiCol_TitleBgActive] = { 0.1f, 0.1f, 0.1f, 1.f };
+
+		colors[ImGuiCol_DockingEmptyBg] = { 0.f, 0.f, 0.f, 1.f };
+		colors[ImGuiCol_MenuBarBg] = { 0.f, 0.f, 0.f, 1.f };
+
+		colors[ImGuiCol_PopupBg] = { 0.1f, 0.1f, 0.1f, 1.f };
+		colors[ImGuiCol_Border] = { 0.1f, 0.1f, 0.1f, 1.f };
+
+		colors[ImGuiCol_Separator] = { 0.2f, 0.2f, 0.2f, 1.f };
+		colors[ImGuiCol_SeparatorHovered] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_SeparatorActive] = { 0.25f, 0.282f, 0.788f, 1.f };
+
+		colors[ImGuiCol_ResizeGrip] = { 0.1f, 0.1f, 0.1f, 0.5f };
+		colors[ImGuiCol_ResizeGripHovered] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_ResizeGripActive] = { 0.25f, 0.282f, 0.788f, 1.f };
+
+		colors[ImGuiCol_ScrollbarBg] = { 0.1f, 0.1f, 0.1f, 0.5f };
+		colors[ImGuiCol_ScrollbarGrab] = { 0.2f, 0.2f, 0.2f, 1.f };
+		colors[ImGuiCol_ScrollbarGrabHovered] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_ScrollbarGrabActive] = { 0.25f, 0.282f, 0.788f, 1.f };
+
+		colors[ImGuiCol_Tab] = { 0.2f, 0.2f, 0.2f, 1.f };
+		colors[ImGuiCol_TabUnfocused] = { 0.2f, 0.2f, 0.2f, 1.f };
+		colors[ImGuiCol_TabUnfocusedActive] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_TabHovered] = { 0.25f, 0.282f, 0.788f, 1.f };
+		colors[ImGuiCol_TabActive] = { 0.313f, 0.352f, 0.988f, 1.f };
+
+		colors[ImGuiCol_Header] = { 0.2f, 0.2f, 0.25f, 1.f };
+		colors[ImGuiCol_HeaderHovered] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_HeaderActive] = { 0.25f, 0.282f, 0.788f, 1.f };
+
+		colors[ImGuiCol_FrameBg] = { 0.25f, 0.25f, 0.25f, 1.f };
+		colors[ImGuiCol_FrameBgHovered] = { 0.2f, 0.2f, 0.35f, 1.f };
+		colors[ImGuiCol_FrameBgActive] = { 0.25f, 0.282f, 0.788f, 1.f };
+
+		colors[ImGuiCol_Button] = { 0.3f, 0.3f, 0.3f, 1.f };
+		colors[ImGuiCol_ButtonHovered] = { 0.25f, 0.282f, 0.788f, 1.f };
+		colors[ImGuiCol_ButtonActive] = { 0.313f, 0.352f, 0.988f, 1.f };
+
 		ImGuiImplementation::Init(GCore->GetWindow());
 	}
 
@@ -54,7 +105,7 @@ namespace Vortex
 
 	void VXGui::Quit()
 	{
-
+		
 	}
 
 	void VXGui::BlockQuit()

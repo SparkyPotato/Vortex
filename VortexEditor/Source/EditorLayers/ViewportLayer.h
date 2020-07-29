@@ -14,5 +14,10 @@ public:
 	virtual void OnGuiRender() override;
 
 private:
+	void HandleResize(int width, int height);
+
 	bool* m_IsOpen;
+
+	Vortex::GPTexture* m_Texture;
+	Vortex::GPFramebuffer* m_Framebuffer;
 };

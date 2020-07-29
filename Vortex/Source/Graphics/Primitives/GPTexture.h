@@ -26,6 +26,10 @@ namespace Vortex
 			Creates a texture from the specified width and height.
 		*/
 		static GPTexture* Create(int width, int height);
+		/*
+			Creates a texture for a particular usage from the specified width and height.
+		*/
+		static GPTexture* Create(int width, int height, TextureUsage usage);
 
 		/*
 			Binding a texture does nothing.

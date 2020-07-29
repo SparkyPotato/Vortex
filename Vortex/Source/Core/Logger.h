@@ -2,42 +2,40 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/base_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Vortex
 {
+	enum class LoggerName
+	{
+		Engine,
+		Client
+	};
+
+	struct Log
+	{
+		Log(std::string msg, spdlog::level::level_enum lvl, LoggerName loc)
+			: message(msg), level(lvl), location(loc)
+		{}
+
+		std::string message;
+		spdlog::level::level_enum level;
+		LoggerName location;
+	};
+
 	template <typename Mutex>
 	class EditorSink : public spdlog::sinks::base_sink<Mutex>
 	{
 	public:
-		enum class LogLevel
-		{
-			Trace = 0,
-			Info = 1,
-			Warn = 2,
-			Error = 3
-		};
-
-		enum class LogLoc
-		{
-			Engine,
-			Client
-		};
-
-		struct Log
-		{
-			Log(std::string msg, LogLevel lvl, LogLoc loc)
-				: message(msg), level(lvl), location(loc)
-			{}
-
-			std::string message;
-			LogLevel level;
-			LogLoc location;
-		};
-
 		EditorSink() {}
 
 		const std::vector<Log>& GetLog() { return m_Logs; }
+		void Shrink(int size)
+		{
+			if ((int) m_Logs.size() > size)
+			{
+				m_Logs.erase(m_Logs.begin(), m_Logs.end() - size - 1);
+			}
+		}
 		void Clear() { m_Logs.clear(); }
 
 	protected:
@@ -45,23 +43,15 @@ namespace Vortex
 		{
 			spdlog::memory_buf_t formatted;
 			base_sink<Mutex>::formatter_->format(msg, formatted);
-			
-			// Extremely crappy code to find the error message.
-			LogLevel logLevel = LogLevel::Trace;
-			LogLoc logLocation = LogLoc::Engine;
-			std::string string = fmt::to_string(formatted);
 
-			if (*(string.c_str() + 36) == 'i')
-				logLevel = LogLevel::Info;
-			else if (*(string.c_str() + 36) == 'w')
-				logLevel = LogLevel::Warn;
-			else if (*(string.c_str() + 36) == 'e')
-				logLevel = LogLevel::Error;
+			LoggerName logger = LoggerName::Engine;
 
-			if (*(string.c_str() + 27) == 'C')
-				logLocation = LogLoc::Client;
+			if (msg.logger_name == "Client")
+				logger = LoggerName::Client;
+			else
+				logger = LoggerName::Engine;
 
-			m_Logs.emplace_back(string, logLevel, logLocation);
+			m_Logs.emplace_back(fmt::to_string(formatted), msg.level, logger);
 		}
 
 		void flush_() override
