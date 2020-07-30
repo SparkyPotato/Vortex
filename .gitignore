@@ -3,6 +3,11 @@
 *.sln
 *.vcxproj*
 
+# Xcode files
+*.DS_Store
+*.xcworkspace
+*.xcodeproj
+
 # Builds
 **/Binaries/*
 **/Intermediate/*
