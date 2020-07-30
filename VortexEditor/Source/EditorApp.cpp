@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
+#include <EditorLayers/ProfilerLayer.h>
 
 using namespace Vortex;
 
@@ -25,6 +26,7 @@ void EditorApp::Start()
 {
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
+	GLayerStack->PushLayer(new ProfilerLayer(&m_IsProfilerOpen));
 }
 
 void EditorApp::Tick(float deltaTime)
@@ -74,7 +76,7 @@ void EditorApp::OnGuiRender()
 			ImGui::MenuItem("Viewport", "", &m_IsViewportOpen, true);
 			ImGui::Separator();
 			ImGui::MenuItem("Log", "", &m_IsLogOpen, true);
-			ImGui::MenuItem("Profiler", "", &m_ShowProfiler, true);
+			ImGui::MenuItem("Profiler", "", &m_IsProfilerOpen, true);
 
 			ImGui::EndMenu();
 		}
@@ -82,31 +84,6 @@ void EditorApp::OnGuiRender()
 		ImGui::EndMenuBar();
 	}
 	ImGui::End();
-
-	// Draw profiler window.
-	if (m_ShowProfiler)
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 200.f, 100.f });
-		if (ImGui::Begin("Profiler", &m_ShowProfiler))
-		{
-			ImGui::Text("Delta Time: %.3f ms", GCore->GetLastDeltaTime() * 1000.f);
-			ImGui::Text("FPS: %.1f", 1 / GCore->GetLastDeltaTime());
-
-			ImGui::Separator();
-
-			for (auto profile : Profiler::GetProfiles())
-			{
-				ImGui::Text("%s: %.3f ms", profile.first.c_str(), profile.second);
-			}
-
-			ImGui::End();
-		}
-		else
-		{
-			ImGui::End();
-		}
-		ImGui::PopStyleVar(1);
-	}
 }
 
 void EditorApp::OnEvent(Vortex::Event& event)
@@ -144,9 +121,9 @@ void EditorApp::LoadPrefs(std::string file)
 		getline(prefsFile, line);
 		line.erase(0, 10);
 		if (line == "1")
-			m_ShowProfiler = true;
+			m_IsProfilerOpen = true;
 		else
-			m_ShowProfiler = false;
+			m_IsProfilerOpen = false;
 
 		prefsFile.close();
 	}
@@ -166,7 +143,7 @@ void EditorApp::SavePrefs(std::string file)
 	{
 		prefsFile << "vpstate " << m_IsViewportOpen << "\n";
 		prefsFile << "logstate " << m_IsLogOpen << "\n";
-		prefsFile << "profstate " << m_ShowProfiler << "\n";
+		prefsFile << "profstate " << m_IsProfilerOpen << "\n";
 
 		prefsFile.close();
 	}

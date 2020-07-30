@@ -60,6 +60,10 @@ void ViewportLayer::OnDetach()
 
 void ViewportLayer::Tick(float deltaTime)
 {
+	VX_PROFILE("Rendering");
+
+	if (!*m_IsOpen) return;
+
 	m_Framebuffer->Bind();
 	m_Framebuffer->Clear(0, 0.5, 0.5, 1);
 

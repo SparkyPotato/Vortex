@@ -32,7 +32,7 @@ void LogLayer::OnGuiRender()
 {
 	if (*m_IsOpen)
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 400.f, 150.f });
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 800.f, 250.f });
 		if (ImGui::Begin("Log", m_IsOpen))
 		{
 			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
@@ -75,6 +75,13 @@ void LogLayer::OnGuiRender()
 
 			// Clear log button.
 			if (ImGui::Button("Clear")) Logger::GetEditorSink()->Clear();
+
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::TextUnformatted("Clears this output");
+				ImGui::EndTooltip();
+			}
 
 			// Puts log text in a seprate scrollable window.
 			ImGui::BeginChild("Scroll");

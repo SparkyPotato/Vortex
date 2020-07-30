@@ -26,5 +26,5 @@ private:
 
 	bool m_IsLogOpen = false;
 
-	bool m_ShowProfiler = false;
+	bool m_IsProfilerOpen = false;
 };

@@ -39,6 +39,7 @@ namespace Vortex
 
 	void LayerStack::Tick(float deltaTime)
 	{
+		ENG_PROFILE("Layers Tick");
 		for (auto it = m_Layers.rbegin(); it != m_Layers.rend(); std::advance(it, 1))
 		{
 			(*it)->Tick(deltaTime);

@@ -4,7 +4,7 @@
 namespace Vortex
 {
 	LARGE_INTEGER Profiler::m_Frequency;
-	std::map<std::string, double> Profiler::m_LastTimes;
+	std::map<std::string, float> Profiler::m_LastTimes;
 
 	Profiler::Profiler(std::string name, Location loc)
 	{
@@ -18,8 +18,8 @@ namespace Vortex
 	{
 		QueryPerformanceCounter(&m_StopTime);
 
-		double time = (double) (m_StopTime.QuadPart - m_StartTime.QuadPart);
-		time /= (double) m_Frequency.QuadPart;
+		float time = (float) (m_StopTime.QuadPart - m_StartTime.QuadPart);
+		time /= (float) m_Frequency.QuadPart;
 		m_LastTimes[m_Name] = time;
 	}
 

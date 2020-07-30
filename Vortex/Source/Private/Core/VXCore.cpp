@@ -77,15 +77,16 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
-		ENG_PROFILE("Tick");
 		// Ticks the Vortex Input module.
 		m_Input->Tick(deltaTime);
 
 		// Updates the application window, getting all window events.
 		m_Window->Update();
 
+		ENG_PROFILESTART("Application Tick");
 		// Calls the application tick.
 		m_App->Tick(deltaTime);
+		ENG_PROFILEEND();
 
 		// Calls the layer stack tick.
 		m_LayerStack->Tick(deltaTime);
@@ -159,6 +160,7 @@ namespace Vortex
 
 	void VXCore::OnWindowEvent(Window* window, Event& event)
 	{
+		ENG_PROFILE("Event Dispatching");
 		EventDispatcher dispatcher = EventDispatcher(event);
 
 		// Dispatches all Input related events to the Vortex Input Module.

@@ -88,6 +88,7 @@ namespace Vortex
 
 	void VXGui::Tick(float deltaTime)
 	{
+		ENG_PROFILE("GUI Render");
 		m_Window->GetFramebuffer()->Bind();
 
 		ImGuiImplementation::NewFrame();

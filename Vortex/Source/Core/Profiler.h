@@ -21,11 +21,11 @@ namespace Vortex
 		static void Init();
 		static void Shutdown();
 
-		static const std::map<std::string, double>& GetProfiles() { return m_LastTimes; }
+		static const std::map<std::string, float>& GetProfiles() { return m_LastTimes; }
 
 	private:
 		static LARGE_INTEGER m_Frequency;
-		static std::map<std::string, double> m_LastTimes;
+		static std::map<std::string, float> m_LastTimes;
 
 		std::string m_Name;
 		Location m_Loc;
@@ -35,4 +35,7 @@ namespace Vortex
 }
 
 #define ENG_PROFILE(name) auto p = Vortex::Profiler(name, Vortex::Profiler::Location::Engine)
-#define VX_PROFILE(name) auto p = Vortex::Profiler(name, Vortex::Profiler::Location::Client);
+#define ENG_PROFILESTART(name) auto p = new Vortex::Profiler(name, Vortex::Profiler::Location::Engine)
+#define ENG_PROFILEEND() delete p
+
+#define VX_PROFILE(name) auto p = Vortex::Profiler(name, Vortex::Profiler::Location::Client)
