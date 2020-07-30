@@ -30,7 +30,6 @@ void ProfilerLayer::Tick(float deltaTime)
 
 void ProfilerLayer::OnGuiRender()
 {
-	ENG_PROFILE("Profiler Render");
 	if (*m_IsOpen)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 300.f, 200.f });

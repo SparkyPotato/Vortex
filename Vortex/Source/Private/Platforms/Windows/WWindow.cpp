@@ -317,6 +317,7 @@ namespace Vortex
 		}
 		case WM_KEYDOWN:
 		{
+			if (lParam & (1 << 30)) break;
 			if (m_Callback) m_Callback(this, KeyDownEvent((int) wParam));
 			break;
 		}
