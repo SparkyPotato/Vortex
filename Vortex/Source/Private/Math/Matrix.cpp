@@ -196,14 +196,28 @@ namespace Math
 	{
 		Matrix mat =
 		{
-			{ 2.f / width, 0.f,          0.f,                          0.f },
-			{ 0.f,         2.f / height, 0.f,                          0.f },
-			{ 0.f,         0.f,          -2.f / (farp - nearp),          0.f },
-			{ 0.f,         0.f,          -(farp + nearp) / (farp - nearp), 1.f }
+			{ 2.f / width, 0.f,          0.f,                     0.f },
+			{ 0.f,         2.f / height, 0.f,                     0.f },
+			{ 0.f,         0.f,          1.f / (farp - nearp),    0.f },
+			{ 0.f,         0.f,          -nearp / (farp - nearp), 1.f }
 		};
 
 		return mat;
 	}
+
+	Matrix Matrix::Perspective(float width, float height, float farp, float nearp)
+	{
+		Matrix mat =
+		{
+			{ 2.f * nearp / width, 0.f,                  0.f,                              0.f },
+			{ 0.f,                 2.f * nearp / height, 0.f,                              0.f },
+			{ 0.f,                 0.f,                  farp / (farp - nearp),            1.f },
+			{ 0.f,                 0.f,                  -(farp * nearp) / (farp - nearp), 0.f }
+		};
+
+		return mat;
+	}
+
 }
 }
  

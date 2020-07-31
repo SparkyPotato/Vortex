@@ -33,6 +33,7 @@ void ViewportLayer::OnAttach()
 	Math::Matrix rot = Math::Matrix::Rotate({ 0.f, 0.f, 1.f }, 90.f);
 	Math::Matrix scale = Math::Matrix::Scale(1.f);
 	Math::Matrix translate = Math::Matrix::Translate({ 0.5f, 0.f, 0.f });
+	Math::Matrix project = Math::Matrix::Perspective(1.6f, 0.9f, 10.f, 0.1f);
 
 	Vertex vertices[] =
 	{
@@ -46,9 +47,9 @@ void ViewportLayer::OnAttach()
 		VertexElement("COLOR", ShaderDataType::float4)
 	};
 	
-	vertices[0].position *= scale * rot * translate;
-	vertices[1].position *= scale * rot * translate;
-	vertices[2].position *= scale * rot * translate;
+	vertices[0].position *= scale * rot * translate * project;
+	vertices[1].position *= scale * rot * translate * project;
+	vertices[2].position *= scale * rot * translate * project;
 
 	m_VBuffer = GPVertexBuffer::Create(vertices, 3, layout);
 

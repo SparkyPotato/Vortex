@@ -24,7 +24,8 @@ namespace Math
 
 		static Matrix Translate(Vector translation);
 
-		static Matrix Orthographic(float width, float height, float far, float near);
+		static Matrix Orthographic(float width, float height, float farPlane, float nearPlane);
+		static Matrix Perspective(float width, float height, float farPlane, float nearPlane);
 
 		Vector columns[4];
 	};
