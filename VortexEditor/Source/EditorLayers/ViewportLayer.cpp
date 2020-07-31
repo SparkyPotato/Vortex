@@ -1,6 +1,7 @@
 #include <EditorLayers/ViewportLayer.h>
 #include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
+#include <Math/Matrix.h>
 
 using namespace Vortex;
 
@@ -25,21 +26,29 @@ void ViewportLayer::OnAttach()
 
 	struct Vertex
 	{
-		float x, y, z;
-		float r, g, b, a;
+		Math::Vector position;
+		Math::Vector color;
 	};
+
+	Math::Matrix rot = Math::Matrix::Rotate({ 0.f, 0.f, 1.f }, 90.f);
+	Math::Matrix scale = Math::Matrix::Scale(1.f);
+	Math::Matrix translate = Math::Matrix::Translate({ 0.5f, 0.f, 0.f });
 
 	Vertex vertices[] =
 	{
-		{ -0.5f, -0.5f, 0.5f, 0.976f, 0.521f, 0.545f, 1.f },
-		{ 0.f, 0.5f, 0.5f, 0.827f, 0.207f, 0.058f, 1.f },
-		{ 0.5f, -0.5f, 0.5f, 0.38f, 0.074f, 0.027f, 1.f }
+		{ { -0.5f, -0.5f, 0.5f }, { 0.976f, 0.521f, 0.545f, 1.f } },
+		{ { 0.f, 0.5f, 0.5f }, { 0.827f, 0.207f, 0.058f, 1.f } },
+		{ { 0.5f, -0.5f, 0.5f }, { 0.38f, 0.074f, 0.027f, 1.f } }
 	};
 	VertexLayout layout =
 	{
-		VertexElement("POSITION", ShaderDataType::float3),
+		VertexElement("POSITION", ShaderDataType::float4),
 		VertexElement("COLOR", ShaderDataType::float4)
 	};
+	
+	vertices[0].position *= scale * rot * translate;
+	vertices[1].position *= scale * rot * translate;
+	vertices[2].position *= scale * rot * translate;
 
 	m_VBuffer = GPVertexBuffer::Create(vertices, 3, layout);
 

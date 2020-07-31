@@ -4,7 +4,6 @@
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
 #include <EditorLayers/ProfilerLayer.h>
-#include <DirectXMath.h>
 
 using namespace Vortex;
 

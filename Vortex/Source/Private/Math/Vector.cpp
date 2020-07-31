@@ -149,6 +149,23 @@ namespace Math
 		return *this;
 	}
 
+	float Vector::GetLength()
+	{
+		float square = x * x + y * y + z * z;
+		return std::sqrt(square);
+	}
+
+	Vector& Vector::Normalize()
+	{
+		*this /= GetLength();
+		return *this;
+	}
+
+	Vector Vector::GetNormalized()
+	{
+		return *this / GetLength();
+	}
+
 	float Vector::Dot3D(const Vector& first, const Vector& second)
 	{
 		float dot = 0.f;

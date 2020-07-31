@@ -1,10 +1,13 @@
 #include <VXpch.h>
 #include <Math/Matrix.h>
+#include <math.h>
 
 namespace Vortex
 {
 namespace Math
 {
+	constexpr double PI = 3.14159265;
+
 	Matrix::Matrix()
 	{
 		columns[0] = { 1.f, 0.f, 0.f, 0.f };
@@ -95,5 +98,99 @@ namespace Math
 
 		return *this;
 	}
+
+	Matrix Matrix::Scale(float scaleFactor)
+	{
+		Matrix mat =
+		{
+			{ scaleFactor, 0.f,         0.f,         0.f },
+			{ 0.f,         scaleFactor, 0.f,         0.f },
+			{ 0.f,         0.f,         scaleFactor, 0.f },
+			{ 0.f,         0.f,         0.f,         1.f }
+		};
+
+		return mat;
+	}
+
+	Matrix Matrix::Scale(Vector scaling)
+	{
+		Matrix mat =
+		{
+			{ scaling.x, 0.f,       0.f,       0.f },
+			{ 0.f,       scaling.y, 0.f,       0.f },
+			{ 0.f,       0.f,       scaling.z, 0.f },
+			{ 0.f,       0.f,       0.f,       1.f }
+		};
+
+		return mat;
+	}
+
+	Matrix Matrix::Rotate(Vector rotation)
+	{
+		float sinx = (float) std::sin(-rotation.x * PI / 180.f);
+		float cosx = (float) std::cos(-rotation.x * PI / 180.f);
+		float siny = (float) std::sin(-rotation.y * PI / 180.f);
+		float cosy = (float) std::cos(-rotation.y * PI / 180.f);
+		float sinz = (float) std::sin(-rotation.z * PI / 180.f);
+		float cosz = (float) std::cos(-rotation.z * PI / 180.f);
+
+		Matrix rotX =
+		{
+			{ 1.f, 0.f,   0.f,  0.f },
+			{ 0.f, cosx,  sinx, 0.f },
+			{ 0.f, -sinx, cosx, 0.f },
+			{ 0.f, 0.f,   0.f,  1.f }
+		};
+		Matrix rotY =
+		{
+			{ cosy, 0.f, -siny, 0.f },
+			{ 0.f,  1.f, 0.f,   0.f },
+			{ siny, 0.f, cosy,  0.f },
+			{ 0.f,  0.f, 0.f,   1.f }
+		};
+		Matrix rotZ =
+		{
+			{ cosz,  sinz, 0.f, 0.f },
+			{ -sinz, cosz, 0.f, 0.f },
+			{ 0.f,   0.f,  1.f, 0.f },
+			{ 0.f,   0.f,  0.f, 1.f }
+		};
+
+		return rotX * rotY * rotZ;
+	}
+
+	Matrix Matrix::Rotate(Vector axis, float angleDegrees)
+	{
+		Vector vec = axis.GetNormalized();
+		float x = vec.x;
+		float y = vec.y;
+		float z = vec.z;
+		float cos = (float) std::cos(-angleDegrees * PI / 180.f);
+		float sin = (float) std::sin(-angleDegrees * PI / 180.f);
+
+		Matrix mat =
+		{
+			{ cos + (x * x) * (1 - cos),    (x * y) * (1 - cos) + z * sin,  (x * z) * (1 - cos) - y * sin, 0.f },
+			{ (x * y) * (1 - cos) - z * sin, cos + (y * y) * (1 - cos),     (y * z) * (1 - cos) + x * sin, 0.f },
+			{ (x * z) * (1 - cos) + y * sin, (y * z) * (1 - cos) - x * sin, cos + (z * z) * (1 - cos),     0.f },
+			{ 0.f,                           0.f,                           0.f,                           1.f }
+		};
+
+		return mat;
+	}
+
+	Matrix Matrix::Translate(Vector translation)
+	{
+		Matrix mat =
+		{
+			{ 1.f,           0.f,           0.f,           0.f },
+			{ 0.f,           1.f,           0.f,           0.f },
+			{ 0.f,           0.f,           1.f,           0.f },
+			{ translation.x, translation.y, translation.z, 1.f }
+		};
+
+		return mat;
+	}
 }
 }
+ 

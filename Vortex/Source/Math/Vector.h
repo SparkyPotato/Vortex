@@ -34,6 +34,11 @@ namespace Math
 		Vector operator/(float scalar);
 		Vector& operator/=(float scalar);
 
+		float GetLength();
+
+		Vector& Normalize();
+		Vector GetNormalized();
+
 		static float Dot3D(const Vector& first, const Vector& second);
 		static Vector Cross3D(const Vector& first, const Vector& second);
 		static Vector Hadamard3D(const Vector& first, const Vector& second);
