@@ -5,31 +5,18 @@ namespace Vortex
 {
 namespace Math
 {
-	struct Matrix3
+	struct Matrix
 	{
 	public:
-		Matrix3();
-		Matrix3(Vector3 row1, Vector3 row2, Vector3 row3);
-		Matrix3(Vector3 rows[3]);
-		Matrix3(const Matrix3& other);
+		Matrix();
+		Matrix(Vector row1, Vector row2, Vector row3, Vector row4);
+		Matrix(Vector rows[4]);
+		Matrix(const Matrix& other);
 
-		Vector3 row1;
-		Vector3 row2;
-		Vector3 row3;
-	};
+		Matrix operator*(const Matrix& other);
+		Matrix& operator*=(const Matrix& other);
 
-	struct Matrix4
-	{
-	public:
-		Matrix4();
-		Matrix4(Vector4 row1, Vector4 row2, Vector4 row3, Vector4 row4);
-		Matrix4(Vector4 rows[4]);
-		Matrix4(const Matrix4& other);
-
-		Vector4 row1;
-		Vector4 row2;
-		Vector4 row3;
-		Vector4 row4;
+		Vector columns[4];
 	};
 }
 }

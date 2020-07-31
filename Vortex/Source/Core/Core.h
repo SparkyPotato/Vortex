@@ -14,6 +14,7 @@
         #else
             #error "macOS is the only Apple OS supported!"
         #endif
+    #endif
 #else
 	#error "Windows is the only supported platform as of yet!"
 #endif

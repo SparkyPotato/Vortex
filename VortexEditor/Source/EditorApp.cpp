@@ -1,9 +1,10 @@
-#include <EditorApp.h>
 #include <fstream>
 #include <filesystem>
+#include <EditorApp.h>
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
 #include <EditorLayers/ProfilerLayer.h>
+#include <DirectXMath.h>
 
 using namespace Vortex;
 
