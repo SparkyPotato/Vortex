@@ -24,6 +24,8 @@ namespace Math
 
 		static Matrix Translate(Vector translation);
 
+		static Matrix Orthographic(float width, float height, float far, float near);
+
 		Vector columns[4];
 	};
 }
