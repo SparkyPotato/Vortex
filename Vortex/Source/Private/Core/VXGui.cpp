@@ -15,7 +15,7 @@ namespace Vortex
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		// io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		io.DisplaySize = ImVec2((float) GCore->GetWindow()->GetProperties().width, (float) GCore->GetWindow()->GetProperties().height);
+		io.DisplaySize = ImVec2((float) m_Window->GetProperties().width, (float) m_Window->GetProperties().height);
 		io.IniFilename = "Preferences/UILayout.vxprefs";
 
 		ImGui::StyleColorsDark();
@@ -81,7 +81,7 @@ namespace Vortex
 		colors[ImGuiCol_ButtonActive] = { 0.313f, 0.352f, 0.988f, 1.f };
 
 		// Initializes the ImGui backend.
-		ImGuiImplementation::Init(GCore->GetWindow());
+		ImGuiImplementation::Init(m_Window);
 	}
 
 	void VXGui::Shutdown()
