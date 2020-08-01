@@ -43,6 +43,9 @@ namespace Vortex
 		m_Gui = new VXGui();
 		m_Gui->Startup();
 
+		m_Renderer = new VXRenderer();
+		m_Renderer->Startup();
+
 		::GCore = this;
 
 		// Starts the user-defined application.
@@ -59,6 +62,9 @@ namespace Vortex
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
 		m_App = nullptr;
+
+		m_Renderer->Shutdown();
+		delete m_Renderer;
 
 		// Deletes the Vortex GUI Module.
 		m_Gui->Shutdown();
@@ -134,8 +140,11 @@ namespace Vortex
 		// Makes sure no one else is keeping the Module running.
 		if (m_CanQuit)
 		{
-			m_IsTicking = false;
+			m_Gui->Quit();
 			m_Input->Quit();
+			m_Renderer->Quit();
+
+			m_IsTicking = false;
 		}
 		else m_WantsQuit = true;
 

@@ -55,8 +55,6 @@ namespace Vortex
 			Does nothing yet.
 		*/
 		virtual void Quit() override;
-		virtual void BlockQuit() override;
-		virtual void AllowQuit() override;
 
 		/*
 			Get the current mouse state.

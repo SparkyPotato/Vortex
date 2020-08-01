@@ -30,10 +30,5 @@ namespace Vortex
 			Requests the module quit after finishing up whatever it is doing.
 		*/
 		virtual void Quit() = 0;
-		/*
-			Lets others stop and allow the module from quitting.
-		*/
-		virtual void BlockQuit() = 0;
-		virtual void AllowQuit() = 0;
 	};
 }

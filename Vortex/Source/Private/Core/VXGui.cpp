@@ -121,16 +121,6 @@ namespace Vortex
 		
 	}
 
-	void VXGui::BlockQuit()
-	{
-
-	}
-
-	void VXGui::AllowQuit()
-	{
-
-	}
-
 	VXGui::VXGui()
 	{
 		m_Window = GWindow;

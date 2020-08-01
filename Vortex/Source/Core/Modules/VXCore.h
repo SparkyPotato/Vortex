@@ -2,6 +2,7 @@
 #include <Core/Module.h>
 #include <Core/Modules/VXInput.h>
 #include <Core/Modules/VXGui.h>
+#include <Core/Modules/VXRenderer.h>
 #include <Core/Application.h>
 #include <Core/Layers/LayerStack.h>
 
@@ -42,11 +43,11 @@ namespace Vortex
 		/*
 			Makes sure the application won't quit until AllowQuit() is called.
 		*/
-		virtual void BlockQuit() override;
+		void BlockQuit();
 		/*
 			Allows the application to quit after a BlockQuit() call.
 		*/
-		virtual void AllowQuit() override;
+		void AllowQuit();
 
 		/*
 			Returns the last frame delta.
@@ -84,6 +85,8 @@ namespace Vortex
 		VXInput* m_Input = nullptr;
 		// The Vortex GUI Module.
 		VXGui* m_Gui = nullptr;
+		// The Vortex Renderer.
+		VXRenderer* m_Renderer = nullptr;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;

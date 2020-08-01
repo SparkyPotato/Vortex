@@ -28,16 +28,6 @@ namespace Vortex
 
 	}
 
-	void VXInput::BlockQuit()
-	{
-
-	}
-
-	void VXInput::AllowQuit()
-	{
-
-	}
-
 	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType)
 	{
 		m_Binders.emplace_back(keyFunction, key, bindingType);
