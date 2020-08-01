@@ -23,7 +23,9 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
 		context->GetContext()->PSSetShader(m_Shader, NULL, 0);
+		context->Unlock();
 	}
 
 	void DX11PixelShader::Recreate()

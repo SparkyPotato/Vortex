@@ -50,7 +50,19 @@ namespace Vortex
 		void RegisterPrimitive(GraphicsPrimitive* primitive);
 		void UnregisterPrimitive(GraphicsPrimitive* primitive);
 
+		/*
+			Draws to the screen.
+		*/
 		virtual void Draw(int drawSize) = 0;
+
+		/*
+			Threading functions. 
+			Please call if you're accessing implementation-specific stuff.
+			(reinterpret_casting GraphicsContext::Get()).
+			It is handled automatically when calling API-independent functions (Like Draw).
+		*/
+		virtual void Lock() = 0;
+		virtual void Unlock() = 0;
 
 	private:
 		static GraphicsContext* s_Context;

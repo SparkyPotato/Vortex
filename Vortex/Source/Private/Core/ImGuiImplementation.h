@@ -55,7 +55,11 @@ namespace Vortex
 		{
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
+				GraphicsContext::Get()->Lock();
+
 				ImGui_ImplDX11_RenderDrawData(data);
+
+				GraphicsContext::Get()->Unlock();
 			}
 		}
 

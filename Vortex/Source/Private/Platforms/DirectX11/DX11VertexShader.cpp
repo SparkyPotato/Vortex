@@ -23,7 +23,9 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
 		context->GetContext()->VSSetShader(m_Shader, NULL, 0);
+		context->Unlock();
 
 		context->SetVertexShader(this);
 	}

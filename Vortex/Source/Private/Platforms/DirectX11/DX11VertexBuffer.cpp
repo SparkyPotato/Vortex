@@ -24,7 +24,10 @@ namespace Vortex
 
 		UINT stride = m_Layout.GetStride();
 		UINT offset = 0;
+
+		context->Lock();
 		context->GetContext()->IASetVertexBuffers(0, 1, &m_Buffer, &stride, &offset);
+		context->Unlock();
 
 		context->SetVertexBuffer(this);
 	}

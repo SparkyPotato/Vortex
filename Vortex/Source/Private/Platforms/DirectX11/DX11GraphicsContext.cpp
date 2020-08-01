@@ -72,7 +72,19 @@ namespace Vortex
 
 	void DX11GraphicsContext::Draw(int drawSize)
 	{
+		Lock();
 		p_Context->DrawIndexed(drawSize, 0, 0);
+		Unlock();
+	}
+
+	void DX11GraphicsContext::Lock()
+	{
+		m_ContextMutex.lock();
+	}
+
+	void DX11GraphicsContext::Unlock()
+	{
+		m_ContextMutex.unlock();
 	}
 
 	void DX11GraphicsContext::PrintDebugInfo()

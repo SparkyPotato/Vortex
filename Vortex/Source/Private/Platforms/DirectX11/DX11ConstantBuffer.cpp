@@ -40,6 +40,8 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
+
 		switch (m_Target)
 		{
 		case ConstantBufferTarget::VertexShader:
@@ -49,6 +51,8 @@ namespace Vortex
 			context->GetContext()->PSSetConstantBuffers(0, 1, &m_Buffer);
 			break;
 		}
+
+		context->Unlock();
 	}
 
 	void DX11ConstantBuffer::Recreate()
@@ -60,9 +64,13 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
+
 		D3D11_MAPPED_SUBRESOURCE sub;
 		context->GetContext()->Map(m_Buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &sub);
 		sub.pData = newData;
 		context->GetContext()->Unmap(m_Buffer, NULL);
+
+		context->Unlock();
 	}
 }

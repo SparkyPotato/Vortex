@@ -21,6 +21,9 @@ namespace Vortex
 
 		virtual void Draw(int drawSize) override;
 
+		virtual void Lock() override;
+		virtual void Unlock() override;
+
 		ID3D11Device* GetDevice() { return p_Device; }
 		ID3D11DeviceContext* GetContext() { return p_Context; }
 		IDXGIFactory1* GetFactory() { return p_Factory; }
@@ -36,6 +39,8 @@ namespace Vortex
 		ID3D11Device* p_Device;
 		ID3D11DeviceContext* p_Context;
 		IDXGIFactory1* p_Factory;
+
+		std::mutex m_ContextMutex;
 
 		DX11VertexBuffer* m_CurrentVertexBuffer = nullptr;
 		DX11VertexShader* m_CurrentVertexShader = nullptr;

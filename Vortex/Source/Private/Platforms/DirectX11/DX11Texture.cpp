@@ -88,7 +88,10 @@ namespace Vortex
 		Create(width, height, m_Usage);
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
 		context->GetContext()->Flush();
+		context->Unlock();
 	}
 
 	void DX11Texture::Create(int width, int height, TextureUsage usage)

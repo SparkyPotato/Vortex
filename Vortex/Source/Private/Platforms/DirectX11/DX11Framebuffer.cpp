@@ -40,9 +40,13 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
+
 		// Bind the Render Target and make sure the viewport dimensions are correct.
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
 		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, p_DepthStencil);
+
+		context->Unlock();
 	}
 
 	void DX11Framebuffer::Recreate()
@@ -99,7 +103,11 @@ namespace Vortex
 		// Flush all commands so that deletion is forced.
 		// This is done since Resize is called many times on resizing.
 		// If not done, the application starts gobbling up memory (From 20 MB up to 200 MB!).
+		context->Lock();
+
 		context->GetContext()->Flush();
+
+		context->Unlock();
 	}
 
 	void DX11Framebuffer::Resize()
@@ -154,7 +162,11 @@ namespace Vortex
 		// Flush all commands so that deletion is forced.
 		// This is done since Resize is called many times on resizing.
 		// If not done, the application starts gobbling up memory (From 20 MB up to 200 MB!).
+		context->Lock();
+
 		context->GetContext()->Flush();
+
+		context->Unlock();
 	}
 
 	void DX11Framebuffer::Clear(float r, float g, float b, float a)
@@ -163,10 +175,14 @@ namespace Vortex
 
 		float color[4] = { r, g, b, a };
 
+		context->Lock();
+
 		// Clear Render Target to the color.
 		context->GetContext()->ClearRenderTargetView(p_RenderTarget, color);
 		// Set the Depth Stencil to infinity.
 		context->GetContext()->ClearDepthStencilView(p_DepthStencil, D3D11_CLEAR_DEPTH, 1.f, 0);
+
+		context->Unlock();
 	}
 
 	void DX11Framebuffer::Create(DX11Texture* texture)
@@ -187,7 +203,11 @@ namespace Vortex
 
 		ID3D11DepthStencilState* depthState;
 		context->GetDevice()->CreateDepthStencilState(&depthDesc, &depthState);
+
+		context->Lock();
 		context->GetContext()->OMSetDepthStencilState(depthState, 1);
+		context->Unlock();
+
 		depthState->Release();
 
 		ID3D11Texture2D* depthStencil;
