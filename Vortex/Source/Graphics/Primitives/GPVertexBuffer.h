@@ -5,6 +5,9 @@
 
 namespace Vortex
 {
+	/*
+		Data type of the input to be passed in to the shader.
+	*/
 	enum class ShaderDataType
 	{
 		float1 = sizeof(float),
@@ -16,6 +19,9 @@ namespace Vortex
 		float4x4 = sizeof(float) * 4 * 4,
 	};
 
+	/*
+		An element of the vertex structure.
+	*/
 	struct VertexElement
 	{
 		VertexElement(std::string Semantic, ShaderDataType type)
@@ -35,6 +41,9 @@ namespace Vortex
 		size_t offset;
 	};
 
+	/*
+		Describes the layout of a single vertex in a buffer.
+	*/
 	struct VertexLayout
 	{
 		VertexLayout(std::initializer_list<VertexElement> elements)
@@ -87,6 +96,9 @@ namespace Vortex
 	public:
 		virtual ~GPVertexBuffer() {}
 
+		/*
+			Creates a vertex buffer from `count` vertices according to the the layout.
+		*/
 		static GPVertexBuffer* Create(void* vertices, int count, const VertexLayout& layout);
 
 		virtual void Bind() = 0;

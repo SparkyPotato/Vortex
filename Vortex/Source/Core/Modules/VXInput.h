@@ -99,3 +99,6 @@ namespace Vortex
 		std::vector<Binder> m_Binders;
 	};
 }
+
+// Global pointer to the Input.
+extern Vortex::VXInput* GInput;

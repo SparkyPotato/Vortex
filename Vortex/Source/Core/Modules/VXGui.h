@@ -6,10 +6,13 @@ namespace Vortex
 	class VXCore;
 	class Window;
 
+	/*
+		Module that deals with ImGui rendering.
+	*/
 	class VXGui : public Module
 	{
 	public:
-		VXGui(VXCore* core);
+		VXGui();
 		virtual ~VXGui();
 
 		virtual void Startup() override;
@@ -22,8 +25,6 @@ namespace Vortex
 		virtual void AllowQuit() override;
 
 	private:
-		VXCore* GCore;
-
 		Window* m_Window;
 	};
 }

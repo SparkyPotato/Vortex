@@ -5,12 +5,18 @@
 
 namespace Vortex
 {
+	/*
+		Who is logging?
+	*/
 	enum class LoggerName
 	{
 		Engine,
 		Client
 	};
 
+	/*
+		A structure to hold all log data.
+	*/
 	struct Log
 	{
 		Log(std::string msg, spdlog::level::level_enum lvl, LoggerName loc)
@@ -22,13 +28,23 @@ namespace Vortex
 		LoggerName location;
 	};
 
+	/*
+		Custom spdlog sink for the Vortex Editor.
+	*/
 	template <typename Mutex>
 	class EditorSink : public spdlog::sinks::base_sink<Mutex>
 	{
 	public:
 		EditorSink() {}
 
+		/*
+			Gets all the logs.
+		*/
 		const std::vector<Log>& GetLog() { return m_Logs; }
+
+		/*
+			Shrinks the log to the last `size` messages, if it is greater than `size`
+		*/
 		void Shrink(int size)
 		{
 			if ((int) m_Logs.size() > size)
@@ -36,6 +52,10 @@ namespace Vortex
 				m_Logs.erase(m_Logs.begin(), m_Logs.end() - size - 1);
 			}
 		}
+
+		/*
+			Clears all the logs.
+		*/
 		void Clear() { m_Logs.clear(); }
 
 	protected:
@@ -46,20 +66,27 @@ namespace Vortex
 
 			LoggerName logger = LoggerName::Engine;
 
+			// Set the location of the log from the spdlog logger name.
 			if (msg.logger_name == "Client")
 				logger = LoggerName::Client;
-			else
-				logger = LoggerName::Engine;
 
+			// Pushes the log into the log vector.
 			m_Logs.emplace_back(fmt::to_string(formatted), msg.level, logger);
 		}
 
 		void flush_() override
 		{
-			
+			/*
+				Flush doesn't do anything because we are using an immediate-mode GUI,
+				and the log vector is read every frame.
+
+				If we start using a retained-mode GUI, flush should tell the GUI to update the log.
+			*/
+
 		}
 
 	private:
+		// Stores all the logs.
 		std::vector<Log> m_Logs;
 	};
 

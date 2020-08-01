@@ -13,7 +13,7 @@ namespace Vortex
 		case GraphicsAPI::DirectX11:
 			return new DX11ConstantBuffer(data, size, target);
 		default:
-			break;
+			return nullptr;
 		}
 	}
 }

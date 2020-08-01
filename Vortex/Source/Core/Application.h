@@ -11,7 +11,7 @@ namespace Vortex
 
 	/*
 		CreateApplication function prototype:-
-		Vortex::IApplication* CreateApplication() { return new YourDerivedClass(); }
+		Vortex::Application* CreateApplication() { return new YourDerivedClass; }
 
 		Deletion of the application is handled by the Vortex Core Module.
 	*/
@@ -24,15 +24,6 @@ namespace Vortex
 	{
 	public:
 		virtual ~Application() {}
-		/*
-			Binds the modules to the application, so you can use GCore to get a pointer to the Vortex Core Module.
-		*/
-		void BindToModule(VXCore* core, VXInput* input, LayerStack* layerStack) 
-		{ 
-			GCore = core;
-			GInput = input;
-			GLayerStack = layerStack;
-		}
 		/*
 			Gets the properties for the main window to be created.
 		*/
@@ -56,14 +47,6 @@ namespace Vortex
 			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overriden.
 		*/
 		virtual void OnEvent(Event& event) {};
-
-	protected:
-		// Pointer to the Vortex Core Module that owns the application.
-		VXCore* GCore;
-		// Pointer to Vortex Input Module.
-		VXInput* GInput;
-		// Pointer to the layer stack.
-		LayerStack* GLayerStack;
 	};
 }
 

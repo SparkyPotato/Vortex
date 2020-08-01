@@ -9,6 +9,7 @@ namespace Vortex
 {
 	void VXGui::Startup()
 	{
+		// Setup ImGui.
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -26,6 +27,7 @@ namespace Vortex
 			style.Colors[ImGuiCol_WindowBg].w = 1.f;
 		}
 
+		// Set the window style.
 		style.ChildRounding = 0.f;
 		style.GrabRounding = 3.f;
 		style.WindowRounding = 3.f;
@@ -33,6 +35,7 @@ namespace Vortex
 		style.FrameRounding = 3.f;
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
 
+		// Set the colors used.
 		ImVec4* colors = style.Colors;
 
 		colors[ImGuiCol_WindowBg] = { 0.f, 0.f, 0.f, 1.f };
@@ -77,29 +80,38 @@ namespace Vortex
 		colors[ImGuiCol_ButtonHovered] = { 0.25f, 0.282f, 0.788f, 1.f };
 		colors[ImGuiCol_ButtonActive] = { 0.313f, 0.352f, 0.988f, 1.f };
 
+		// Initializes the ImGui backend.
 		ImGuiImplementation::Init(GCore->GetWindow());
 	}
 
 	void VXGui::Shutdown()
 	{
+		// Shuts down the ImGui backend.
 		ImGuiImplementation::Shutdown();
 		ImGui::DestroyContext();
 	}
 
 	void VXGui::Tick(float deltaTime)
 	{
+		// Profiles GUI Render.
 		ENG_PROFILE("GUI Render");
+
+		// Bind main window framebuffer.
 		m_Window->GetFramebuffer()->Bind();
 
+		// Start ImGui frame.
 		ImGuiImplementation::NewFrame();
 		ImGui::NewFrame();
 
+		// Call all GUI Render functions.
 		GCore->GetApplication()->OnGuiRender();
-		GCore->GetLayerStack()->RenderGui();
+		GLayerStack->RenderGui();
 
+		// Render ImGui.
 		ImGui::Render();
 		ImGuiImplementation::Draw(ImGui::GetDrawData());
 
+		// Update windows for ImGui viewports.
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
@@ -119,10 +131,9 @@ namespace Vortex
 
 	}
 
-	VXGui::VXGui(VXCore* core)
+	VXGui::VXGui()
 	{
-		GCore = core;
-		m_Window = core->GetWindow();
+		m_Window = GWindow;
 	}
 
 	VXGui::~VXGui()

@@ -3,6 +3,10 @@
 
 namespace Vortex
 {
+	/*
+		Defines a layer of an application. 
+		Is stored in the global GLayerStack, but a layer can have its own layer stack as well.
+	*/
 	class Layer
 	{
 	public:

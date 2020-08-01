@@ -8,7 +8,7 @@ namespace Vortex
 	class GPFramebuffer;
 
 	/*
-		Class that defines the basic Window Interface.
+		Class that defines the basic window interface.
 		Implementation details vary per platform.
 	*/
 	class Window
@@ -52,9 +52,10 @@ namespace Vortex
 			int x = 100;
 			int y = 100;
 
-			// Does the window have focus.
+			// Does the window have focus?
 			bool isActive = false;
 
+			// State of the window.
 			bool isMinimized = false;
 			bool isMaximized = false;
 			bool isFullscreen = false;
@@ -116,3 +117,5 @@ namespace Vortex
 		virtual GPFramebuffer* GetFramebuffer() = 0;
 	};
 }
+
+extern Vortex::Window* GWindow;

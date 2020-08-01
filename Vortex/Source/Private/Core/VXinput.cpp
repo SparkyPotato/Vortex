@@ -1,11 +1,15 @@
 #include <VXpch.h>
 #include <Core/Modules/VXInput.h>
 
+Vortex::VXInput* GInput;
+
 namespace Vortex
 {
 	void VXInput::Startup()
 	{
 		ENG_TRACE("Started Vortex Input Module.");
+
+		::GInput = this;
 	}
 
 	void VXInput::Shutdown()
@@ -44,6 +48,7 @@ namespace Vortex
 		// Set the bit to true.
 		m_KeyStates[event.GetKeyCode()] = 1;
 
+		// Call bound functions.
 		for (auto binder : m_Binders)
 		{
 			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Pressed)
@@ -60,6 +65,7 @@ namespace Vortex
 		// Set the bit to false.
 		m_KeyStates[event.GetKeyCode()] = 0;
 
+		// Call bound functions.
 		for (auto binder : m_Binders)
 		{
 			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Released)

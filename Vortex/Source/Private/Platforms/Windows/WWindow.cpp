@@ -9,6 +9,8 @@
 #include <examples/imgui_impl_win32.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+Vortex::Window* GWindow;
+
 namespace Vortex
 {
 	Window* Window::Create(const Window::Properties& properties)

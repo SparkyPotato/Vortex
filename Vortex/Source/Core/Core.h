@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+    We define all platform-specific macros here.
+    This lets us decide what we're running on during compile-time,
+    and throw errors if compiling on an unsupported platform.
+*/
 #ifdef _WIN32
 	#ifdef _WIN64
 		#define PLATFORM_WINDOWS

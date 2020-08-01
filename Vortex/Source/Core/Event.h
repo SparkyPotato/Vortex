@@ -55,6 +55,9 @@ namespace Vortex
 			For example:-
 			bool OnWindowClose(const WindowCloseEvent& event)
 			{
+				// Do stuff when the window closes.
+
+				// Handle the event.
 				return true;
 			}
 

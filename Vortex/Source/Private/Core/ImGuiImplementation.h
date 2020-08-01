@@ -11,34 +11,46 @@
 
 namespace Vortex
 {
+	/*
+		The implementation of ImGui, since it varies per-platform.
+	*/
 	class ImGuiImplementation
 	{
 	public:
+		/*
+			Initializes the ImGui implementation.
+		*/
 		static void Init(Window* window)
 		{
 			#ifdef PLATFORM_WINDOWS
 			ImGui_ImplWin32_Init(reinterpret_cast<WWindow*>(window)->GetWindowHandle());
-			#endif
 
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 				ImGui_ImplDX11_Init(context->GetDevice(), context->GetContext());
 			}
+			#endif
 		}
 
+		/*
+			Begins a new frame.
+		*/
 		static void NewFrame()
 		{
+			#ifdef PLATFORM_WINDOWS
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				ImGui_ImplDX11_NewFrame();
 			}
 
-			#ifdef PLATFORM_WINDOWS
 			ImGui_ImplWin32_NewFrame();
 			#endif
 		}
 
+		/*
+			Draws the data.
+		*/
 		static void Draw(ImDrawData* data)
 		{
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
@@ -47,6 +59,9 @@ namespace Vortex
 			}
 		}
 
+		/*
+			Shuts the implementation down.
+		*/
 		static void Shutdown()
 		{
 			#ifdef PLATFORM_WINDOWS

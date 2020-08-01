@@ -3,6 +3,8 @@
 #include <Core/Events/WindowEvent.h>
 #include <Graphics/GraphicsContext.h>
 
+Vortex::VXCore* GCore;
+
 namespace Vortex
 {
 	void VXCore::Startup()
@@ -24,10 +26,10 @@ namespace Vortex
 
 		// Creates the layer stack.
 		m_LayerStack = new LayerStack();
+		GLayerStack = m_LayerStack;
 
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
-		m_App->BindToModule(this, m_Input, m_LayerStack);
 		ENG_TRACE("Created Client application.");
 
 		// Create the Graphics Context.
@@ -36,9 +38,12 @@ namespace Vortex
 		// Creates the window, using the application-defined properties.
 		m_Window = Window::Create(m_App->GetWindowProperties());
 		m_Window->SetEventCallback(std::bind(&VXCore::OnWindowEvent, this, std::placeholders::_1, std::placeholders::_2));
+		GWindow = m_Window;
 
-		m_Gui = new VXGui(this);
+		m_Gui = new VXGui();
 		m_Gui->Startup();
+
+		::GCore = this;
 
 		// Starts the user-defined application.
 		m_App->Start();

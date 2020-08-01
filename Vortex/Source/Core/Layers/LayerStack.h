@@ -4,6 +4,10 @@
 
 namespace Vortex
 {
+	/*
+		A collection of layers.
+		Deals with event propogation and ticking.
+	*/
 	class LayerStack
 	{
 	public:
@@ -38,3 +42,5 @@ namespace Vortex
 		std::vector<Layer*> m_Layers;
 	};
 }
+
+extern Vortex::LayerStack* GLayerStack;

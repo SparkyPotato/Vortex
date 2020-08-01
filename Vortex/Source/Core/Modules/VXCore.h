@@ -104,3 +104,6 @@ namespace Vortex
 		LARGE_INTEGER m_LastTime, m_CurrentTime;
 	};
 }
+
+// Global pointer to the Core.
+extern Vortex::VXCore* GCore;

@@ -3,11 +3,17 @@
 
 namespace Vortex
 {
+	/*
+		An index buffer.
+	*/
 	class GPIndexBuffer : public GraphicsPrimitive
 	{
 	public:
 		virtual ~GPIndexBuffer() {}
 
+		/*
+			Creates an index buffer from `count` indices.
+		*/
 		static GPIndexBuffer* Create(unsigned int* indices, int count);
 
 		virtual void Bind() = 0;
