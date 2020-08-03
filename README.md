@@ -1,4 +1,5 @@
-# Vortex
+![Logo](/Resources/VortexWeb.png?raw=true)
+
 Vortex aims to be a high-performance, cross-platform Game Engine and Application Framework.  
 
 ## Getting Started with Vortex
