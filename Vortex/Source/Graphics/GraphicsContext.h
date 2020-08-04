@@ -69,6 +69,6 @@ namespace Vortex
 
 		GraphicsAPI m_API;
 		// Holds every primitive currently registered with the Graphics Context.
-		std::vector<GraphicsPrimitive*> m_Primitives;
+		std::vector<std::unique_ptr<GraphicsPrimitive>> m_Primitives;
 	};
 }

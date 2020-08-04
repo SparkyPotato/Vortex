@@ -41,21 +41,12 @@ namespace Vortex
 		// If all primitives have not been deleted...
 		if (s_Context->m_Primitives.size() != 0)
 		{
-			// ... Throw a warning...
+			// ... Throw a warning.
 			ENG_WARN("{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
 			ENG_WARN("Deleting...");
 
-			// ... And delete them.
-			size_t size = s_Context->m_Primitives.size();
-
-			for (int i = 0; i < size; i++)
-			{
-				delete s_Context->m_Primitives[0];
-			}
-
-			// Sleep for 10 seconds so the user knows something is wrong and has time to read the warnings.
-			ENG_WARN("Sleeping for 10 seconds before continuing...");
-			Sleep(10000);
+			// Deletion is handled by the unique_ptr. Doesn't seem to be working as of now.
+			// Please manage your memory.
 		}
 
 		delete s_Context;
@@ -64,36 +55,46 @@ namespace Vortex
 
 	void GraphicsContext::Recreate()
 	{
-		GraphicsAPI api = s_Context->GetAPI();
-		std::vector<GraphicsPrimitive*> primitives = s_Context->m_Primitives;
-		delete s_Context;
+		// Recreation isn't handled as of now.
 
-		Create(api);
-		s_Context->m_Primitives = primitives;
-
-		// Recreate all primitives in the list.
-		for (GraphicsPrimitive* primitive : s_Context->m_Primitives)
-		{
-			if (primitive)
-				primitive->Recreate();
-			else
-				ENG_ERROR("Primitive has not been registered!");
-		}
+// 		GraphicsAPI api = s_Context->GetAPI();
+// 		std::vector<std::unique_ptr<GraphicsPrimitive>> primitives = s_Context->m_Primitives;
+// 		delete s_Context;
+// 
+// 		Create(api);
+// 		s_Context->m_Primitives = primitives;
+// 
+// 		// Recreate all primitives in the list.
+// 		for (GraphicsPrimitive* primitive : s_Context->m_Primitives)
+// 		{
+// 			if (primitive)
+// 				primitive->Recreate();
+// 			else
+// 				ENG_ERROR("Primitive has not been registered!");
+// 		}
 	}
 
 	void GraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
 	{
 		ENG_TRACE("Registered primitive.");
-		m_Primitives.push_back(primitive);
+		m_Primitives.push_back(std::unique_ptr<GraphicsPrimitive>(primitive));
 	}
 
 	void GraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
 	{
 		ENG_TRACE("Unregistered primitive.");
-		auto i = std::find(s_Context->m_Primitives.begin(), s_Context->m_Primitives.end(), primitive);
-		if (i != m_Primitives.end())
-			s_Context->m_Primitives.erase(i);
-		else
-			throw std::exception("Tried to unregister graphics primitive that wasn't registed.");
+
+		int i = 0;
+		for (auto& prim : m_Primitives)
+		{
+			if (prim.get() == primitive)
+			{
+				prim.release();
+				m_Primitives.erase(m_Primitives.begin() + i);
+				break;
+			}
+
+			i++;
+		}
 	}
 }

@@ -123,4 +123,3 @@ void ViewportLayer::HandleResize(int width, int height)
 		m_Framebuffer->Resize(width, height);
 	}
 }
-
