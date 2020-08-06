@@ -4,6 +4,7 @@ namespace Vortex
 {
 	class World;
 	class TransformComponent;
+	class MeshComponent;
 
 	class Entity
 	{
@@ -27,6 +28,9 @@ namespace Vortex
 		void SetName(std::string name) { m_Name = name; }
 
 		TransformComponent* GetTransform() { return m_Transform; }
+
+		MeshComponent* AddMesh();
+		MeshComponent* GetMesh();
 
 	private:
 		unsigned int m_ID;

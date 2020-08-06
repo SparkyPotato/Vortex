@@ -53,6 +53,11 @@ namespace Vortex
 
 	TransformComponent* World::CreateTransformComponent(unsigned int entityID)
 	{
-		return &m_Transforms.emplace_back(entityID);
+		return &m_Transforms.emplace_back(entityID, this);
+	}
+
+	MeshComponent* World::CreateMeshComponent(unsigned int entityID)
+	{
+		return &m_Meshes.emplace_back(entityID);
 	}
 }

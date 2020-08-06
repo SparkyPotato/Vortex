@@ -37,4 +37,22 @@ namespace Vortex
 	{
 		return m_World->GetEntityFromID(m_ParentID);
 	}
+
+	MeshComponent* Entity::AddMesh()
+	{
+		return m_World->CreateMeshComponent(m_ID);
+	}
+
+	MeshComponent* Entity::GetMesh()
+	{
+		auto meshes = m_World->GetMeshes();
+
+		for (auto& mesh : meshes)
+		{
+			if (mesh.GetOwnerID() == m_ID)
+			{
+				return &mesh;
+			}
+		}
+	}
 }
