@@ -3,17 +3,20 @@
 namespace Vortex
 {
 	class World;
+	class TransformComponent;
 
 	class Entity
 	{
 	public:
-		Entity(unsigned int id, std::string name);
+		Entity(unsigned int id, std::string name, World* world);
 		~Entity();
 
 		bool operator==(const Entity& other);
 		bool operator==(unsigned int id);
 
 		unsigned int GetID() { return m_ID; }
+
+		Entity* AddChild(std::string name);
 
 		Entity* GetParent();
 		unsigned int GetParentID() { return m_ParentID; }
@@ -23,8 +26,7 @@ namespace Vortex
 		std::string GetName() { return m_Name; }
 		void SetName(std::string name) { m_Name = name; }
 
-		World* GetWorld() { return m_World; }
-		void SetWorld(World* world) { m_World = world; }
+		TransformComponent* GetTransform() { return m_Transform; }
 
 	private:
 		unsigned int m_ID;
@@ -33,5 +35,7 @@ namespace Vortex
 		unsigned int m_ParentID = 0;
 
 		World* m_World;
+
+		TransformComponent* m_Transform;
 	};
 }

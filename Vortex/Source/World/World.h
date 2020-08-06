@@ -1,5 +1,6 @@
 #pragma once
 #include <World/Entity.h>
+#include <World/Components/TransformComponent.h>
 
 namespace Vortex
 {
@@ -16,9 +17,12 @@ namespace Vortex
 
 		Entity* GetEntityFromID(unsigned int id);
 
+		TransformComponent* CreateTransformComponent(unsigned int entityID);
+
 	private:
 		unsigned int m_NextID = 1;
 
 		std::vector<Entity> m_Entities;
+		std::vector<TransformComponent> m_Transforms;
 	};
 }

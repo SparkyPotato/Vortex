@@ -4,10 +4,10 @@
 
 namespace Vortex
 {
-	Entity::Entity(unsigned int id, std::string name)
-		: m_ID(id), m_Name(name)
+	Entity::Entity(unsigned int id, std::string name, World* world)
+		: m_ID(id), m_Name(name), m_World(world)
 	{
-
+		m_World->CreateTransformComponent(m_ID);
 	}
 
 	Entity::~Entity()
@@ -23,6 +23,14 @@ namespace Vortex
 	bool Entity::operator==(unsigned int id)
 	{
 		return m_ID == id;
+	}
+
+	Entity* Entity::AddChild(std::string name)
+	{
+		Entity* child = m_World->CreateEntity(name);
+		child->SetParentFromID(m_ID);
+
+		return child;
 	}
 
 	Entity* Entity::GetParent()

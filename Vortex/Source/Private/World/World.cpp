@@ -6,6 +6,7 @@ namespace Vortex
 	World::World()
 	{
 		m_Entities.reserve(100);
+		m_Transforms.reserve(100);
 	}
 
 	World::~World()
@@ -15,10 +16,7 @@ namespace Vortex
 
 	Entity* World::CreateEntity(std::string name)
 	{
-		auto entity = m_Entities.emplace_back(m_NextID++, name);
-		entity.SetWorld(this);
-
-		return &entity;
+		return &m_Entities.emplace_back(m_NextID++, name, this);
 	}
 
 	void World::DestroyEntity(unsigned int entityID)
@@ -49,5 +47,12 @@ namespace Vortex
 		{
 			return &(*it);
 		}
+
+		return nullptr;
+	}
+
+	TransformComponent* World::CreateTransformComponent(unsigned int entityID)
+	{
+		return &m_Transforms.emplace_back(entityID);
 	}
 }
