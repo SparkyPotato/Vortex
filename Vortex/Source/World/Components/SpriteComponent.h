@@ -9,7 +9,7 @@ namespace Vortex
 
 	struct Quad
 	{
-		Quad(float height = 1.f, float width = 1.f);
+		Quad(float width = 1.f, float height = 1.f);
 		~Quad();
 
 		void CalculateMatrix(const Math::Vector& position, const Math::Vector& rotation, const Math::Vector& scale);
@@ -28,6 +28,7 @@ namespace Vortex
 
 		unsigned int GetOwnerID() { return m_Owner; }
 
+		void SetQuadSize(float width, float height);
 		Quad& GetQuad() { return m_Quad; }
 
 	private:

@@ -69,7 +69,7 @@ namespace Math
 		return *this;
 	}
 
-	Vector Vector::operator-()
+	Vector Vector::operator-() const
 	{
 		return Vector(-x, -y, -z);
 	}

@@ -8,13 +8,8 @@ namespace Vortex
 		: m_Owner(owner), m_World(world)
 	{
 		auto transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
-		if (!transform)
-		{
-			ENG_ERROR("Entity does not exist!");
-			return;
-		}
 
-		CalculateMatrix(transform->GetPosition(), transform->GetRotation(), transform->GetScale());
+		CalculateMatrix(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 	}
 
 	MeshComponent::~MeshComponent()

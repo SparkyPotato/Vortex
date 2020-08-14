@@ -35,24 +35,19 @@ namespace Vortex
 
 	void TransformComponent::MoveComponents()
 	{
-		auto meshes = m_World->GetMeshes();
-		for (auto& mesh : meshes)
-		{
-			if (mesh.GetOwnerID() == m_Owner)
-			{
-				mesh.CalculateMatrix(m_Position, m_Rotation, m_Scale);
-				break;
-			}
-		}
+		auto entity = m_World->GetEntityFromID(m_Owner);
 
-		auto sprites = m_World->GetSprites();
-		for (auto& sprite : sprites)
-		{
-			if (sprite.GetOwnerID() == m_Owner)
-			{
-				sprite.GetQuad().CalculateMatrix(m_Position, m_Position, m_Scale);
-				break;
-			}
-		}
+		auto mesh = entity->GetMeshComponent();
+		if (mesh)
+			mesh->CalculateMatrix(m_Position, m_Rotation, m_Scale);
+
+		auto sprite = entity->GetSpriteComponent();
+		if (sprite)
+			sprite->GetQuad().CalculateMatrix(m_Position, m_Rotation, m_Scale);
+
+		auto camera = entity->GetCameraComponent();
+		if (camera)
+			camera->CalculateMatrix(m_Position, m_Rotation, m_Scale);
 	}
+
 }

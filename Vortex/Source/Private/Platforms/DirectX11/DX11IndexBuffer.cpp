@@ -4,6 +4,7 @@
 namespace Vortex
 {
 	DX11IndexBuffer::DX11IndexBuffer(unsigned int* indices, int count)
+		: m_Size(count)
 	{
 		GraphicsContext::Get()->RegisterPrimitive(this);
 

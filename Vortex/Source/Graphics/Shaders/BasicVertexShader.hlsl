@@ -1,3 +1,8 @@
+cbuffer ConstantBuffer : register(b0)
+{
+    float4x4 worldViewProjectionMatrix;
+}
+
 struct VSOut
 {
 	float4 color : COLOR;
@@ -5,11 +10,12 @@ struct VSOut
 	float4 position : SV_POSITION;
 };
 
-VSOut main(float4 pos : POSITION, float4 col : COLOR, float4 norm : NORMAL)
+VSOut main(float4 pos : POSITION, float4 norm : NORMAL, float4 col : COLOR)
 {
 	VSOut output;
 	
-    output.position = pos;
+    output.position = mul(pos, worldViewProjectionMatrix);
+	
 	output.color = col;
     output.normal = norm;
 	

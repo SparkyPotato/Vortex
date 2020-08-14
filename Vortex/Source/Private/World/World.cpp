@@ -47,7 +47,6 @@ namespace Vortex
 		{
 			return &(*it);
 		}
-
 		return nullptr;
 	}
 
@@ -64,5 +63,10 @@ namespace Vortex
 	SpriteComponent* World::CreateSpriteComponent(unsigned int entityID)
 	{
 		return &m_Sprites.emplace_back(entityID, this);
+	}
+
+	CameraComponent* World::CreateCameraComponent(unsigned int entityID)
+	{
+		return &m_Cameras.emplace_back(entityID, this);
 	}
 }

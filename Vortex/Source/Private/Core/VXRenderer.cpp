@@ -1,5 +1,6 @@
 #include <VXpch.h>
 #include <Core/Modules/VXRenderer.h>
+#include <World/World.h>
 
 Vortex::VXRenderer* GRenderer;
 
@@ -20,12 +21,22 @@ namespace Vortex
 		m_Target = GWindow->GetFramebuffer();
 		m_IsOnWindow = true;
 
+		ConstantBuffer buffer;
+		m_ConstantBuffer = GPConstantBuffer::Create(&buffer, sizeof(ConstantBuffer), ConstantBufferTarget::VertexShader);
+		m_BasicVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl");
+		m_BasicPixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/BasicPixelShader.hlsl");
+
+		m_BasicVertexShader->Bind();
+		m_BasicPixelShader->Bind();
+
 		::GRenderer = this;
 	}
 
 	void VXRenderer::Shutdown()
 	{
-
+		delete m_ConstantBuffer;
+		delete m_BasicVertexShader;
+		delete m_BasicPixelShader;
 	}
 
 	void VXRenderer::Tick(float deltaTime)
@@ -34,6 +45,29 @@ namespace Vortex
 
 		m_Target->Bind();
 		m_Target->Clear(0.f, 0.5f, 0.5f, 1.f);
+
+		auto camera = m_World->GetCameras().begin();
+		m_ConstantBuffer->Bind();
+
+		for (auto& sprite : m_World->GetSprites())
+		{
+			m_ConstantBufferData.worldViewProjectionMatrix 
+				= sprite.GetQuad().transformation * camera->GetViewProjectionMatrix();
+			m_ConstantBuffer->Set(&m_ConstantBufferData);
+
+			sprite.GetQuad().vertices->Bind();
+			sprite.GetQuad().indices->Bind();
+
+			GraphicsContext::Get()->Draw(sprite.GetQuad().indices->GetSize());
+		}
+
+		Math::Vector positions[4] =
+		{
+			{ -0.5f, 0.5f, 0.f },
+			{ 0.5, 0.5f, 0.f },
+			{ -0.5f, -0.5f, 0.f },
+			{ 0.5f, -0.5f, 0.f }
+		};
 	}
 
 	void VXRenderer::Quit()
@@ -80,6 +114,7 @@ namespace Vortex
 
 	void VXRenderer::PostFrambufferResize(int width, int height)
 	{
-
+		auto camera = m_World->GetCameras().begin();
+		camera->Resize((float) width / (float) height);
 	}
 }

@@ -79,7 +79,7 @@ void LogLayer::OnGuiRender()
 			if (ImGui::IsItemHovered())
 			{
 				ImGui::BeginTooltip();
-				ImGui::TextUnformatted("Clears this output");
+				ImGui::TextUnformatted("Clears the output");
 				ImGui::EndTooltip();
 			}
 

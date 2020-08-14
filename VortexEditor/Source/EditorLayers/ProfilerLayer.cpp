@@ -47,7 +47,7 @@ void ProfilerLayer::OnGuiRender()
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::BeginTooltip();
-					ImGui::TextUnformatted("Reduce GUI usage to get a more accurate reading.");
+					ImGui::TextUnformatted("Pause to see a detailed breakdown");
 					ImGui::EndTooltip();
 				}
 

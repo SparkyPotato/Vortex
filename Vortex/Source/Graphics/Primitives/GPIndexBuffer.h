@@ -18,5 +18,7 @@ namespace Vortex
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;
+
+		virtual int GetSize() = 0;
 	};
 }

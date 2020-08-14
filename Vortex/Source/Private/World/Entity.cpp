@@ -5,9 +5,9 @@
 namespace Vortex
 {
 	Entity::Entity(unsigned int id, std::string name, World* world)
-		: m_ID(id), m_Name(name), m_World(world)
+		: m_ID(id), m_Name(name), m_World(world), m_Transform(m_World->CreateTransformComponent(m_ID))
 	{
-		m_World->CreateTransformComponent(m_ID);
+		
 	}
 
 	Entity::~Entity()
@@ -45,13 +45,53 @@ namespace Vortex
 
 	MeshComponent* Entity::GetMeshComponent()
 	{
-		auto meshes = m_World->GetMeshes();
+		auto& meshes = m_World->GetMeshes();
 
-		for (auto& mesh : meshes)
+		for (MeshComponent& mesh : meshes)
 		{
 			if (mesh.GetOwnerID() == m_ID)
 			{
 				return &mesh;
+			}
+		}
+
+		return nullptr;
+	}
+
+	SpriteComponent* Entity::AddSpriteComponent()
+	{
+		return m_World->CreateSpriteComponent(m_ID);
+	}
+
+	SpriteComponent* Entity::GetSpriteComponent()
+	{
+		auto& sprites = m_World->GetSprites();
+
+		for (SpriteComponent& sprite : sprites)
+		{
+			if (sprite.GetOwnerID() == m_ID)
+			{
+				return &sprite;
+			}
+		}
+
+		return nullptr;
+	}
+
+	CameraComponent* Entity::AddCameraComponent()
+	{
+		return m_World->CreateCameraComponent(m_ID);
+	}
+
+	CameraComponent* Entity::GetCameraComponent()
+	{
+		auto& cameras = m_World->GetCameras();
+
+		for (CameraComponent& camera : cameras)
+		{
+			if (camera.GetOwnerID() == m_ID)
+			{
+				return &camera;
 			}
 		}
 

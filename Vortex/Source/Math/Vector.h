@@ -23,7 +23,7 @@ namespace Math
 		Vector& operator+=(const Vector& other);
 		Vector& operator+=(float all);
 
-		Vector operator-();
+		Vector operator-() const;
 		Vector operator-(const Vector& other);
 		Vector operator-(float all);
 		Vector& operator-=(const Vector& other);

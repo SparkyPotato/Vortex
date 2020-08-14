@@ -1,9 +1,6 @@
 #pragma once
 #include <VortexMinimal.h>
-#include <Graphics/Primitives/GPVertexBuffer.h>
-#include <Graphics/Primitives/GPIndexBuffer.h>
-#include <Graphics/Primitives/GPVertexShader.h>
-#include <Graphics/Primitives/GPPixelShader.h>
+#include <World/World.h>
 
 class ViewportLayer : public Vortex::Layer 
 {
@@ -20,10 +17,18 @@ public:
 private:
 	void HandleResize(int width, int height);
 
+	void MoveForward();
+	void MoveBackward();
+	void MoveRight();
+	void MoveLeft();
+
 	bool* m_IsOpen;
 
 	Vortex::GPTexture* m_Texture;
 	Vortex::GPFramebuffer* m_Framebuffer;
 
 	Vortex::World* m_World;
+
+	Vortex::Entity* m_EditorEntity;
+	Vortex::CameraComponent* m_EditorCamera;
 };

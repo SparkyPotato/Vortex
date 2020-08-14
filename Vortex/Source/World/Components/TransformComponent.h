@@ -12,7 +12,7 @@ namespace Vortex
 		~TransformComponent();
 
 		unsigned int GetOwnerID() { return m_Owner; }
-
+		
 		const Math::Vector& GetPosition() { return m_Position; }
 		const Math::Vector& GetRotation() { return m_Rotation; }
 		const Math::Vector& GetScale() { return m_Scale; }

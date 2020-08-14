@@ -4,7 +4,7 @@
 
 namespace Vortex
 {
-	Quad::Quad(float height /*= 1.f*/, float width /*= 1.f*/)
+	Quad::Quad(float width /*= 1.f*/, float height /*= 1.f*/)
 	{
 		struct Vertex
 		{
@@ -16,8 +16,8 @@ namespace Vortex
 		VertexLayout layout =
 		{
 			{ "POSITION", ShaderDataType::float4 },
-			{ "COLOR", ShaderDataType::float4 },
-			{ "NORMAL", ShaderDataType::float4 }
+			{ "NORMAL", ShaderDataType::float4 },
+			{ "COLOR", ShaderDataType::float4 }
 		};
 
 		Vertex vertexArray[4];
@@ -61,20 +61,20 @@ namespace Vortex
 	}
 
 	SpriteComponent::SpriteComponent(unsigned int owner, World* world)
-		: m_Owner(owner), m_World(world)
+		: m_Owner(owner), m_World(world), m_Quad(1.f, 1.f)
 	{
 		auto transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
-		if (!transform)
-		{
-			ENG_ERROR("Entity does not exist!");
-			return;
-		}
 
-		m_Quad.CalculateMatrix(transform->GetPosition(), transform->GetRotation(), transform->GetScale());
+		m_Quad.CalculateMatrix(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 	}
 
 	SpriteComponent::~SpriteComponent()
 	{
 
+	}
+
+	void SpriteComponent::SetQuadSize(float width, float height)
+	{
+		m_Quad = Quad(width, height);
 	}
 }
