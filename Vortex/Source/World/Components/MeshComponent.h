@@ -5,10 +5,12 @@
 
 namespace Vortex
 {
+	class World;
+
 	class MeshComponent
 	{
 	public:
-		MeshComponent(unsigned int owner);
+		MeshComponent(unsigned int owner, World* world);
 		~MeshComponent();
 
 		void LoadFromFile(std::string file);
@@ -23,6 +25,7 @@ namespace Vortex
 
 	private:
 		unsigned int m_Owner;
+		World* m_World;
 
 		GPVertexBuffer* m_Vertices  = nullptr;
 		GPIndexBuffer* m_Indices = nullptr;

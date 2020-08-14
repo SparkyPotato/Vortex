@@ -5,6 +5,7 @@ namespace Vortex
 	class World;
 	class TransformComponent;
 	class MeshComponent;
+	class SpriteComponent;
 
 	class Entity
 	{
@@ -29,8 +30,11 @@ namespace Vortex
 
 		TransformComponent* GetTransform() { return m_Transform; }
 
-		MeshComponent* AddMesh();
-		MeshComponent* GetMesh();
+		MeshComponent* AddMeshComponent();
+		MeshComponent* GetMeshComponent();
+
+		SpriteComponent* AddSpriteComponent();
+		SpriteComponent* GetSpriteComponent();
 
 	private:
 		unsigned int m_ID;

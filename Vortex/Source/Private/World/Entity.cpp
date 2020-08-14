@@ -38,12 +38,12 @@ namespace Vortex
 		return m_World->GetEntityFromID(m_ParentID);
 	}
 
-	MeshComponent* Entity::AddMesh()
+	MeshComponent* Entity::AddMeshComponent()
 	{
 		return m_World->CreateMeshComponent(m_ID);
 	}
 
-	MeshComponent* Entity::GetMesh()
+	MeshComponent* Entity::GetMeshComponent()
 	{
 		auto meshes = m_World->GetMeshes();
 
@@ -54,5 +54,7 @@ namespace Vortex
 				return &mesh;
 			}
 		}
+
+		return nullptr;
 	}
 }

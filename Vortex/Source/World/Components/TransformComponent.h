@@ -22,6 +22,8 @@ namespace Vortex
 		void SetScale(const Math::Vector& scale);
 
 	private:
+		void MoveComponents();
+
 		unsigned int m_Owner;
 		World* m_World;
 

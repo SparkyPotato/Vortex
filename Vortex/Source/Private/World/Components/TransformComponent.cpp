@@ -18,23 +18,24 @@ namespace Vortex
 	void TransformComponent::SetPosition(const Math::Vector& position)
 	{
 		m_Position = position;
-		auto meshes = m_World->GetMeshes();
-
-		for (auto& mesh : meshes)
-		{
-			if (mesh.GetOwnerID() == m_Owner)
-			{
-				mesh.CalculateMatrix(m_Position, m_Rotation, m_Scale);
-				break;
-			}
-		}
+		MoveComponents();
 	}
 
 	void TransformComponent::SetRotation(const Math::Vector& rotation)
 	{
 		m_Rotation = rotation;
-		auto meshes = m_World->GetMeshes();
+		MoveComponents();
+	}
 
+	void TransformComponent::SetScale(const Math::Vector& scale)
+	{
+		m_Scale = scale;
+		MoveComponents();
+	}
+
+	void TransformComponent::MoveComponents()
+	{
+		auto meshes = m_World->GetMeshes();
 		for (auto& mesh : meshes)
 		{
 			if (mesh.GetOwnerID() == m_Owner)
@@ -43,18 +44,13 @@ namespace Vortex
 				break;
 			}
 		}
-	}
 
-	void TransformComponent::SetScale(const Math::Vector& scale)
-	{
-		m_Scale = scale;
-		auto meshes = m_World->GetMeshes();
-
-		for (auto& mesh : meshes)
+		auto sprites = m_World->GetSprites();
+		for (auto& sprite : sprites)
 		{
-			if (mesh.GetOwnerID() == m_Owner)
+			if (sprite.GetOwnerID() == m_Owner)
 			{
-				mesh.CalculateMatrix(m_Position, m_Rotation, m_Scale);
+				sprite.GetQuad().CalculateMatrix(m_Position, m_Position, m_Scale);
 				break;
 			}
 		}
