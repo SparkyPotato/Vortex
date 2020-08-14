@@ -102,6 +102,8 @@ namespace Vortex
 		// Calls the layer stack tick.
 		m_LayerStack->Tick(deltaTime);
 
+		m_Renderer->Tick(deltaTime);
+
 		m_Gui->Tick(deltaTime);
 	}
 
@@ -186,6 +188,8 @@ namespace Vortex
 		dispatcher.Dispatch<MouseButtonUpEvent>(std::bind(&VXInput::MUEvent, m_Input, std::placeholders::_1));
 		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(std::bind(&VXInput::MDCEvent, m_Input, std::placeholders::_1));
 		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
+
+		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&VXRenderer::ResizeOnWindow, m_Renderer, std::placeholders::_1));
 
 		m_LayerStack->PassEvent(event);
 

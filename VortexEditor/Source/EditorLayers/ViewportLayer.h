@@ -25,9 +25,5 @@ private:
 	Vortex::GPTexture* m_Texture;
 	Vortex::GPFramebuffer* m_Framebuffer;
 
-	Vortex::GPVertexBuffer* m_VBuffer;
-	Vortex::GPIndexBuffer* m_IBuffer;
-
-	Vortex::GPVertexShader* m_VShader;
-	Vortex::GPPixelShader* m_PShader;
+	Vortex::World* m_World;
 };

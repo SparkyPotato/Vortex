@@ -1,6 +1,7 @@
 #include <EditorLayers/ViewportLayer.h>
 #include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
+#include <World/World.h>
 #include <Math/Matrix.h>
 
 using namespace Vortex;
@@ -8,12 +9,12 @@ using namespace Vortex;
 ViewportLayer::ViewportLayer(bool* isViewportCurrentlyOpen)
 	: m_IsOpen(isViewportCurrentlyOpen)
 {
-	
+	m_World = new Vortex::World();
 }
 
 ViewportLayer::~ViewportLayer()
 {
-	
+	delete m_World;
 }
 
 void ViewportLayer::OnAttach()
@@ -21,69 +22,19 @@ void ViewportLayer::OnAttach()
 	m_Texture = GPTexture::Create(300, 300);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 
-	unsigned int indices[] = { 0, 1, 2 };
-	m_IBuffer = GPIndexBuffer::Create(indices, 3);
-
-	struct Vertex
-	{
-		Math::Vector position;
-		Math::Vector color;
-	};
-
-	Math::Matrix rot = Math::Matrix::Rotate({ 0.f, 0.f, 1.f }, 90.f);
-	Math::Matrix scale = Math::Matrix::Scale(1.f);
-	Math::Matrix translate = Math::Matrix::Translate({ 0.5f, 0.f, 0.f });
-	Math::Matrix project = Math::Matrix::Perspective(1.6f, 0.9f, 10.f, 0.1f);
-
-	Vertex vertices[] =
-	{
-		{ { -0.5f, -0.5f, 0.5f }, { 0.976f, 0.521f, 0.545f, 1.f } },
-		{ { 0.f, 0.5f, 0.5f }, { 0.827f, 0.207f, 0.058f, 1.f } },
-		{ { 0.5f, -0.5f, 0.5f }, { 0.38f, 0.074f, 0.027f, 1.f } }
-	};
-	VertexLayout layout =
-	{
-		VertexElement("POSITION", ShaderDataType::float4),
-		VertexElement("COLOR", ShaderDataType::float4)
-	};
-	
-	vertices[0].position *= scale * rot * translate * project;
-	vertices[1].position *= scale * rot * translate * project;
-	vertices[2].position *= scale * rot * translate * project;
-
-	m_VBuffer = GPVertexBuffer::Create(vertices, 3, layout);
-
-	m_VShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl");
-
-	m_PShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/BasicPixelShader.hlsl");
+	GRenderer->RenderToFramebuffer(m_Framebuffer);
+	GRenderer->RenderWorld(m_World);
 }
 
 void ViewportLayer::OnDetach()
 {
+	GRenderer->RenderToWindow(GWindow);
 	delete m_Framebuffer;
-	delete m_VBuffer;
-	delete m_IBuffer;
-
-	delete m_VShader;
-	delete m_PShader;
 }
 
 void ViewportLayer::Tick(float deltaTime)
 {
-	VX_PROFILE("Rendering");
-
 	if (!*m_IsOpen) return;
-
-	m_Framebuffer->Bind();
-	m_Framebuffer->Clear(0, 0.5, 0.5, 1);
-
-	m_VShader->Bind();
-	m_PShader->Bind();
-
-	m_VBuffer->Bind();
-	m_IBuffer->Bind();
-
-	GraphicsContext::Get()->Draw(3);
 }
 
 void ViewportLayer::OnGuiRender()
@@ -120,6 +71,6 @@ void ViewportLayer::HandleResize(int width, int height)
 		return;
 	else if (width != m_Texture->GetWidth() || height != m_Texture->GetHeight())
 	{
-		m_Framebuffer->Resize(width, height);
+		GRenderer->ResizeFramebuffer(width, height);
 	}
 }
