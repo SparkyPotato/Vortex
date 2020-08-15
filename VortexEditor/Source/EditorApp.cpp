@@ -4,6 +4,7 @@
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
 #include <EditorLayers/ProfilerLayer.h>
+#include <EditorLayers/ConsoleLayer.h>
 
 using namespace Vortex;
 
@@ -14,19 +15,27 @@ Application* CreateApplication()
 
 EditorApp::EditorApp()
 {
-	LoadPrefs("Preferences/Editor.vxprefs");
+	
 }
 
 EditorApp::~EditorApp()
 {
-	SavePrefs("Preferences/Editor.vxprefs");
+	
 }
 
 void EditorApp::Start()
 {
+	LoadPrefs("Preferences/Editor.vxprefs");
+
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 	GLayerStack->PushLayer(new ProfilerLayer(&m_IsProfilerOpen));
+	GLayerStack->PushLayer(new ConsoleLayer(&m_IsConsoleOpen));
+}
+
+void EditorApp::Quit()
+{
+	SavePrefs("Preferences/Editor.vxprefs");
 }
 
 void EditorApp::Tick(float deltaTime)
@@ -52,7 +61,7 @@ void EditorApp::OnGuiRender()
 
 	ImGui::PopStyleVar(3);
 
-	// Create a dockspace in the window.
+	// Create a Dockspace in the window.
 	ImGuiID dockspace_id = ImGui::GetID("Vortex Editor Dock");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 
@@ -76,6 +85,7 @@ void EditorApp::OnGuiRender()
 			ImGui::MenuItem("Viewport", "", &m_IsViewportOpen, true);
 			ImGui::Separator();
 			ImGui::MenuItem("Log", "", &m_IsLogOpen, true);
+			ImGui::MenuItem("Console", "", &m_IsConsoleOpen, true);
 			ImGui::MenuItem("Profiler", "", &m_IsProfilerOpen, true);
 
 			ImGui::EndMenu();
@@ -125,6 +135,13 @@ void EditorApp::LoadPrefs(std::string file)
 		else
 			m_IsProfilerOpen = false;
 
+		getline(prefsFile, line);
+		line.erase(0, 9);
+		if (line == "1")
+			m_IsConsoleOpen = true;
+		else
+			m_IsConsoleOpen = false;
+
 		prefsFile.close();
 	}
 	else
@@ -144,6 +161,7 @@ void EditorApp::SavePrefs(std::string file)
 		prefsFile << "vpstate " << m_IsViewportOpen << "\n";
 		prefsFile << "logstate " << m_IsLogOpen << "\n";
 		prefsFile << "profstate " << m_IsProfilerOpen << "\n";
+		prefsFile << "constate " << m_IsConsoleOpen << "\n";
 
 		prefsFile.close();
 	}

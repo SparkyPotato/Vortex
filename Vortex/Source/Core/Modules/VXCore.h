@@ -49,6 +49,8 @@ namespace Vortex
 		*/
 		void AllowQuit();
 
+		virtual bool OnConsoleCommand(ConsoleCommand command) override;
+
 		/*
 			Returns the last frame delta.
 		*/
@@ -63,6 +65,8 @@ namespace Vortex
 			Returns the Vortex Input Module.
 		*/
 		VXInput* GetInput() { return m_Input; }
+
+		VXGui* GetGui() { return m_Gui; }
 
 		/*
 			Returns the layer stack.
@@ -99,6 +103,7 @@ namespace Vortex
 		bool m_IsTicking = false;
 		bool m_CanQuit = true;
 		bool m_WantsQuit = false;
+		bool m_ShouldRestart = false;
 		std::mutex m_QuitMutex;
 
 		// The last frame delta.

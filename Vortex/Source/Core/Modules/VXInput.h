@@ -56,6 +56,8 @@ namespace Vortex
 		*/
 		virtual void Quit() override;
 
+		virtual bool OnConsoleCommand(ConsoleCommand command) override;
+
 		/*
 			Get the current mouse state.
 		*/
@@ -66,6 +68,8 @@ namespace Vortex
 		bool IsKeyDown(InputCode keyCode) { return m_KeyStates[(int) keyCode]; }
 
 		void AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType);
+
+		void ClearInputState();
 
 	private:
 		struct Binder

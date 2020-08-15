@@ -1,6 +1,7 @@
 #include <VXpch.h>
 #include <Core/Modules/VXRenderer.h>
 #include <World/World.h>
+#include <Core/VXConsole.h>
 
 Vortex::VXRenderer* GRenderer;
 
@@ -51,8 +52,10 @@ namespace Vortex
 
 		for (auto& sprite : m_World->GetSprites())
 		{
-			m_ConstantBufferData.worldViewProjectionMatrix 
-				= sprite.GetQuad().transformation * camera->GetViewProjectionMatrix();
+// 			m_ConstantBufferData.worldViewProjectionMatrix 
+// 				= sprite.GetQuad().transformation * camera->GetViewProjectionMatrix();
+
+			m_ConstantBufferData.worldViewProjectionMatrix = Math::Matrix();
 			m_ConstantBuffer->Set(&m_ConstantBufferData);
 
 			sprite.GetQuad().vertices->Bind();
@@ -60,19 +63,16 @@ namespace Vortex
 
 			GraphicsContext::Get()->Draw(sprite.GetQuad().indices->GetSize());
 		}
-
-		Math::Vector positions[4] =
-		{
-			{ -0.5f, 0.5f, 0.f },
-			{ 0.5, 0.5f, 0.f },
-			{ -0.5f, -0.5f, 0.f },
-			{ 0.5f, -0.5f, 0.f }
-		};
 	}
 
 	void VXRenderer::Quit()
 	{
 
+	}
+
+	bool VXRenderer::OnConsoleCommand(ConsoleCommand command)
+	{
+		return false;
 	}
 
 	void VXRenderer::RenderToFramebuffer(GPFramebuffer* framebuffer)

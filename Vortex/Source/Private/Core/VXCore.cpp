@@ -2,6 +2,7 @@
 #include <Core/Modules/VXCore.h>
 #include <Core/Events/WindowEvent.h>
 #include <Graphics/GraphicsContext.h>
+#include <Core/VXConsole.h>
 
 Vortex::VXCore* GCore;
 
@@ -59,6 +60,8 @@ namespace Vortex
 	{
 		ENG_TRACE("Shutting down Vortex Core Module.");
 
+		m_IsTicking = false;
+
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
 		m_App = nullptr;
@@ -82,6 +85,8 @@ namespace Vortex
 		// Deletes the Vortex Input Module.
 		m_Input->Shutdown();
 		delete m_Input;
+
+		::GCore = nullptr;
 
 		ENG_TRACE("Shut down Vortex Core Module.");
 	}
@@ -120,6 +125,14 @@ namespace Vortex
 			if (m_WantsQuit && m_CanQuit)
 				Quit();
 
+			if (m_ShouldRestart)
+			{
+				Quit();
+				Shutdown();
+				Startup();
+				m_ShouldRestart = false;
+			}
+
 			// Get time before frame.
 			QueryPerformanceCounter(&m_LastTime);
 
@@ -145,6 +158,7 @@ namespace Vortex
 			m_Gui->Quit();
 			m_Input->Quit();
 			m_Renderer->Quit();
+			m_App->Quit();
 
 			m_IsTicking = false;
 		}
@@ -174,10 +188,24 @@ namespace Vortex
 		m_QuitMutex.unlock();
 	}
 
+	bool VXCore::OnConsoleCommand(ConsoleCommand command)
+	{
+		if (command.command == "restart")
+		{
+			m_ShouldRestart = true;
+		}
+		else if (command.command == "quit")
+		{
+			Quit();
+		}
+		else return false;
+		return true;
+	}
+
 	void VXCore::OnWindowEvent(Window* window, Event& event)
 	{
 		ENG_PROFILE("Event Dispatching");
-		EventDispatcher dispatcher = EventDispatcher(event);
+		auto dispatcher = EventDispatcher(event);
 
 		// Dispatches all Input related events to the Vortex Input Module.
 		dispatcher.Dispatch<KeyDownEvent>(std::bind(&VXInput::KDEvent, m_Input, std::placeholders::_1));
@@ -190,6 +218,11 @@ namespace Vortex
 		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
 
 		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&VXRenderer::ResizeOnWindow, m_Renderer, std::placeholders::_1));
+
+		if (event.GetType() == EventType::WindowDeactivate)
+		{
+			GInput->ClearInputState();
+		}
 
 		m_LayerStack->PassEvent(event);
 

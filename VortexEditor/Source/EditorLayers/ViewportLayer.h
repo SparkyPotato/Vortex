@@ -6,7 +6,7 @@ class ViewportLayer : public Vortex::Layer
 {
 public:
 	ViewportLayer(bool* isViewportCurrentlyOpen);
-	~ViewportLayer();
+	virtual ~ViewportLayer();
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;

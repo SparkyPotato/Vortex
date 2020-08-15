@@ -1,11 +1,11 @@
 #pragma once
 #include <VortexMinimal.h>
 
-class ProfilerLayer : public Vortex::Layer
+class ConsoleLayer : public Vortex::Layer 
 {
 public:
-	ProfilerLayer(bool* isProfilerOpen);
-	virtual ~ProfilerLayer();
+	ConsoleLayer(bool* isConsoleCurrentlyOpen);
+	virtual ~ConsoleLayer();
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
@@ -15,10 +15,8 @@ public:
 
 private:
 	bool* m_IsOpen;
-	bool m_IsPaused = false;
 
-	float m_CurrentDeltaTime;
-	float m_PausedDeltaTime;
+	char m_ConsoleBuffer[512];
 
-	std::map<std::string, float> m_PausedProfiles;
+	std::vector<std::string> m_Commands;
 };

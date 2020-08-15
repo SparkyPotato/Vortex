@@ -1,5 +1,6 @@
 #include <VXpch.h>
 #include <Core/Modules/VXInput.h>
+#include <Core/VXConsole.h>
 
 Vortex::VXInput* GInput;
 
@@ -28,18 +29,37 @@ namespace Vortex
 
 	}
 
+	bool VXInput::OnConsoleCommand(ConsoleCommand command)
+	{
+		return false;
+	}
+
 	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType)
 	{
 		m_Binders.emplace_back(keyFunction, key, bindingType);
 	}
 
+	void VXInput::ClearInputState()
+	{
+		for (int i = 0; i < 256; i++)
+		{
+			m_KeyStates[i] = false;
+		}
+
+		m_MouseState.leftButton = false;
+		m_MouseState.rightButton = false;
+		m_MouseState.middleButton = false;
+		m_MouseState.x1Button = false;
+		m_MouseState.x2Button = false;
+	}
+
 	bool VXInput::KDEvent(const KeyDownEvent& event)
 	{
 		// Set the bit to true.
-		m_KeyStates[event.GetKeyCode()] = 1;
+		m_KeyStates[event.GetKeyCode()] = true;
 
 		// Call bound functions.
-		for (auto binder : m_Binders)
+		for (auto& binder : m_Binders)
 		{
 			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Pressed)
 			{
@@ -53,10 +73,10 @@ namespace Vortex
 	bool VXInput::KUEvent(const KeyUpEvent& event)
 	{
 		// Set the bit to false.
-		m_KeyStates[event.GetKeyCode()] = 0;
+		m_KeyStates[event.GetKeyCode()] = false;
 
 		// Call bound functions.
-		for (auto binder : m_Binders)
+		for (auto& binder : m_Binders)
 		{
 			if (binder.code == (InputCode) event.GetKeyCode() && binder.binding == Binding::Released)
 			{

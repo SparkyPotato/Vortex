@@ -5,7 +5,7 @@ class LogLayer : public Vortex::Layer
 {
 public:
 	LogLayer(bool* isLogCurrentlyOpen);
-	~LogLayer();
+	virtual ~LogLayer();
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;

@@ -2,6 +2,9 @@
 
 namespace Vortex
 {
+	struct ConsoleCommand;
+	class VXConsole;
+
 	/*
 		Base class of all Vortex Modules. 
 	*/
@@ -30,5 +33,7 @@ namespace Vortex
 			Requests the module quit after finishing up whatever it is doing.
 		*/
 		virtual void Quit() = 0;
+
+		virtual bool OnConsoleCommand(ConsoleCommand command) = 0;
 	};
 }

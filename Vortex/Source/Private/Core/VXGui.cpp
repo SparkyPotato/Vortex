@@ -5,6 +5,8 @@
 #include <Private/Core/ImGuiImplementation.h>
 #include <imgui.h>
 
+#include <Core/VXConsole.h>
+
 namespace Vortex
 {
 	void VXGui::Startup()
@@ -119,6 +121,21 @@ namespace Vortex
 	void VXGui::Quit()
 	{
 		
+	}
+
+	bool VXGui::OnConsoleCommand(ConsoleCommand command)
+	{
+		if (command.command == "light")
+		{
+			ImGui::StyleColorsLight();
+			return true;
+		}
+		else if (command.command == "dark")
+		{
+			ImGui::StyleColorsDark();
+			return true;
+		}
+		else return false;
 	}
 
 	VXGui::VXGui()

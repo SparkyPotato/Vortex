@@ -24,6 +24,8 @@ namespace Vortex
 
 		virtual void Quit() override;
 
+		virtual bool OnConsoleCommand(ConsoleCommand command) override;
+
 		void RenderToFramebuffer(GPFramebuffer* framebuffer);
 		void RenderToWindow(Window* window);
 

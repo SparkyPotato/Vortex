@@ -33,6 +33,12 @@ namespace Vortex
 			Called on application startup.
 		*/
 		virtual void Start() = 0;
+
+		/*
+			Called on application quit.
+		*/
+		virtual void Quit() = 0;
+
 		/*
 			Called every frame, with the frame delta of the previous frame (0 for the first frame).
 		*/
