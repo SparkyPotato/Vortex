@@ -127,11 +127,17 @@ namespace Vortex
 	{
 		if (command.command == "light")
 		{
+			VX_INFO(LogConsole, "GUI: Switched to ImGui default light mode.");
 			ImGui::StyleColorsLight();
 		}
 		else if (command.command == "dark")
 		{
+			VX_INFO(LogConsole, "GUI: Switched to ImGui default dark mode.");
 			ImGui::StyleColorsDark();
+		}
+		else
+		{
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for module gui!", command.command);
 		}
 	}
 

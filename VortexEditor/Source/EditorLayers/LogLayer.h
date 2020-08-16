@@ -13,10 +13,17 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void OnGuiRender() override;
 
+	void OpenConsole();
+
 	void ShowLogText();
 
 private:
 	bool* m_IsOpen;
 
+	std::vector<const Vortex::Log*> m_Logs;
 	int m_LogLevel = 0;
+
+	bool m_IsConsoleOpen = false;
+	bool m_IsFocused = false;
+	char m_ConsoleBuffer[1024];
 };

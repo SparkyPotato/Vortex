@@ -1,11 +1,14 @@
 #include <EditorLayers/LogLayer.h>
+#include <Core/VXConsole.h>
 
 using namespace Vortex;
+
+DEFINE_LOGGER(LogDefault, spdlog::level::trace);
 
 LogLayer::LogLayer(bool* isLogCurrentlyOpen)
 	: m_IsOpen(isLogCurrentlyOpen)
 {
-
+	memset(m_ConsoleBuffer, 0, sizeof(m_ConsoleBuffer));
 }
 
 LogLayer::~LogLayer()
@@ -15,7 +18,7 @@ LogLayer::~LogLayer()
 
 void LogLayer::OnAttach()
 {
-
+	GInput->AddKeyBinding([&]() { this->OpenConsole(); }, InputCode::Tilde, Binding::Pressed);
 }
 
 void LogLayer::OnDetach()
@@ -30,11 +33,16 @@ void LogLayer::Tick(float deltaTime)
 
 void LogLayer::OnGuiRender()
 {
+	bool show = true;
+	ImGui::ShowDemoWindow(&show);
+
 	if (*m_IsOpen)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 800.f, 250.f });
 		if (ImGui::Begin("Log", m_IsOpen))
 		{
+			m_IsFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
 			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
 
 			// Clear log button.
@@ -65,7 +73,14 @@ void LogLayer::OnGuiRender()
 			}
 
 			// Puts log text in a separate scrollable window.
-			ImGui::BeginChild("Scroll");
+			if (m_IsConsoleOpen)
+			{
+				ImGui::BeginChild("Scroll", { 0.f, -ImGui::GetFontSize() * 2.2f });
+			}
+			else
+			{
+				ImGui::BeginChild("Scroll");
+			}
 
 			// Shows log text.
 			ShowLogText();
@@ -74,6 +89,21 @@ void LogLayer::OnGuiRender()
 				ImGui::SetScrollHereY(1.f);
 
 			ImGui::EndChild();
+
+			if (m_IsConsoleOpen)
+			{
+				ImGui::Separator();
+
+				ImGui::PushItemWidth(-1);
+				if (ImGui::InputTextWithHint("##ConsoleInput", "Console", m_ConsoleBuffer, sizeof(m_ConsoleBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					VXConsole::Get()->SubmitCommand(m_ConsoleBuffer);
+
+					ImGui::SetKeyboardFocusHere();
+					memset(m_ConsoleBuffer, 0, sizeof(m_ConsoleBuffer));
+				}
+				ImGui::PopItemWidth();
+			}
 
 			ImGui::End();
 		}
@@ -86,9 +116,16 @@ void LogLayer::OnGuiRender()
 	}
 }
 
+void LogLayer::OpenConsole()
+{
+	if (m_IsFocused && GInput->IsKeyDown(InputCode::Shift))
+	{
+		m_IsConsoleOpen = !m_IsConsoleOpen;
+	}
+}
+
 void LogLayer::ShowLogText()
 {
-	std::vector<const Log*> logs;
 	Logger::GetEditorSink()->Shrink(250);
 
 	size_t size = Logger::GetEditorSink()->GetLog().size();
@@ -97,17 +134,17 @@ void LogLayer::ShowLogText()
 		const Log* log = &(Logger::GetEditorSink()->GetLog()[i]);
 
 		if (log->level >= m_LogLevel)
-			logs.push_back(log);
+			m_Logs.push_back(log);
 	}
 
 	ImGuiListClipper clipper;
-	clipper.Begin((int) logs.size());
+	clipper.Begin((int) m_Logs.size());
 
 	while (clipper.Step())
 	{
 		for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
 		{
-			auto log = *logs[i];
+			auto log = *m_Logs[i];
 
 			if (log.level == spdlog::level::trace)
 				ImGui::TextColored({ 0.7f, 0.7f, 0.7f, 1.f }, log.message.c_str());
@@ -123,4 +160,6 @@ void LogLayer::ShowLogText()
 	}
 
 	clipper.End();
+
+	m_Logs.clear();
 }

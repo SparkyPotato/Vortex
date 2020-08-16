@@ -104,12 +104,15 @@ namespace Vortex
 		NumLock = 0x90,
 		ScrollLock = 0x91,
 
+		Shift = 0x10,
 		LeftShift = 0xA0,
 		RightShift = 0xA1,
 		LeftControl = 0xA2,
 		RightControl = 0xA3,
 		LeftAlt = 0xA4,
-		RightAlt = 0xA5
+		RightAlt = 0xA5,
+
+		Tilde = 0xC0
 	};
 	#endif
 }

@@ -4,8 +4,6 @@
 
 namespace Vortex
 {
-	DEFINE_LOGGER(LogDefault, spdlog::level::trace);
-
 	// Creating spdlog sinks.
 	std::shared_ptr<EditorSink_mt> Logger::s_EditorSink = std::make_shared<EditorSink_mt>();
 	std::vector<spdlog::sink_ptr> Logger::s_Sinks = { Logger::GetEditorSink(), std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true) };

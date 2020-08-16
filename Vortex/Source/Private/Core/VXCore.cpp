@@ -196,11 +196,17 @@ namespace Vortex
 	{
 		if (command.command == "restart")
 		{
+			VX_INFO(LogConsole, "Core: Restarting...");
 			m_ShouldRestart = true;
 		}
 		else if (command.command == "quit")
 		{
+			VX_INFO(LogConsole, "Core: Quitting...");
 			Quit();
+		}
+		else
+		{
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for module core!", command.command);
 		}
 	}
 
