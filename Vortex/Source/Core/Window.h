@@ -5,6 +5,8 @@
 
 namespace Vortex
 {
+	DECLARE_LOGGER_EXTERN(LogWindow);
+
 	class GPFramebuffer;
 
 	/*

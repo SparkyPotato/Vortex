@@ -2,6 +2,8 @@
 
 namespace Vortex
 {
+	DECLARE_LOGGER_EXTERN(LogConsole);
+
 	struct ConsoleCommand
 	{
 		std::string command;
@@ -15,7 +17,7 @@ namespace Vortex
 
 		static VXConsole* Get() { return s_Console; }
 
-		bool SubmitCommand(std::string commandString);
+		void SubmitCommand(std::string commandString);
 
 	private:
 		VXConsole();

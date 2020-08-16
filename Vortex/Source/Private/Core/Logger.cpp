@@ -4,46 +4,24 @@
 
 namespace Vortex
 {
-	std::shared_ptr<spdlog::logger> Logger::s_EngineLogger;
-	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
-	std::shared_ptr<EditorSink_mt> Logger::s_EditorSink;
+	DEFINE_LOGGER(LogDefault, spdlog::level::trace);
+
+	// Creating spdlog sinks.
+	std::shared_ptr<EditorSink_mt> Logger::s_EditorSink = std::make_shared<EditorSink_mt>();
+	std::vector<spdlog::sink_ptr> Logger::s_Sinks = { Logger::GetEditorSink(), std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true) };
 
 	void Logger::Init()
 	{
-		// Creating spdlog sinks.
-		s_EditorSink = std::make_shared<EditorSink_mt>();
-
-		std::vector<spdlog::sink_ptr> sinks;
-		sinks.push_back(s_EditorSink);
-		sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true));
-
-		// Creating spdlog loggers.
-		s_EngineLogger = std::make_shared<spdlog::logger>("Engine", begin(sinks), end(sinks));
-		s_ClientLogger = std::make_shared<spdlog::logger>("Client", begin(sinks), end(sinks));
-
-		if (s_EngineLogger == nullptr)
-			throw std::exception("Failed to create Engine Logger.");
-		if (s_ClientLogger == nullptr)
-			throw std::exception("Failed to create Client Logger.");
-
 		// Setting the log pattern.
-		spdlog::set_pattern("[%I:%M:%S.%e] %n: (%l) %^%v%$");
+		spdlog::set_pattern("%I:%M:%S.%e [%n] %l: %^%v%$");
+	}
 
-		// Setting log level based on configuration.
-		#ifdef CFG_DEBUGENG
-		s_EngineLogger->set_level(spdlog::level::trace);
-		#endif
+	std::shared_ptr<spdlog::logger> Logger::CreateLogger(std::string name, spdlog::level::level_enum logLevel)
+	{
+		std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>(name, s_Sinks.begin(), s_Sinks.end());
+		logger->set_level(logLevel);
+		logger->set_pattern("%I:%M:%S.%e [%n] %l: %^%v%$");
 
-		#ifdef CFG_DEBUGAPP
-		s_ClientLogger->set_level(spdlog::level::trace);
-		#endif
-
-		#ifndef CFG_DEBUGENG
-		s_EngineLogger->set_level(spdlog::level::warn);
-		#endif
-
-		#ifndef CFG_DEBUGAPP
-		s_ClientLogger->set_level(spdlog::level::warn);
-		#endif
+		return logger;
 	}
 }

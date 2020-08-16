@@ -22,12 +22,12 @@ namespace Vortex
 
 	void DX11SwapChain::Bind()
 	{
-		ENG_WARN("Binding a swap chain does nothing.");
+		VX_WARN(LogGraphicsAPI, "Binding a swap chain does nothing.");
 	}
 
 	void DX11SwapChain::Recreate()
 	{
-		ENG_TRACE("Creating DirectX 11 Swap Chain.");
+		VX_TRACE(LogGraphicsAPI, "Creating DirectX 11 Swap Chain.");
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
@@ -65,7 +65,7 @@ namespace Vortex
 		m_BackBuffer = new DX11Texture(texture);
 		texture->Release();
 
-		ENG_TRACE("Created DirectX 11 Swap Chain.");
+		VX_TRACE(LogGraphicsAPI, "Created DirectX 11 Swap Chain.");
 	}
 
 	GPTexture* DX11SwapChain::GetBackBuffer()
@@ -85,7 +85,7 @@ namespace Vortex
 		texture->Release();
 
 		if (FAILED(hr))
-			ENG_WARN("Failed to resize swap chain.");
+			VX_WARN(LogGraphicsAPI, "Failed to resize swap chain.");
 	}
 
 	void DX11SwapChain::Swap(int syncInterval)
@@ -93,11 +93,11 @@ namespace Vortex
 		HRESULT hr = p_SwapChain->Present(syncInterval, 0);
 
 		if (FAILED(hr))
-			ENG_WARN("Failed to swap.");
+			VX_WARN(LogGraphicsAPI, "Failed to swap.");
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
-			ENG_WARN("Device removed. Driver probably crashed. Recreating graphics device.");
+			VX_WARN(LogGraphicsAPI, "Device removed. Driver probably crashed. Recreating graphics device.");
 			GraphicsContext::Recreate();
 		}
 	}

@@ -22,7 +22,7 @@ namespace Vortex
 	WWindow::WWindow(const Window::Properties& properties)
 		: m_Properties(properties)
 	{
-		ENG_TRACE("Creating window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+		VX_TRACE(LogWindow, "Creating window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
 		// Adjust size for window style.
 		RECT windowRect;
@@ -62,12 +62,12 @@ namespace Vortex
 		// Create the framebuffer.
 		m_Framebuffer = GPFramebuffer::Create(this);
 
-		ENG_TRACE("Created window.");
+		VX_TRACE(LogWindow, "Created window.");
 	}
 
 	WWindow::~WWindow()
 	{
-		ENG_TRACE("Destroying window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+		VX_TRACE(LogWindow, "Destroying window: \"{0}\" ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 
 		if (m_Framebuffer) delete m_Framebuffer;
 		delete m_SwapChain;
@@ -75,7 +75,7 @@ namespace Vortex
 		// Remove the window from the screen.
 		DestroyWindow(m_WindowHandle);
 
-		ENG_TRACE("Destroyed window.");
+		VX_TRACE(LogWindow, "Destroyed window.");
 	}
 
 	void WWindow::Update()
@@ -155,7 +155,7 @@ namespace Vortex
 		if (RegisterClassEx(&windowClass) == 0)
 			throw std::exception("Failed to register window class");
 
-		ENG_TRACE("Registered window class.");
+		VX_TRACE(LogWindow, "Registered window class.");
 	}
 
 	LRESULT WWindow::BaseWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
@@ -200,27 +200,27 @@ namespace Vortex
 
 			if (wParam == SIZE_MAXIMIZED)
 			{
-				ENG_TRACE("Window \"{0}\" maximized.", m_Properties.name);
+				VX_TRACE(LogWindow, "Window \"{0}\" maximized.", m_Properties.name);
 				m_Properties.isMinimized = false;
 				m_Properties.isMaximized = true;
 				if (m_Callback) m_Callback(this, WindowMaximizeEvent());
 
 				// Resize the framebuffer.
 				if (m_Framebuffer) m_Framebuffer->Resize();
-				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				VX_TRACE(LogWindow, "Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;
 			}
 			else if (wParam == SIZE_MINIMIZED)
 			{
-				ENG_TRACE("Window \"{0}\" minimized.", m_Properties.name);
+				VX_TRACE(LogWindow, "Window \"{0}\" minimized.", m_Properties.name);
 				m_Properties.isMinimized = true;
 				m_Properties.isMaximized = false;
 				if (m_Callback) m_Callback(this, WindowMinimizeEvent());
 
 				// Resize the framebuffer.
 				if (m_Framebuffer) m_Framebuffer->Resize();
-				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				VX_TRACE(LogWindow, "Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;
 			}
@@ -229,25 +229,25 @@ namespace Vortex
 				m_Properties.isResizing = true;
 				if (m_Properties.isMaximized)
 				{
-					ENG_TRACE("Window \"{0}\" unmaximized.", m_Properties.name);
+					VX_TRACE(LogWindow, "Window \"{0}\" unmaximized.", m_Properties.name);
 					m_Properties.isMaximized = false;
 					if (m_Callback) m_Callback(this, WindowUnmaximizeEvent());
 
 					// Resize the framebuffer.
 					if (m_Framebuffer) m_Framebuffer->Resize();
-					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+					VX_TRACE(LogWindow, "Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 					m_Properties.isResizing = false;
 				}
 				else if (m_Properties.isMinimized)
 				{
-					ENG_TRACE("Window \"{0}\" unminimized", m_Properties.name);
+					VX_TRACE(LogWindow, "Window \"{0}\" unminimized", m_Properties.name);
 					m_Properties.isMinimized = false;
 					if (m_Callback) m_Callback(this, WindowUnminimizeEvent());
 
 					// Resize the framebuffer.
 					if (m_Framebuffer) m_Framebuffer->Resize();
-					ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+					VX_TRACE(LogWindow, "Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 					if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 					m_Properties.isResizing = false;
 				}
@@ -283,13 +283,13 @@ namespace Vortex
 			if (LOWORD(wParam) != WA_INACTIVE)
 			{
 				m_Properties.isActive = true;
-				ENG_TRACE("Window \"{0}\" activated.", m_Properties.name);
+				VX_TRACE(LogWindow, "Window \"{0}\" activated.", m_Properties.name);
 				if (m_Callback) m_Callback(this, WindowActivateEvent());
 			}
 			else
 			{
 				m_Properties.isActive = false;
-				ENG_TRACE("Window \"{0}\" deactivated.", m_Properties.name);
+				VX_TRACE(LogWindow, "Window \"{0}\" deactivated.", m_Properties.name);
 				if (m_Callback) m_Callback(this, WindowDeactivateEvent());
 			}
 			break;
@@ -304,14 +304,14 @@ namespace Vortex
 			{
 				// Resize the framebuffer.
 				if (m_Framebuffer) m_Framebuffer->Resize();
-				ENG_TRACE("Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
+				VX_TRACE(LogWindow, "Window \"{0}\" resized to ({1}, {2}).", m_Properties.name, m_Properties.width, m_Properties.height);
 				if (m_Callback) m_Callback(this, WindowResizeEvent(m_Properties.width, m_Properties.height));
 				m_Properties.isResizing = false;
 			}
 
 			if (m_Properties.isMoving)
 			{
-				ENG_TRACE("Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
+				VX_TRACE(LogWindow, "Window \"{0}\" moved to ({1}, {2}).", m_Properties.name, m_Properties.x, m_Properties.y);
 				if (m_Callback) m_Callback(this, WindowMoveEvent(m_Properties.x, m_Properties.y));
 				m_Properties.isMoving = false;
 			}

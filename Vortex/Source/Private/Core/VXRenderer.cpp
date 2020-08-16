@@ -7,6 +7,8 @@ Vortex::VXRenderer* GRenderer;
 
 namespace Vortex
 {
+	CREATE_LOGGER_LOCAL(LogRenderer, spdlog::level::trace);
+
 	VXRenderer::VXRenderer()
 	{
 		
@@ -70,9 +72,9 @@ namespace Vortex
 
 	}
 
-	bool VXRenderer::OnConsoleCommand(ConsoleCommand command)
+	void VXRenderer::OnConsoleCommand(ConsoleCommand command)
 	{
-		return false;
+		
 	}
 
 	void VXRenderer::RenderToFramebuffer(GPFramebuffer* framebuffer)
@@ -91,7 +93,7 @@ namespace Vortex
 	{
 		if (m_IsOnWindow)
 		{
-			ENG_ERROR("Cannot manually resize the Renderer on a Window!");
+			VX_ERROR(LogRenderer, "Cannot manually resize the Renderer on a Window!");
 			return;
 		}
 

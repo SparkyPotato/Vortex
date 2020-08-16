@@ -123,19 +123,16 @@ namespace Vortex
 		
 	}
 
-	bool VXGui::OnConsoleCommand(ConsoleCommand command)
+	void VXGui::OnConsoleCommand(ConsoleCommand command)
 	{
 		if (command.command == "light")
 		{
 			ImGui::StyleColorsLight();
-			return true;
 		}
 		else if (command.command == "dark")
 		{
 			ImGui::StyleColorsDark();
-			return true;
 		}
-		else return false;
 	}
 
 	VXGui::VXGui()

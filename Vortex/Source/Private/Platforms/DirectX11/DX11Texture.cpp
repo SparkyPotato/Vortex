@@ -5,7 +5,7 @@ namespace Vortex
 {
 	DX11Texture::DX11Texture(int width, int height)
 	{
-		ENG_TRACE("Creating texture.");
+		VX_TRACE(LogGraphicsAPI, "Creating texture.");
 
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
@@ -14,12 +14,12 @@ namespace Vortex
 
 		Create(width, height, TextureUsage::ColorTexture);
 
-		ENG_TRACE("Created texture.");
+		VX_TRACE(LogGraphicsAPI, "Created texture.");
 	}
 
 	DX11Texture::DX11Texture(int width, int height, TextureUsage usage)
 	{
-		ENG_TRACE("Creating texture.");
+		VX_TRACE(LogGraphicsAPI, "Creating texture.");
 
 		if (width == 0 || height == 0)
 			throw std::exception("Cannot create texture with 0 dimensions.");
@@ -28,12 +28,12 @@ namespace Vortex
 
 		Create(width, height, usage);
 
-		ENG_TRACE("Created texture.");
+		VX_TRACE(LogGraphicsAPI, "Created texture.");
 	}
 
 	DX11Texture::DX11Texture(ID3D11Texture2D* texture)
 	{
-		ENG_TRACE("Creating texture.");
+		VX_TRACE(LogGraphicsAPI, "Creating texture.");
 
 		D3D11_TEXTURE2D_DESC desc;
 		texture->GetDesc(&desc);
@@ -54,7 +54,7 @@ namespace Vortex
 		texture->AddRef();
 		p_Texture = texture;
 
-		ENG_TRACE("Created texture.");
+		VX_TRACE(LogGraphicsAPI, "Created texture.");
 	}
 
 	DX11Texture::~DX11Texture()
@@ -66,7 +66,7 @@ namespace Vortex
 
 	void DX11Texture::Bind()
 	{
-		ENG_WARN("Binding a texture does nothing.");
+		VX_WARN(LogGraphicsAPI, "Binding a texture does nothing.");
 	}
 
 	void DX11Texture::Recreate()

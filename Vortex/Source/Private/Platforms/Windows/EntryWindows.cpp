@@ -15,6 +15,8 @@ int wmain(int argc, wchar_t** argv)
 {
 	using namespace Vortex;
 
+	CREATE_LOGGER_LOCAL(LogEntry, spdlog::level::trace);
+
 	// Initialize the Logger, so we can start logging without depending on VXCore.
 	try { Logger::Init(); }
 	catch (...)
@@ -32,9 +34,9 @@ int wmain(int argc, wchar_t** argv)
 	try { WWindow::RegisterWindowClass(); }
 	catch (std::exception& e)
 	{
-		ENG_ERROR("Failed to initialize Window Class!");
-		ENG_ERROR("Error: {0}", e.what());
-		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		VX_ERROR(LogEntry, "Failed to initialize Window Class!");
+		VX_ERROR(LogEntry, "Error: {0}", e.what());
+		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
 	}
@@ -44,8 +46,8 @@ int wmain(int argc, wchar_t** argv)
 	try { core->Startup(); }
 	catch (std::exception& e)
 	{
-		ENG_ERROR("Failed to start Vortex Core!");
-		ENG_ERROR("Error: {0}", e.what());
+		VX_ERROR(LogEntry, "Failed to start Vortex Core!");
+		VX_ERROR(LogEntry, "Error: {0}", e.what());
 
 		// If we have created the Graphics Context, make sure to clean everything up before exiting.
 		if (GraphicsContext::Get())
@@ -53,7 +55,7 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
 	}
@@ -62,8 +64,8 @@ int wmain(int argc, wchar_t** argv)
 	try { core->RunTickLoop(); }
 	catch (std::exception& e)
 	{
-		ENG_ERROR("Error while running Vortex Core Module Tick!");
-		ENG_ERROR("Error: {0}", e.what());
+		VX_ERROR(LogEntry, "Error while running Vortex Core Module Tick!");
+		VX_ERROR(LogEntry, "Error: {0}", e.what());
 
 		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
 		if (GraphicsContext::Get())
@@ -71,7 +73,7 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
 	}
@@ -80,8 +82,8 @@ int wmain(int argc, wchar_t** argv)
 	try { core->Shutdown(); }
 	catch (std::exception& e)
 	{
-		ENG_ERROR("Failed to shutdown Vortex Core!");
-		ENG_ERROR("Error: {0}", e.what());
+		VX_ERROR(LogEntry, "Failed to shutdown Vortex Core!");
+		VX_ERROR(LogEntry, "Error: {0}", e.what());
 
 		// If we haven't deleted the Graphics Context, make sure to clean everything up before exiting.
 		if (GraphicsContext::Get())
@@ -89,7 +91,7 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		ENG_ERROR("Sleeping for 10 seconds before exiting...");
+		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
 		Sleep(10000);
 		return -1;
 	}
@@ -97,7 +99,7 @@ int wmain(int argc, wchar_t** argv)
 	Profiler::Shutdown();
 
 	delete core;
-	ENG_TRACE("Exiting...");
+	VX_TRACE(LogEntry, "Exiting...");
 	return 0;
 }
 

@@ -34,6 +34,6 @@ namespace Vortex
 		*/
 		virtual void Quit() = 0;
 
-		virtual bool OnConsoleCommand(ConsoleCommand command) = 0;
+		virtual void OnConsoleCommand(ConsoleCommand command) = 0;
 	};
 }

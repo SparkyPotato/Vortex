@@ -4,9 +4,10 @@
 #include <EditorLayers/LogLayer.h>
 #include <EditorLayers/ViewportLayer.h>
 #include <EditorLayers/ProfilerLayer.h>
-#include <EditorLayers/ConsoleLayer.h>
 
 using namespace Vortex;
+
+CREATE_LOGGER_LOCAL(LogEditor, spdlog::level::trace);
 
 Application* CreateApplication()
 {
@@ -30,7 +31,6 @@ void EditorApp::Start()
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 	GLayerStack->PushLayer(new ProfilerLayer(&m_IsProfilerOpen));
-	GLayerStack->PushLayer(new ConsoleLayer(&m_IsConsoleOpen));
 }
 
 void EditorApp::Quit()
@@ -85,7 +85,6 @@ void EditorApp::OnGuiRender()
 			ImGui::MenuItem("Viewport", "", &m_IsViewportOpen, true);
 			ImGui::Separator();
 			ImGui::MenuItem("Log", "", &m_IsLogOpen, true);
-			ImGui::MenuItem("Console", "", &m_IsConsoleOpen, true);
 			ImGui::MenuItem("Profiler", "", &m_IsProfilerOpen, true);
 
 			ImGui::EndMenu();
@@ -135,18 +134,11 @@ void EditorApp::LoadPrefs(std::string file)
 		else
 			m_IsProfilerOpen = false;
 
-		getline(prefsFile, line);
-		line.erase(0, 9);
-		if (line == "1")
-			m_IsConsoleOpen = true;
-		else
-			m_IsConsoleOpen = false;
-
 		prefsFile.close();
 	}
 	else
 	{
-		VX_WARN("Couldn't open preferences file. Using default settings...");
+		VX_WARN(LogEditor, "Couldn't open preferences file. Using default settings...");
 		auto path = std::filesystem::path("Preferences/");
 		std::filesystem::create_directory(path);
 	}
@@ -161,12 +153,11 @@ void EditorApp::SavePrefs(std::string file)
 		prefsFile << "vpstate " << m_IsViewportOpen << "\n";
 		prefsFile << "logstate " << m_IsLogOpen << "\n";
 		prefsFile << "profstate " << m_IsProfilerOpen << "\n";
-		prefsFile << "constate " << m_IsConsoleOpen << "\n";
 
 		prefsFile.close();
 	}
 	else
 	{
-		VX_ERROR("Failed to write to preferences file! Not saving preferences.");
+		VX_ERROR(LogEditor, "Failed to write to preferences file! Not saving preferences.");
 	}
 }

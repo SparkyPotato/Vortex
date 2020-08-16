@@ -7,6 +7,8 @@
 
 namespace Vortex
 {
+	DEFINE_LOGGER(LogGraphicsAPI, spdlog::level::trace);
+
 	GraphicsContext* GraphicsContext::s_Context = nullptr;
 
 	void GraphicsContext::Create(GraphicsAPI api)
@@ -42,8 +44,8 @@ namespace Vortex
 		if (s_Context->m_Primitives.size() != 0)
 		{
 			// ... Throw a warning.
-			ENG_WARN("{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
-			ENG_WARN("Deleting...");
+			VX_WARN(LogGraphicsAPI, "{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
+			VX_WARN(LogGraphicsAPI, "Deleting...");
 
 			// Deletion is handled by the unique_ptr. Doesn't seem to be working as of now.
 			// Please manage your memory.
@@ -76,13 +78,13 @@ namespace Vortex
 
 	void GraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
 	{
-		ENG_TRACE("Registered primitive.");
+		VX_TRACE(LogGraphicsAPI, "Registered primitive.");
 		m_Primitives.push_back(std::unique_ptr<GraphicsPrimitive>(primitive));
 	}
 
 	void GraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
 	{
-		ENG_TRACE("Unregistered primitive.");
+		VX_TRACE(LogGraphicsAPI, "Unregistered primitive.");
 
 		int i = 0;
 		for (auto& prim : m_Primitives)

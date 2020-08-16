@@ -49,7 +49,7 @@ namespace Vortex
 		*/
 		void AllowQuit();
 
-		virtual bool OnConsoleCommand(ConsoleCommand command) override;
+		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
 		/*
 			Returns the last frame delta.

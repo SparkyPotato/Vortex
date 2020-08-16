@@ -18,6 +18,5 @@ public:
 private:
 	bool* m_IsOpen;
 
-	int m_EngineLogLevel = 0;
-	int m_ClientLogLevel = 0;
+	int m_LogLevel = 0;
 };

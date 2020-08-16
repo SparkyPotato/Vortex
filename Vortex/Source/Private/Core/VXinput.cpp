@@ -6,16 +6,18 @@ Vortex::VXInput* GInput;
 
 namespace Vortex
 {
+	CREATE_LOGGER_LOCAL(LogInput, spdlog::level::trace);
+
 	void VXInput::Startup()
 	{
-		ENG_TRACE("Started Vortex Input Module.");
+		VX_TRACE(LogInput, "Started Vortex Input Module.");
 
 		::GInput = this;
 	}
 
 	void VXInput::Shutdown()
 	{
-		ENG_TRACE("Shutdown Vortex Input Module.");
+		VX_TRACE(LogInput, "Shutdown Vortex Input Module.");
 	}
 
 	void VXInput::Tick(float deltaTime)
@@ -29,9 +31,9 @@ namespace Vortex
 
 	}
 
-	bool VXInput::OnConsoleCommand(ConsoleCommand command)
+	void VXInput::OnConsoleCommand(ConsoleCommand command)
 	{
-		return false;
+		
 	}
 
 	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType)
@@ -110,7 +112,7 @@ namespace Vortex
 			m_MouseState.middleButton = true;
 			break;
 		default:
-			ENG_WARN("Illegal mouse event.");
+			VX_WARN(LogInput, "Illegal mouse event.");
 		}
 		return true;
 	}
@@ -130,7 +132,7 @@ namespace Vortex
 			m_MouseState.middleButton = false;
 			break;
 		default:
-			ENG_WARN("Illegal mouse event.");
+			VX_WARN(LogInput, "Illegal mouse event.");
 		}
 		return true;
 	}

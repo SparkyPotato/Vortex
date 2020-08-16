@@ -8,9 +8,13 @@ Vortex::VXCore* GCore;
 
 namespace Vortex
 {
+	CREATE_LOGGER_LOCAL(LogCore, spdlog::level::trace);
+
+	DEFINE_LOGGER(LogWindow, spdlog::level::trace);
+
 	void VXCore::Startup()
 	{
-		ENG_TRACE("Starting Vortex Core Module.");
+		VX_TRACE(LogCore, "Starting Vortex Core Module.");
 
 		// Make sure we can't start the engine twice.
 		if (m_IsTicking)
@@ -31,7 +35,7 @@ namespace Vortex
 
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
-		ENG_TRACE("Created Client application.");
+		VX_TRACE(LogCore, "Created Client application.");
 
 		// Create the Graphics Context.
 		GraphicsContext::Create(GraphicsAPI::DirectX11);
@@ -51,14 +55,14 @@ namespace Vortex
 
 		// Starts the user-defined application.
 		m_App->Start();
-		ENG_TRACE("Started Client application.");
+		VX_TRACE(LogCore, "Started Client application.");
 
-		ENG_TRACE("Started Vortex Core Module.");
+		VX_TRACE(LogCore, "Started Vortex Core Module.");
 	}
 
 	void VXCore::Shutdown()
 	{
-		ENG_TRACE("Shutting down Vortex Core Module.");
+		VX_TRACE(LogCore, "Shutting down Vortex Core Module.");
 
 		m_IsTicking = false;
 
@@ -88,7 +92,7 @@ namespace Vortex
 
 		::GCore = nullptr;
 
-		ENG_TRACE("Shut down Vortex Core Module.");
+		VX_TRACE(LogCore, "Shut down Vortex Core Module.");
 	}
 
 	void VXCore::Tick(float deltaTime)
@@ -114,7 +118,7 @@ namespace Vortex
 
 	void VXCore::RunTickLoop()
 	{
-		ENG_TRACE("Starting Vortex Core Module Tick.");
+		VX_TRACE(LogCore, "Starting Vortex Core Module Tick.");
 
 		if (!m_IsTicking)
 			throw std::exception("Module has not been started!");
@@ -144,7 +148,7 @@ namespace Vortex
 			m_DeltaTime /= m_Frequency.QuadPart;
 		}
 
-		ENG_TRACE("Ended Vortex Core Module Tick.");
+		VX_TRACE(LogCore, "Ended Vortex Core Module Tick.");
 	}
 
 	void VXCore::Quit()
@@ -188,7 +192,7 @@ namespace Vortex
 		m_QuitMutex.unlock();
 	}
 
-	bool VXCore::OnConsoleCommand(ConsoleCommand command)
+	void VXCore::OnConsoleCommand(ConsoleCommand command)
 	{
 		if (command.command == "restart")
 		{
@@ -198,8 +202,6 @@ namespace Vortex
 		{
 			Quit();
 		}
-		else return false;
-		return true;
 	}
 
 	void VXCore::OnWindowEvent(Window* window, Event& event)

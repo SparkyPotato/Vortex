@@ -5,6 +5,8 @@ Vortex::LayerStack* GLayerStack;
 
 namespace Vortex
 {
+	CREATE_LOGGER_LOCAL(LogLayerStack, spdlog::level::trace);
+
 	LayerStack::LayerStack()
 	{
 		
@@ -38,7 +40,7 @@ namespace Vortex
 		}
 		else
 		{
-			ENG_WARN("Tried to pop layer that wasn't owned by layer stack!");
+			VX_WARN(LogLayerStack, "Tried to pop layer that wasn't owned by layer stack!");
 		}
 	}
 

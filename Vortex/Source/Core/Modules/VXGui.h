@@ -22,7 +22,7 @@ namespace Vortex
 
 		virtual void Quit() override;
 
-		virtual bool OnConsoleCommand(ConsoleCommand command) override;
+		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
 	private:
 		Window* m_Window;

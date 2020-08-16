@@ -58,7 +58,7 @@ namespace Vortex
 	{
 		if (m_Window)
 		{
-			ENG_ERROR("Cannot force size onto window. Use Resize() instead.");
+			VX_ERROR(LogGraphicsAPI, "Cannot resize framebuffer on window. Use Resize() instead.");
 			return;
 		}
 
@@ -114,7 +114,7 @@ namespace Vortex
 	{
 		if (!m_Window)
 		{
-			ENG_ERROR("Cannot freely resize texture-based framebuffer. Use Resize(width, height) instead.");
+			VX_ERROR(LogGraphicsAPI, "Cannot freely resize texture-based framebuffer. Use Resize(width, height) instead.");
 			return;
 		}
 
@@ -187,7 +187,7 @@ namespace Vortex
 
 	void DX11Framebuffer::Create(DX11Texture* texture)
 	{
-		ENG_TRACE("Creating DirectX 11 Framebuffer.");
+		VX_TRACE(LogGraphicsAPI, "Creating DirectX 11 Framebuffer.");
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
@@ -241,6 +241,6 @@ namespace Vortex
 		m_Viewport.TopLeftX = 0;
 		m_Viewport.TopLeftY = 0;
 
-		ENG_TRACE("Created DirectX 11 Framebuffer.");
+		VX_TRACE(LogGraphicsAPI, "Created DirectX 11 Framebuffer.");
 	}
 }

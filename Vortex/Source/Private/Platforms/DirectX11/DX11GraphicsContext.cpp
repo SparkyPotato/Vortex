@@ -8,7 +8,7 @@ namespace Vortex
 {
 	DX11GraphicsContext::DX11GraphicsContext()
 	{
-		ENG_TRACE("Creating DirectX 11 Graphics Context.");
+		VX_TRACE(LogGraphicsAPI, "Creating DirectX 11 Graphics Context.");
 
 		D3D_FEATURE_LEVEL level = D3D_FEATURE_LEVEL_11_1;
 		D3D_FEATURE_LEVEL levelGot;
@@ -49,7 +49,7 @@ namespace Vortex
 
 		p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		ENG_TRACE("Created DirectX 11 Context.");
+		VX_TRACE(LogGraphicsAPI, "Created DirectX 11 Context.");
 	}
 
 	DX11GraphicsContext::~DX11GraphicsContext()

@@ -2,6 +2,8 @@
 
 namespace Vortex
 {
+	DECLARE_LOGGER_EXTERN(LogGraphicsAPI);
+
 	/*
 		Base class of Graphics Primitives.
 	*/

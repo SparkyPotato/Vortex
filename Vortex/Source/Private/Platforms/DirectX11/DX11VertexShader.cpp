@@ -47,7 +47,12 @@ namespace Vortex
 		std::wstring wfile(size_needed, 0);
 		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &wfile[0], size_needed);
 
-		HRESULT hr = D3DCompileFromFile(wfile.c_str(), NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, NULL, &m_Blob, NULL);
+		UINT flags = 0;
+		#ifdef CFG_DEBUGENG
+		flags = D3DCOMPILE_DEBUG;
+		#endif
+
+		HRESULT hr = D3DCompileFromFile(wfile.c_str(), NULL, NULL, "main", "vs_5_0", flags, NULL, &m_Blob, NULL);
 		if (hr == E_FAIL)
 		{
 			throw std::exception("Failed to compile shader!");

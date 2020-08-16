@@ -37,42 +37,6 @@ void LogLayer::OnGuiRender()
 		{
 			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
 
-			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x / 3.f);
-			// Engine log level dropdown.
-			if (ImGui::BeginCombo("Engine Log Level", levels[m_EngineLogLevel]))
-			{
-				for (int n = 0; n < 5; n++)
-				{
-					const bool isSelected = (m_EngineLogLevel == n);
-					if (ImGui::Selectable(levels[n], isSelected))
-						m_EngineLogLevel = n;
-
-					if (isSelected)
-						ImGui::SetItemDefaultFocus();
-				}
-
-				ImGui::EndCombo();
-			}
-
-			ImGui::SameLine(ImGui::GetContentRegionAvail().x / 2.f);
-
-			// Client log level dropdown.
-			if (ImGui::BeginCombo("Client Log Level", levels[m_ClientLogLevel]))
-			{
-				for (int n = 0; n < 5; n++)
-				{
-					const bool isSelected = (m_ClientLogLevel == n);
-					if (ImGui::Selectable(levels[n], isSelected))
-						m_ClientLogLevel = n;
-
-					if (isSelected)
-						ImGui::SetItemDefaultFocus();
-				}
-
-				ImGui::EndCombo();
-			}
-			ImGui::PopItemWidth();
-
 			// Clear log button.
 			if (ImGui::Button("Clear")) Logger::GetEditorSink()->Clear();
 
@@ -82,8 +46,25 @@ void LogLayer::OnGuiRender()
 				ImGui::TextUnformatted("Clears the output");
 				ImGui::EndTooltip();
 			}
+			ImGui::SameLine();
 
-			// Puts log text in a seprate scrollable window.
+			// Engine log level dropdown.
+			if (ImGui::BeginCombo("Log Level", levels[m_LogLevel]))
+			{
+				for (int n = 0; n < 5; n++)
+				{
+					const bool isSelected = (m_LogLevel == n);
+					if (ImGui::Selectable(levels[n], isSelected))
+						m_LogLevel = n;
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			// Puts log text in a separate scrollable window.
 			ImGui::BeginChild("Scroll");
 
 			// Shows log text.
@@ -115,9 +96,7 @@ void LogLayer::ShowLogText()
 	{
 		const Log* log = &(Logger::GetEditorSink()->GetLog()[i]);
 
-		if (log->location == LoggerName::Engine && (int) log->level >= m_EngineLogLevel)
-			logs.push_back(log);
-		else if (log->location == LoggerName::Client && (int) log->level >= m_ClientLogLevel)
+		if (log->level >= m_LogLevel)
 			logs.push_back(log);
 	}
 

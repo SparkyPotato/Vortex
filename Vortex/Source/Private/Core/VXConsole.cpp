@@ -4,6 +4,8 @@
 
 namespace Vortex
 {
+	DEFINE_LOGGER(LogConsole, spdlog::level::trace);
+
 	VXConsole* VXConsole::s_Console = nullptr;
 
 	VXConsole::VXConsole()
@@ -26,28 +28,31 @@ namespace Vortex
 		delete s_Console;
 	}
 
-	bool VXConsole::SubmitCommand(std::string commandString)
+	void VXConsole::SubmitCommand(std::string commandString)
 	{
 		std::string delimiter = ".";
-		std::string destination = commandString.substr(0, commandString.find(delimiter));
+		std::string module = commandString.substr(0, commandString.find(delimiter));
 		commandString.erase(0, commandString.find(delimiter) + delimiter.length());
 
-		if (destination == "core")
+		if (module == "core" || module == "c")
 		{
-			return GCore->OnConsoleCommand({ commandString });
+			GCore->OnConsoleCommand({ commandString });
 		}
-		else if (destination == "gui")
+		else if (module == "gui" || module == "g")
 		{
-			return GCore->GetGui()->OnConsoleCommand({ commandString });
+			GCore->GetGui()->OnConsoleCommand({ commandString });
 		}
-		else if (destination == "input")
+		else if (module == "input" || module == "i")
 		{
-			return GInput->OnConsoleCommand({ commandString });
+			GInput->OnConsoleCommand({ commandString });
 		}
-		else if (destination == "renderer")
+		else if (module == "renderer" || module == "r")
 		{
-			return GRenderer->OnConsoleCommand({ commandString });
+			GRenderer->OnConsoleCommand({ commandString });
 		}
-		else return false;
+		else
+		{
+			VX_ERROR(LogConsole, "'{0}' is not a valid module!", module);
+		}
 	}
 }
