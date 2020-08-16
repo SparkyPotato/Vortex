@@ -197,25 +197,33 @@ namespace Vortex
 
 	void VXCore::OnConsoleCommand(ConsoleCommand command)
 	{
-		if (command.command == "restart")
+		std::string delimiter = ".";
+		std::string variable = command.command.substr(0, command.command.find(delimiter));
+		command.command.erase(0, command.command.find(delimiter) + delimiter.length());
+
+		if (variable == "restart")
 		{
 			VX_INFO(LogConsole, "Core: Restarting...");
 			m_ShouldRestart = true;
 		}
-		else if (command.command == "quit")
+		else if (variable == "quit")
 		{
 			VX_INFO(LogConsole, "Core: Quitting...");
 			Quit();
 		}
-		else if (command.command == "help")
+		else if (variable == "help")
 		{
 			VX_INFO(LogConsole, "Core: Functions: ");
 			VX_INFO(LogConsole, "Core:     quit - Quits the Vortex Engine.");
 			VX_INFO(LogConsole, "Core:     restart - Restarts the Vortex Engine.");
 		}
+		else if (variable == "window")
+		{
+			m_Window->OnConsoleCommand({ command.command });
+		}
 		else
 		{
-			VX_ERROR(LogConsole, "'{0}' is not a valid command for module core!", command.command);
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for module core!", variable);
 		}
 	}
 

@@ -27,6 +27,8 @@ namespace Vortex
 		virtual GPSwapChain* GetSwapChain() override { return m_SwapChain; }
 		virtual GPFramebuffer* GetFramebuffer() override { return m_Framebuffer; }
 
+		virtual void OnConsoleCommand(ConsoleCommand command) override;
+
 		/*
 			Registers window class, called in the Windows Entry Point.
 		*/

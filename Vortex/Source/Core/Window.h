@@ -8,6 +8,7 @@ DECLARE_LOGGER(LogWindow);
 namespace Vortex
 {
 	class GPFramebuffer;
+	struct ConsoleCommand;
 
 	/*
 		Class that defines the basic window interface.
@@ -117,6 +118,8 @@ namespace Vortex
 			Gets the framebuffer of the window.
 		*/
 		virtual GPFramebuffer* GetFramebuffer() = 0;
+
+		virtual void OnConsoleCommand(ConsoleCommand command) = 0;
 	};
 }
 

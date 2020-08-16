@@ -5,6 +5,7 @@
 #include <Core/Events/WindowEvent.h>
 #include <Core/Events/InputEvent.h>
 #include <Graphics/Primitives/GPFramebuffer.h>
+#include <Core/VXConsole.h>
 
 #include <examples/imgui_impl_win32.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -132,6 +133,42 @@ namespace Vortex
 		m_Properties.x = x;
 		m_Properties.y = y;
 		SetWindowPos(m_WindowHandle, HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
+	}
+
+	void WWindow::OnConsoleCommand(ConsoleCommand command)
+	{
+		std::string delimiter = " ";
+		std::string variable = command.command.substr(0, command.command.find(delimiter));
+		command.command.erase(0, command.command.find(delimiter) + delimiter.length());
+
+		if (variable == "syncinterval")
+		{
+			m_Properties.syncInterval = std::stoi(command.command);
+			VX_INFO(LogConsole, "Window: Set Sync Interval to {0}", m_Properties.syncInterval);
+		}
+		else if (variable == "title")
+		{
+			SetName(command.command);
+			VX_INFO(LogConsole, "Window: Set Title to {0}", m_Properties.name);
+		}
+		else if (variable == "size")
+		{
+			std::string x = command.command.substr(0, command.command.find(delimiter));
+			command.command.erase(0, command.command.find(delimiter) + delimiter.length());
+
+			SetSize(std::stoi(x), std::stoi(command.command));
+			VX_INFO(LogConsole, "Window: Set Size to ({0}, {1})", m_Properties.width, m_Properties.height);
+		}
+		else if (variable == "help")
+		{
+			VX_INFO(LogConsole, "Window: Variables: ");
+			VX_INFO(LogConsole, "Window:     syncinterval - VSync Interval.");
+			VX_INFO(LogConsole, "Window:     title - The title of the window, as shown in the title bar.");
+		}
+		else
+		{
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for window!", command.command);
+		}
 	}
 
 	void WWindow::RegisterWindowClass()
