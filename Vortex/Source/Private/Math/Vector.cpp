@@ -222,6 +222,5 @@ namespace Math
 
 		return vec;
 	}
-
 }
 }

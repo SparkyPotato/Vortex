@@ -9,6 +9,7 @@
 #include <Core/Profiler.h>
 
 // STL includes
+#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>

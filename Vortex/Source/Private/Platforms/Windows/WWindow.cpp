@@ -167,7 +167,7 @@ namespace Vortex
 		}
 		else
 		{
-			VX_ERROR(LogConsole, "'{0}' is not a valid command for window!", command.command);
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for window!", variable);
 		}
 	}
 

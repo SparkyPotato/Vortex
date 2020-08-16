@@ -51,5 +51,15 @@ namespace Math
 		// All the columns of the matrix.
 		Vector columns[4];
 	};
+
+	template<typename OStream>
+	OStream& operator<<(OStream& os, const Matrix& mat)
+	{
+		return os << "Columns: \n"
+				  << mat.columns[0] << "\n"
+				  << mat.columns[1] << "\n"
+				  << mat.columns[2] << "\n"
+				  << mat.columns[3] << "\n";
+	}
 }
 }

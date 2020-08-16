@@ -4,13 +4,11 @@
 namespace Vortex
 {
 	DX11ConstantBuffer::DX11ConstantBuffer(void* data, int size, ConstantBufferTarget target)
+		: m_Size(size), m_Target(target)
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
 		context->RegisterPrimitive(this);
-
-		m_Size = size;
-		m_Target = target;
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
@@ -20,6 +18,8 @@ namespace Vortex
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.MiscFlags = NULL;
+
+		m_Data = new char[size];
 
 		D3D11_SUBRESOURCE_DATA subData;
 		subData.pSysMem = data;
@@ -34,6 +34,7 @@ namespace Vortex
 		context->UnregisterPrimitive(this);
 
 		m_Buffer->Release();
+		delete m_Data;
 	}
 
 	void DX11ConstantBuffer::Bind()
@@ -68,7 +69,7 @@ namespace Vortex
 
 		D3D11_MAPPED_SUBRESOURCE sub;
 		context->GetContext()->Map(m_Buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &sub);
-		sub.pData = newData;
+		memcpy(sub.pData, newData, m_Size);
 		context->GetContext()->Unmap(m_Buffer, NULL);
 
 		context->Unlock();

@@ -217,7 +217,6 @@ namespace Math
 
 		return mat;
 	}
-
 }
 }
  

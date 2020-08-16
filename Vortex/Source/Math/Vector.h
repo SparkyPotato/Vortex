@@ -1,4 +1,5 @@
 #pragma once
+#include <spdlog/fmt/ostr.h>
 
 namespace Vortex
 {
@@ -7,7 +8,7 @@ namespace Math
 	struct Matrix;
 
 	/*
-		A 4x1 row vecotr.
+		A 4x1 row vector.
 	*/
 	struct Vector
 	{
@@ -70,5 +71,11 @@ namespace Math
 		float z;
 		float w;
 	};
+
+	template<typename OStream>
+	OStream& operator<<(OStream& os, const Vector& vec)
+	{
+		return os << "x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << ", w: " << vec.w;
+	}
 }
 }

@@ -26,7 +26,7 @@ void ViewportLayer::OnAttach()
 	m_Texture = GPTexture::Create(400, 400);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 
-	m_EditorEntity->GetTransform().SetPosition({ 0.f, 0.f, -10.f });
+	m_EditorEntity->GetTransform().SetPosition({ 0.f, 0.f, -2.f });
 
 	auto sprite = m_World->CreateEntity("Sprite");
 	sprite->AddSpriteComponent();

@@ -56,10 +56,9 @@ namespace Vortex
 
 		for (auto& sprite : m_World->GetSprites())
 		{
-// 			m_ConstantBufferData.worldViewProjectionMatrix 
-// 				= sprite.GetQuad().transformation * camera->GetViewProjectionMatrix();
+ 			m_ConstantBufferData.worldViewProjectionMatrix 
+ 				= sprite.GetQuad().transformation * camera->GetViewProjectionMatrix();
 
-			m_ConstantBufferData.worldViewProjectionMatrix = Math::Matrix();
 			m_ConstantBuffer->Set(&m_ConstantBufferData);
 
 			sprite.GetQuad().vertices->Bind();

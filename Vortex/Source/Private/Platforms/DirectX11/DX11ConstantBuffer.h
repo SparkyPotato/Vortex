@@ -17,6 +17,8 @@ namespace Vortex
 
 	private:
 		ID3D11Buffer* m_Buffer;
+		void* m_Data;
+
 		ConstantBufferTarget m_Target;
 		int m_Size;
 	};
