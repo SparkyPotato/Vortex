@@ -58,7 +58,7 @@ namespace Vortex
 		return nullptr;
 	}
 
-	SpriteComponent* Entity::AddSpriteComponent()
+	SpriteComponent* Entity::AddSpriteComponent(float width, float height, Math::Matrix colors)
 	{
 		return m_World->CreateSpriteComponent(m_ID);
 	}

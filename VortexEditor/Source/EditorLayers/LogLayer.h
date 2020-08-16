@@ -16,11 +16,12 @@ public:
 	void OpenConsole();
 
 	void ShowLogText();
+	void UpdateLog();
 
 private:
 	bool* m_IsOpen;
 
-	std::vector<const Vortex::Log*> m_Logs;
+	std::vector<Vortex::Log> m_LogsToShow;
 	int m_LogLevel = 0;
 
 	bool m_IsConsoleOpen = false;

@@ -24,6 +24,8 @@ private:
 
 	bool* m_IsOpen;
 
+	ImVec2 m_ViewportSize;
+
 	Vortex::GPTexture* m_Texture;
 	Vortex::GPFramebuffer* m_Framebuffer;
 

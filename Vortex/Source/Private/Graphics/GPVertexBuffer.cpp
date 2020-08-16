@@ -7,12 +7,12 @@
 
 namespace Vortex 
 {
-	GPVertexBuffer* GPVertexBuffer::Create(void* vertices, int count, const VertexLayout& layout)
+	GPVertexBuffer* GPVertexBuffer::Create(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType)
 	{
 		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case GraphicsAPI::DirectX11:
-			return new DX11VertexBuffer(vertices, count, layout);
+			return new DX11VertexBuffer(vertices, count, layout, accessType);
 		default:
 			return nullptr;
 		}

@@ -49,6 +49,8 @@ namespace Vortex
 		*/
 		void Clear() { m_Logs.clear(); }
 
+		void SetLogCallback(std::function<void(Log&)> callback) { m_Callback = callback; }
+
 	protected:
 		void sink_it_(const spdlog::details::log_msg& msg) override
 		{
@@ -57,6 +59,8 @@ namespace Vortex
 
 			// Pushes the log into the log vector.
 			m_Logs.emplace_back(fmt::to_string(formatted), msg.level, msg.logger_name.data());
+
+			if (m_Callback) m_Callback(*(m_Logs.end() - 1));
 		}
 
 		void flush_() override
@@ -73,6 +77,7 @@ namespace Vortex
 	private:
 		// Stores all the logs.
 		std::vector<Log> m_Logs;
+		std::function<void(Log&)> m_Callback = nullptr;
 	};
 
 	using EditorSink_mt = EditorSink<std::mutex>;

@@ -4,14 +4,9 @@
 
 namespace Vortex
 {
-	Quad::Quad(float width /*= 1.f*/, float height /*= 1.f*/)
+	Quad::Quad(float width, float height, Math::Matrix colors)
 	{
-		struct Vertex
-		{
-			Math::Vector position;
-			Math::Vector normal;
-			Math::Vector color;
-		};
+		m_Vertices = new Vertex[4];
 
 		VertexLayout layout =
 		{
@@ -20,22 +15,20 @@ namespace Vortex
 			{ "COLOR", ShaderDataType::float4 }
 		};
 
-		Vertex vertexArray[4];
+		m_Vertices[0].position = { -width / 2, height / 2, 0.f };
+		m_Vertices[1].position = { width / 2, height / 2, 0.f };
+		m_Vertices[2].position = { -width / 2, -height / 2, 0.f };
+		m_Vertices[3].position = { width / 2, -height / 2, 0.f };
 
-		vertexArray[0].position = { -width / 2, height / 2, 0.f };
-		vertexArray[1].position = { width / 2, height / 2, 0.f };
-		vertexArray[2].position = { -width / 2, -height / 2, 0.f };
-		vertexArray[3].position = { width / 2, -height / 2, 0.f };
+		m_Vertices[0].color = colors.columns[0];
+		m_Vertices[1].color = colors.columns[1];
+		m_Vertices[2].color = colors.columns[2];
+		m_Vertices[3].color = colors.columns[3];
 
-		vertexArray[0].color = { 1.f, 1.f, 1.f, 1.f };
-		vertexArray[1].color = { 1.f, 1.f, 1.f, 1.f };
-		vertexArray[2].color = { 1.f, 1.f, 1.f, 1.f };
-		vertexArray[3].color = { 1.f, 1.f, 1.f, 1.f };
-
-		vertexArray[0].normal = { 0.f, 0.f, -1.f, 0.f };
-		vertexArray[1].normal = { 0.f, 0.f, -1.f, 0.f };
-		vertexArray[2].normal = { 0.f, 0.f, -1.f, 0.f };
-		vertexArray[3].normal = { 0.f, 0.f, -1.f, 0.f };
+		m_Vertices[0].normal = { 0.f, 0.f, -1.f, 0.f };
+		m_Vertices[1].normal = { 0.f, 0.f, -1.f, 0.f };
+		m_Vertices[2].normal = { 0.f, 0.f, -1.f, 0.f };
+		m_Vertices[3].normal = { 0.f, 0.f, -1.f, 0.f };
 
 		unsigned int indexArray[6] =
 		{
@@ -43,38 +36,45 @@ namespace Vortex
 			2, 1, 3
 		};
 
-		vertices = GPVertexBuffer::Create(vertexArray, 4, layout);
+		vertices = GPVertexBuffer::Create(m_Vertices, 4, layout, BufferAccessType::Dynamic);
 		indices = GPIndexBuffer::Create(indexArray, 6);
 	}
 
 	Quad::~Quad()
 	{
+		delete[] m_Vertices;
 		delete vertices;
 		delete indices;
 	}
 
-	void Quad::CalculateMatrix(const Math::Vector& position, const Math::Vector& rotation, const Math::Vector& scale)
+	void Quad::SetSize(float width, float height)
 	{
-		using namespace Math;
+		m_Vertices[0].position = { -width / 2, height / 2, 0.f };
+		m_Vertices[1].position = { width / 2, height / 2, 0.f };
+		m_Vertices[2].position = { -width / 2, -height / 2, 0.f };
+		m_Vertices[3].position = { width / 2, -height / 2, 0.f };
 
-		transformation = Matrix::Rotate(rotation) * Matrix::Scale(scale) * Matrix::Translate(position);
+		vertices->Set(m_Vertices, 4);
 	}
 
-	SpriteComponent::SpriteComponent(unsigned int owner, World* world)
-		: m_Owner(owner), m_World(world), m_Quad(1.f, 1.f)
+	void Quad::SetColors(Math::Matrix colors)
 	{
-		auto transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
+		m_Vertices[0].color = colors.columns[0];
+		m_Vertices[1].color = colors.columns[1];
+		m_Vertices[2].color = colors.columns[2];
+		m_Vertices[3].color = colors.columns[3];
 
-		m_Quad.CalculateMatrix(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
+		vertices->Set(m_Vertices, 4);
+	}
+
+	SpriteComponent::SpriteComponent(unsigned int owner, World* world, float width, float height, Math::Matrix colors)
+		: m_Owner(owner), m_World(world), m_Quad(width, height, colors), m_Transform(m_World->GetEntityFromID(m_Owner)->GetTransform())
+	{
+
 	}
 
 	SpriteComponent::~SpriteComponent()
 	{
 
-	}
-
-	void SpriteComponent::SetQuadSize(float width, float height)
-	{
-		m_Quad = Quad(width, height);
 	}
 }

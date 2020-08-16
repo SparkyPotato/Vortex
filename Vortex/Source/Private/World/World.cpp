@@ -60,9 +60,9 @@ namespace Vortex
 		return &m_Meshes.emplace_back(entityID, this);
 	}
 
-	SpriteComponent* World::CreateSpriteComponent(unsigned int entityID)
+	SpriteComponent* World::CreateSpriteComponent(unsigned int entityID, float width, float height, Math::Matrix colors)
 	{
-		return &m_Sprites.emplace_back(entityID, this);
+		return &m_Sprites.emplace_back(entityID, this, width, height, colors);
 	}
 
 	CameraComponent* World::CreateCameraComponent(unsigned int entityID)

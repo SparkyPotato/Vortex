@@ -1,10 +1,10 @@
 #pragma once
 #include <Math/Matrix.h>
+#include <World/Components/TransformComponent.h>
 
 namespace Vortex
 {
 	class World;
-	class TransformComponent;
 
 	enum class CameraProjection
 	{
@@ -23,9 +23,7 @@ namespace Vortex
 
 		unsigned int GetOwnerID() { return m_Owner; }
 
-		void CalculateMatrix(const Math::Vector& position, const Math::Vector& rotation, const Math::Vector& scale);
-
-		const Math::Matrix& GetViewProjectionMatrix() { return m_ViewProjection; }
+		const Math::Matrix GetViewProjectionMatrix() { return m_Transform.GetTransformInverse() * m_ProjectionMatrix; }
 
 		Math::Vector GetForwardVector();
 
@@ -33,9 +31,9 @@ namespace Vortex
 		unsigned int m_Owner;
 		World* m_World;
 
-		Math::Matrix m_ViewProjection;
+		Math::Matrix m_ProjectionMatrix;
 
-		TransformComponent* m_Transform;
+		TransformComponent& m_Transform;
 
 		CameraProjection m_Projection;
 		float m_AspectRatio;

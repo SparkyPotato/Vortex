@@ -26,11 +26,11 @@ void ViewportLayer::OnAttach()
 	m_Texture = GPTexture::Create(400, 400);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 
-	m_EditorEntity->GetTransform().SetPosition({ 0.f, 0.f, -2.f });
+	m_EditorEntity->GetTransform().SetPosition({ 0.f, 0.f, 0.f });
 
 	auto sprite = m_World->CreateEntity("Sprite");
-	sprite->AddSpriteComponent();
-	sprite->GetTransform().SetPosition({ 0.f, 0.f, 2.f });
+	sprite->AddSpriteComponent(2.f, 2.f);
+	sprite->GetTransform().SetPosition({ 0.f, 0.f, 1.f });
 
 	GRenderer->RenderToFramebuffer(m_Framebuffer);
 	GRenderer->RenderWorld(m_World);
@@ -46,6 +46,8 @@ void ViewportLayer::OnDetach()
 void ViewportLayer::Tick(float deltaTime)
 {
 	if (!*m_IsOpen) return;
+
+	HandleResize((int) m_ViewportSize.x, (int) m_ViewportSize.y);
 }
 
 void ViewportLayer::OnGuiRender()
@@ -58,7 +60,7 @@ void ViewportLayer::OnGuiRender()
 	{
 		if (ImGui::Begin("Viewport", m_IsOpen, windowFlags))
 		{
-			HandleResize((int) ImGui::GetContentRegionAvail().x, (int) ImGui::GetContentRegionAvail().y);
+			m_ViewportSize = ImGui::GetContentRegionAvail();
 
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{

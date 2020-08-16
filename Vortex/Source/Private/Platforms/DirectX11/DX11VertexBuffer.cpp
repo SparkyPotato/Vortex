@@ -3,12 +3,12 @@
 
 namespace Vortex
 {
-	DX11VertexBuffer::DX11VertexBuffer(void* vertices, int count, const VertexLayout& layout)
-		: m_Layout(layout)
+	DX11VertexBuffer::DX11VertexBuffer(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType)
+		: m_Layout(layout), m_Size(count), m_AccessType(accessType)
 	{
 		GraphicsContext::Get()->RegisterPrimitive(this);
 
-		Create(vertices, count);
+		Create(vertices);
 	}
 
 	DX11VertexBuffer::~DX11VertexBuffer()
@@ -37,17 +37,46 @@ namespace Vortex
 		// Does nothing yet.
 	}
 
-	void DX11VertexBuffer::Create(void* vertices, int count)
+	void DX11VertexBuffer::Set(void* vertices, int count)
+	{
+		if (m_AccessType == BufferAccessType::Static)
+		{
+			VX_ERROR(LogGraphicsAPI, "Cannot set static vertex buffer!");
+			return;
+		}
+		if (count > m_Size)
+		{
+			VX_ERROR(LogGraphicsAPI, "Cannot increase size of vertex buffer!");
+			return;
+		}
+
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		D3D11_MAPPED_SUBRESOURCE sub;
+		context->GetContext()->Map(m_Buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &sub);
+		memcpy(sub.pData, vertices, m_Layout.GetStride() * count);
+		context->GetContext()->Unmap(m_Buffer, NULL);
+	}
+
+	void DX11VertexBuffer::Create(void* vertices)
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		UINT cpuAccess = NULL;
+		D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
+		if (m_AccessType == BufferAccessType::Dynamic)
+		{
+			cpuAccess = D3D11_CPU_ACCESS_WRITE;
+			usage = D3D11_USAGE_DYNAMIC;
+		}
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
 		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		desc.ByteWidth = m_Layout.GetStride() * count;
-		desc.CPUAccessFlags = NULL;
+		desc.ByteWidth = m_Layout.GetStride() * m_Size;
+		desc.CPUAccessFlags = cpuAccess;
 		desc.StructureByteStride = m_Layout.GetStride();
-		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.Usage = usage;
 		desc.MiscFlags = NULL;
 
 		D3D11_SUBRESOURCE_DATA data;

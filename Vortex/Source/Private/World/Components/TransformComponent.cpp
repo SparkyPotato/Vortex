@@ -1,6 +1,5 @@
 #include <VXpch.h>
 #include <World/Components/TransformComponent.h>
-#include <World/World.h>
 
 namespace Vortex
 {
@@ -18,36 +17,32 @@ namespace Vortex
 	void TransformComponent::SetPosition(const Math::Vector& position)
 	{
 		m_Position = position;
-		MoveComponents();
+		RecalculateMatrices();
 	}
 
 	void TransformComponent::SetRotation(const Math::Vector& rotation)
 	{
 		m_Rotation = rotation;
-		MoveComponents();
+		RecalculateMatrices();
 	}
 
 	void TransformComponent::SetScale(const Math::Vector& scale)
 	{
 		m_Scale = scale;
-		MoveComponents();
+		RecalculateMatrices();
 	}
 
-	void TransformComponent::MoveComponents()
+	void TransformComponent::RecalculateMatrices()
 	{
-		auto entity = m_World->GetEntityFromID(m_Owner);
+		using namespace Math;
 
-		auto mesh = entity->GetMeshComponent();
-		if (mesh)
-			mesh->CalculateMatrix(m_Position, m_Rotation, m_Scale);
+		m_Transformation = Matrix::Rotate(m_Rotation) * Matrix::Scale(m_Scale) * Matrix::Translate(m_Position);
 
-		auto sprite = entity->GetSpriteComponent();
-		if (sprite)
-			sprite->GetQuad().CalculateMatrix(m_Position, m_Rotation, m_Scale);
+		m_InverseTransformation = Matrix::Translate(-m_Position) 
+			* Matrix::Rotate(-m_Rotation) 
+			* Matrix::Scale({ 1.f / m_Scale.x, 1.f / m_Scale.y, 1.f / m_Scale.z });
 
-		auto camera = entity->GetCameraComponent();
-		if (camera)
-			camera->CalculateMatrix(m_Position, m_Rotation, m_Scale);
+		m_RotationMatrix = Matrix::Rotate(m_Rotation);
 	}
 
 }

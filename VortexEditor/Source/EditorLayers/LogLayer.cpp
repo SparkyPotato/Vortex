@@ -16,11 +16,14 @@ LogLayer::~LogLayer()
 void LogLayer::OnAttach()
 {
 	GInput->AddKeyBinding(BIND_INPUT(this->OpenConsole), InputCode::Tilde, Binding::Pressed);
+	Logger::GetEditorSink()->SetLogCallback([&](Log& log) { if (log.level >= m_LogLevel) m_LogsToShow.push_back(log); });
+	UpdateLog();
 }
 
 void LogLayer::OnDetach()
 {
 	GInput->RemoveKeyBinding(InputCode::Tilde, Binding::Pressed);
+	Logger::GetEditorSink()->SetLogCallback(nullptr);
 }
 
 void LogLayer::Tick(float deltaTime)
@@ -38,7 +41,11 @@ void LogLayer::OnGuiRender()
 			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
 
 			// Clear log button.
-			if (ImGui::Button("Clear")) Logger::GetEditorSink()->Clear();
+			if (ImGui::Button("Clear"))
+			{
+				Logger::GetEditorSink()->Clear();
+				UpdateLog();
+			}
 
 			if (ImGui::IsItemHovered())
 			{
@@ -54,8 +61,11 @@ void LogLayer::OnGuiRender()
 				for (int n = 0; n < 5; n++)
 				{
 					const bool isSelected = (m_LogLevel == n);
-					if (ImGui::Selectable(levels[n], isSelected))
+					if (ImGui::Selectable(levels[n], isSelected) && n != m_LogLevel)
+					{
 						m_LogLevel = n;
+						UpdateLog();
+					}
 
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
@@ -124,25 +134,14 @@ void LogLayer::OpenConsole()
 
 void LogLayer::ShowLogText()
 {
-	Logger::GetEditorSink()->Shrink(250);
-
-	size_t size = Logger::GetEditorSink()->GetLog().size();
-	for (int i = 0; i < size; i++)
-	{
-		const Log* log = &(Logger::GetEditorSink()->GetLog()[i]);
-
-		if (log->level >= m_LogLevel)
-			m_Logs.push_back(log);
-	}
-
 	ImGuiListClipper clipper;
-	clipper.Begin((int) m_Logs.size());
+	clipper.Begin((int) m_LogsToShow.size());
 
 	while (clipper.Step())
 	{
 		for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
 		{
-			auto log = *m_Logs[i];
+			auto log = m_LogsToShow[i];
 
 			if (log.level == spdlog::level::trace)
 				ImGui::TextColored({ 0.7f, 0.7f, 0.7f, 1.f }, log.message.c_str());
@@ -158,6 +157,23 @@ void LogLayer::ShowLogText()
 	}
 
 	clipper.End();
+}
 
-	m_Logs.clear();
+void LogLayer::UpdateLog()
+{
+	m_LogsToShow.clear();
+
+	if (Logger::GetEditorSink()->GetLog().size() > 500)
+	{
+		Logger::GetEditorSink()->Shrink(250);
+	}
+
+	size_t size = Logger::GetEditorSink()->GetLog().size();
+	for (int i = 0; i < size; i++)
+	{
+		Log log = Logger::GetEditorSink()->GetLog()[i];
+
+		if (log.level >= m_LogLevel)
+			m_LogsToShow.push_back(log);
+	}
 }

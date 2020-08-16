@@ -70,7 +70,7 @@ namespace Math
 		columns[3] = other.columns[3];
 	}
 
-	Matrix Matrix::operator*(const Matrix& other)
+	Matrix Matrix::operator*(const Matrix& other) const
 	{
 		Matrix mat;
 

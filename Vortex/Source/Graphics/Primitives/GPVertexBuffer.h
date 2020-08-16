@@ -91,6 +91,11 @@ namespace Vortex
 		int m_Size;
 	};
 
+	enum class BufferAccessType
+	{
+		Static, Dynamic
+	};
+
 	class GPVertexBuffer : public GraphicsPrimitive
 	{
 	public:
@@ -99,10 +104,11 @@ namespace Vortex
 		/*
 			Creates a vertex buffer from `count` vertices according to the the layout.
 		*/
-		static GPVertexBuffer* Create(void* vertices, int count, const VertexLayout& layout);
+		static GPVertexBuffer* Create(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType);
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;
+		virtual void Set(void* vertices, int count) = 0;
 
 		virtual const VertexLayout& GetLayout() = 0;
 	};

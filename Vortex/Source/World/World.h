@@ -32,7 +32,7 @@ namespace Vortex
 
 		TransformComponent* CreateTransformComponent(unsigned int entityID);
 		MeshComponent* CreateMeshComponent(unsigned int entityID);
-		SpriteComponent* CreateSpriteComponent(unsigned int entityID);
+		SpriteComponent* CreateSpriteComponent(unsigned int entityID, float width = 1.f, float height = 1.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
 		CameraComponent* CreateCameraComponent(unsigned int entityID);
 
 	private:
