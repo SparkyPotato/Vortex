@@ -2,19 +2,18 @@
 #include <Core/Layers/LayerStack.h>
 
 Vortex::LayerStack* GLayerStack;
+DEFINE_LOGGER(LogLayerStack);
 
 namespace Vortex
 {
-	CREATE_LOGGER_LOCAL(LogLayerStack, spdlog::level::trace);
-
 	LayerStack::LayerStack()
 	{
-		
+		CREATE_LOGGER(LogLayerStack, spdlog::level::trace);
 	}
 
 	LayerStack::~LayerStack()
 	{
-		// Detaches all laters.
+		// Detaches all layers.
 		for (auto layer : m_Layers)
 		{
 			layer->OnDetach();

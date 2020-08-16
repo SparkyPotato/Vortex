@@ -3,10 +3,10 @@
 #include <Core/Event.h>
 #include <Graphics/Primitives/GPSwapChain.h>
 
+DECLARE_LOGGER(LogWindow);
+
 namespace Vortex
 {
-	DECLARE_LOGGER_EXTERN(LogWindow);
-
 	class GPFramebuffer;
 
 	/*

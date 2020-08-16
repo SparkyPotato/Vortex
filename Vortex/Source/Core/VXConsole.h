@@ -1,9 +1,9 @@
 #pragma once
 
+DECLARE_LOGGER(LogConsole);
+
 namespace Vortex
 {
-	DECLARE_LOGGER_EXTERN(LogConsole);
-
 	struct ConsoleCommand
 	{
 		std::string command;

@@ -3,6 +3,8 @@
 #include <Core/Module.h>
 #include <Core/Events/InputEvent.h>
 
+DECLARE_LOGGER(LogInput);
+
 namespace Vortex
 {
 	/*

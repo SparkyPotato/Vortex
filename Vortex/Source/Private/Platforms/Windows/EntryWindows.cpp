@@ -8,6 +8,9 @@
 #include <Core/Modules/VXCore.h>
 #include <Private/Platforms/Windows/WWindow.h>
 
+DECLARE_LOGGER(LogEntry);
+DEFINE_LOGGER(LogEntry);
+
 /*
 	If building as a Console App.
 */
@@ -15,7 +18,8 @@ int wmain(int argc, wchar_t** argv)
 {
 	using namespace Vortex;
 
-	CREATE_LOGGER_LOCAL(LogEntry, spdlog::level::trace);
+	CREATE_LOGGER(LogEntry, spdlog::level::trace);
+	CREATE_LOGGER(LogWindow, spdlog::level::trace);
 
 	// Initialize the Logger, so we can start logging without depending on VXCore.
 	try { Logger::Init(); }

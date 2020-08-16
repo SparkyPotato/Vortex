@@ -96,20 +96,20 @@ namespace Vortex
 	};
 }
 
-#define DECLARE_LOGGER_EXTERN(loggerName) \
+#define DECLARE_LOGGER(loggerName) \
 extern std::shared_ptr<spdlog::logger> Logger##loggerName
 
-#define DEFINE_LOGGER(loggerName, logLevel) \
-std::shared_ptr<spdlog::logger> Logger##loggerName = Logger::CreateLogger(#loggerName, logLevel)
+#define DEFINE_LOGGER(loggerName) \
+std::shared_ptr<spdlog::logger> Logger##loggerName = nullptr
 
-#define CREATE_LOGGER_LOCAL(loggerName, logLevel) \
-std::shared_ptr<spdlog::logger> Logger##loggerName = Logger::CreateLogger(#loggerName, logLevel)
+#define CREATE_LOGGER(loggerName, logLevel) \
+::Logger##loggerName = Vortex::Logger::CreateLogger(#loggerName, logLevel)
 
 // Log Macros. 'logger' is a logger created by CREATE_LOGGER(loggerName, logLevel).
-#define VX_TRACE(logger, ...)  Logger##logger->trace(__VA_ARGS__)
-#define VX_DEBUG(logger, ...)  Logger##logger->debug(__VA_ARGS__)
-#define VX_INFO(logger, ...)   Logger##logger->info(__VA_ARGS__)
-#define VX_WARN(logger, ...)   Logger##logger->warn(__VA_ARGS__)
-#define VX_ERROR(logger, ...)  Logger##logger->error(__VA_ARGS__)
+#define VX_TRACE(logger, ...)  ::Logger##logger->trace(__VA_ARGS__)
+#define VX_DEBUG(logger, ...)  ::Logger##logger->debug(__VA_ARGS__)
+#define VX_INFO(logger, ...)   ::Logger##logger->info(__VA_ARGS__)
+#define VX_WARN(logger, ...)   ::Logger##logger->warn(__VA_ARGS__)
+#define VX_ERROR(logger, ...)  ::Logger##logger->error(__VA_ARGS__)
 
-DECLARE_LOGGER_EXTERN(LogDefault);
+DECLARE_LOGGER(LogDefault);

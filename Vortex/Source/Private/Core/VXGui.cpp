@@ -55,6 +55,13 @@ namespace Vortex
 		// Profiles GUI Render.
 		ENG_PROFILE("GUI Render");
 
+		if (m_ShouldRestart)
+		{
+			Shutdown();
+			Startup();
+			m_ShouldRestart = false;
+		}
+
 		// Bind main window framebuffer.
 		m_Window->GetFramebuffer()->Bind();
 
@@ -96,6 +103,12 @@ namespace Vortex
 		{
 			VX_INFO(LogConsole, "GUI: Switched to default Vortex colors.");
 			SetVortexColors();
+		}
+		else if (command.command == "restart")
+		{
+			VX_INFO(LogConsole, "GUI: Restarting GUI...");
+			ImGui::GetIO().IniFilename = NULL;
+			m_ShouldRestart = true;
 		}
 		else if (command.command == "help")
 		{

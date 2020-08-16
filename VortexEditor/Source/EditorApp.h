@@ -1,6 +1,8 @@
 #pragma once
 #include <VortexMinimal.h>
 
+DECLARE_LOGGER(LogEditor);
+
 class EditorApp : public Vortex::Application
 {
 public:
@@ -17,9 +19,13 @@ public:
 
 	virtual void OnEvent(Vortex::Event& event) override;
 
+	virtual void OnConsoleCommand(Vortex::ConsoleCommand command) override;
+
 private:
-	void LoadPrefs(std::string file);
-	void SavePrefs(std::string file);
+	std::string m_LayoutFilePath = "Preferences/EditorLayout.vxprefs";
+
+	void LoadLayout(std::string file);
+	void SaveLayout(std::string file);
 
 	bool m_IsClosing = false;
 

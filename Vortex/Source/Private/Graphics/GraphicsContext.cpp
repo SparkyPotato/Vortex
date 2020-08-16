@@ -4,17 +4,18 @@
 #include <Private/Platforms/DirectX11/DX11GraphicsContext.h>
 #endif
 
+DEFINE_LOGGER(LogGraphicsAPI);
 
 namespace Vortex
 {
-	DEFINE_LOGGER(LogGraphicsAPI, spdlog::level::trace);
-
 	GraphicsContext* GraphicsContext::s_Context = nullptr;
 
 	void GraphicsContext::Create(GraphicsAPI api)
 	{
 		// Throw an exception if the Context has already been created.
 		if (s_Context) throw std::exception("Graphics context has already been created!");
+
+		CREATE_LOGGER(LogGraphicsAPI, spdlog::level::trace);
 
 		switch (api)
 		{

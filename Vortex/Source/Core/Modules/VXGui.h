@@ -28,5 +28,7 @@ namespace Vortex
 
 	private:
 		Window* m_Window;
+
+		bool m_ShouldRestart = false;
 	};
 }

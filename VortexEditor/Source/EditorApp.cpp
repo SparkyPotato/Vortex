@@ -7,10 +7,11 @@
 
 using namespace Vortex;
 
-CREATE_LOGGER_LOCAL(LogEditor, spdlog::level::trace);
+DEFINE_LOGGER(LogEditor);
 
 Application* CreateApplication()
 {
+	CREATE_LOGGER(LogEditor, spdlog::level::trace);
 	return new EditorApp();
 }
 
@@ -26,7 +27,7 @@ EditorApp::~EditorApp()
 
 void EditorApp::Start()
 {
-	LoadPrefs("Preferences/Editor.vxprefs");
+	LoadLayout(m_LayoutFilePath);
 
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
@@ -35,12 +36,12 @@ void EditorApp::Start()
 
 void EditorApp::Quit()
 {
-	SavePrefs("Preferences/Editor.vxprefs");
+	SaveLayout(m_LayoutFilePath);
 }
 
 void EditorApp::Tick(float deltaTime)
 {
-	
+
 }
 
 void EditorApp::OnGuiRender()
@@ -103,9 +104,30 @@ void EditorApp::OnEvent(Vortex::Event& event)
 	}
 }
 
-void EditorApp::LoadPrefs(std::string file)
+void EditorApp::OnConsoleCommand(Vortex::ConsoleCommand command)
+{
+	if (command.command == "loadlayout")
+	{
+		VX_INFO(LogConsole, "Loading Layout.");
+		LoadLayout(m_LayoutFilePath);
+		VXConsole::Get()->SubmitCommand("gui.restart");
+	}
+	else if (command.command == "help")
+	{
+		VX_INFO(LogConsole, "Editor: Functions: ");
+		VX_INFO(LogConsole, "Editor:     loadlayout - Loads the layout of the last application startup.");
+	}
+	else
+	{
+		VX_ERROR(LogConsole, "'{0}' is not a valid Editor command!", command.command);
+	}
+}
+
+void EditorApp::LoadLayout(std::string file)
 {
 	std::ifstream prefsFile(file);
+
+	VX_INFO(LogEditor, "Loading Editor layout.");
 
 	if (prefsFile.is_open())
 	{
@@ -138,14 +160,16 @@ void EditorApp::LoadPrefs(std::string file)
 	}
 	else
 	{
-		VX_WARN(LogEditor, "Couldn't open preferences file. Using default settings...");
+		VX_WARN(LogEditor, "Couldn't open preferences file. Using default settings.");
 		auto path = std::filesystem::path("Preferences/");
 		std::filesystem::create_directory(path);
 	}
 }
 
-void EditorApp::SavePrefs(std::string file)
+void EditorApp::SaveLayout(std::string file)
 {
+	VX_INFO(LogEditor, "Saving Editor layout.");
+
 	std::ofstream prefsFile(file);
 
 	if (prefsFile.is_open())

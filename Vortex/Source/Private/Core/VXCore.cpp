@@ -6,15 +6,18 @@
 
 Vortex::VXCore* GCore;
 
+DEFINE_LOGGER(LogCore);
+DEFINE_LOGGER(LogWindow);
+
 namespace Vortex
 {
-	CREATE_LOGGER_LOCAL(LogCore, spdlog::level::trace);
-
-	DEFINE_LOGGER(LogWindow, spdlog::level::trace);
-
 	void VXCore::Startup()
 	{
+		CREATE_LOGGER(LogCore, spdlog::level::trace);
+
 		VX_TRACE(LogCore, "Starting Vortex Core Module.");
+
+		VXConsole::Init();
 
 		// Make sure we can't start the engine twice.
 		if (m_IsTicking)

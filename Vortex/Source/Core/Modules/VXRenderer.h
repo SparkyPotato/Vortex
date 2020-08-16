@@ -7,6 +7,8 @@
 #include <Math/Matrix.h>
 #include <Core/Events/WindowEvent.h>
 
+DECLARE_LOGGER(LogRenderer);
+
 namespace Vortex
 {
 	class World;

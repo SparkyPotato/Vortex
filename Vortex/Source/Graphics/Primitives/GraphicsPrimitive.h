@@ -1,9 +1,9 @@
 #pragma once
 
+DECLARE_LOGGER(LogGraphicsAPI);
+
 namespace Vortex
 {
-	DECLARE_LOGGER_EXTERN(LogGraphicsAPI);
-
 	/*
 		Base class of Graphics Primitives.
 	*/

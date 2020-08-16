@@ -4,12 +4,14 @@
 
 Vortex::VXInput* GInput;
 
+DEFINE_LOGGER(LogInput);
+
 namespace Vortex
 {
-	CREATE_LOGGER_LOCAL(LogInput, spdlog::level::trace);
-
 	void VXInput::Startup()
 	{
+		CREATE_LOGGER(LogInput, spdlog::level::trace);
+
 		VX_TRACE(LogInput, "Started Vortex Input Module.");
 
 		::GInput = this;

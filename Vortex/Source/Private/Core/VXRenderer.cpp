@@ -5,10 +5,10 @@
 
 Vortex::VXRenderer* GRenderer;
 
+DEFINE_LOGGER(LogRenderer);
+
 namespace Vortex
 {
-	CREATE_LOGGER_LOCAL(LogRenderer, spdlog::level::trace);
-
 	VXRenderer::VXRenderer()
 	{
 		
@@ -21,6 +21,8 @@ namespace Vortex
 
 	void VXRenderer::Startup()
 	{
+		CREATE_LOGGER(LogRenderer, spdlog::level::trace);
+
 		m_Target = GWindow->GetFramebuffer();
 		m_IsOnWindow = true;
 

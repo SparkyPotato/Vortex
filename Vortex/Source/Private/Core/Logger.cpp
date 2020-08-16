@@ -2,6 +2,8 @@
 #include <Core/Logger.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
+DEFINE_LOGGER(LogDefault);
+
 namespace Vortex
 {
 	// Creating spdlog sinks.
@@ -10,6 +12,8 @@ namespace Vortex
 
 	void Logger::Init()
 	{
+		CREATE_LOGGER(LogDefault, spdlog::level::trace);
+
 		// Setting the log pattern.
 		spdlog::set_pattern("%I:%M:%S.%e [%n] %l: %^%v%$");
 	}

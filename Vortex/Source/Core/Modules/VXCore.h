@@ -6,6 +6,8 @@
 #include <Core/Application.h>
 #include <Core/Layers/LayerStack.h>
 
+DECLARE_LOGGER(LogCore);
+
 namespace Vortex
 {
 	/*

@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Window.h>
+#include <Core/VXConsole.h>
 #include <imgui.h>
 
 namespace Vortex
@@ -45,14 +46,22 @@ namespace Vortex
 		virtual void Tick(float deltaTime) = 0;
 
 		/*
-			Called every frame when ImGui is being rendered. ImGui functions will only work here. Doesn't have to be overriden.
+			Called every frame when ImGui is being rendered. ImGui functions will only work here. Doesn't have to be overridden.
 		*/
 		virtual void OnGuiRender() {}
 
 		/*
-			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overriden.
+			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overridden.
 		*/
 		virtual void OnEvent(Event& event) {};
+
+		/*
+			Called to run application-custom console commands.
+		*/
+		virtual void OnConsoleCommand(ConsoleCommand command)
+		{
+			VX_ERROR(LogConsole, "Application has no custom commands.");
+		}
 	};
 }
 

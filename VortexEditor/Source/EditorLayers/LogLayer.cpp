@@ -1,9 +1,6 @@
 #include <EditorLayers/LogLayer.h>
-#include <Core/VXConsole.h>
 
 using namespace Vortex;
-
-DEFINE_LOGGER(LogDefault, spdlog::level::trace);
 
 LogLayer::LogLayer(bool* isLogCurrentlyOpen)
 	: m_IsOpen(isLogCurrentlyOpen)
