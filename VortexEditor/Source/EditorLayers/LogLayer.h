@@ -24,6 +24,6 @@ private:
 	int m_LogLevel = 0;
 
 	bool m_IsConsoleOpen = false;
-	bool m_IsFocused = false;
+	bool m_WasJustOpened = false;
 	char m_ConsoleBuffer[1024];
 };

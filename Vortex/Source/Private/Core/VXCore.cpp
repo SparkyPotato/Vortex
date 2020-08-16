@@ -204,6 +204,12 @@ namespace Vortex
 			VX_INFO(LogConsole, "Core: Quitting...");
 			Quit();
 		}
+		else if (command.command == "help")
+		{
+			VX_INFO(LogConsole, "Core: Functions: ");
+			VX_INFO(LogConsole, "Core:     quit - Quits the Vortex Engine.");
+			VX_INFO(LogConsole, "Core:     restart - Restarts the Vortex Engine.");
+		}
 		else
 		{
 			VX_ERROR(LogConsole, "'{0}' is not a valid command for module core!", command.command);
@@ -216,16 +222,16 @@ namespace Vortex
 		auto dispatcher = EventDispatcher(event);
 
 		// Dispatches all Input related events to the Vortex Input Module.
-		dispatcher.Dispatch<KeyDownEvent>(std::bind(&VXInput::KDEvent, m_Input, std::placeholders::_1));
-		dispatcher.Dispatch<KeyUpEvent>(std::bind(&VXInput::KUEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<KeyDownEvent>(BIND_EVENT(m_Input->KDEvent));
+		dispatcher.Dispatch<KeyUpEvent>(BIND_EVENT(m_Input->KUEvent));
 
-		dispatcher.Dispatch<MouseMoveEvent>(std::bind(&VXInput::MMEvent, m_Input, std::placeholders::_1));
-		dispatcher.Dispatch<MouseButtonDownEvent>(std::bind(&VXInput::MDEvent, m_Input, std::placeholders::_1));
-		dispatcher.Dispatch<MouseButtonUpEvent>(std::bind(&VXInput::MUEvent, m_Input, std::placeholders::_1));
-		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(std::bind(&VXInput::MDCEvent, m_Input, std::placeholders::_1));
-		dispatcher.Dispatch<MouseScrollEvent>(std::bind(&VXInput::MSEvent, m_Input, std::placeholders::_1));
+		dispatcher.Dispatch<MouseMoveEvent>(BIND_EVENT(m_Input->MMEvent));
+		dispatcher.Dispatch<MouseButtonDownEvent>(BIND_EVENT(m_Input->MDEvent));
+		dispatcher.Dispatch<MouseButtonUpEvent>(BIND_EVENT(m_Input->MUEvent));
+		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(BIND_EVENT(m_Input->MDCEvent));
+		dispatcher.Dispatch<MouseScrollEvent>(BIND_EVENT(m_Input->MSEvent));
 
-		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&VXRenderer::ResizeOnWindow, m_Renderer, std::placeholders::_1));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT(m_Renderer->ResizeOnWindow));
 
 		if (event.GetType() == EventType::WindowDeactivate)
 		{

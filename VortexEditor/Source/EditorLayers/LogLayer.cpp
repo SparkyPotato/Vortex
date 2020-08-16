@@ -18,12 +18,12 @@ LogLayer::~LogLayer()
 
 void LogLayer::OnAttach()
 {
-	GInput->AddKeyBinding([&]() { this->OpenConsole(); }, InputCode::Tilde, Binding::Pressed);
+	GInput->AddKeyBinding(BIND_INPUT(this->OpenConsole), InputCode::Tilde, Binding::Pressed);
 }
 
 void LogLayer::OnDetach()
 {
-
+	GInput->RemoveKeyBinding(InputCode::Tilde, Binding::Pressed);
 }
 
 void LogLayer::Tick(float deltaTime)
@@ -33,16 +33,11 @@ void LogLayer::Tick(float deltaTime)
 
 void LogLayer::OnGuiRender()
 {
-	bool show = true;
-	ImGui::ShowDemoWindow(&show);
-
 	if (*m_IsOpen)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 800.f, 250.f });
-		if (ImGui::Begin("Log", m_IsOpen))
+		if (ImGui::Begin("Log", m_IsOpen), ImGuiWindowFlags_NoScrollbar)
 		{
-			m_IsFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
-
 			const char* levels[] = { "Trace", "Debug", "Info", "Warn", "Error" };
 
 			// Clear log button.
@@ -95,6 +90,11 @@ void LogLayer::OnGuiRender()
 				ImGui::Separator();
 
 				ImGui::PushItemWidth(-1);
+				if (m_WasJustOpened)
+				{
+					ImGui::SetKeyboardFocusHere();
+					m_WasJustOpened = false;
+				}
 				if (ImGui::InputTextWithHint("##ConsoleInput", "Console", m_ConsoleBuffer, sizeof(m_ConsoleBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
 					VXConsole::Get()->SubmitCommand(m_ConsoleBuffer);
@@ -118,9 +118,10 @@ void LogLayer::OnGuiRender()
 
 void LogLayer::OpenConsole()
 {
-	if (m_IsFocused && GInput->IsKeyDown(InputCode::Shift))
+	if (GInput->IsKeyDown(InputCode::Shift))
 	{
 		m_IsConsoleOpen = !m_IsConsoleOpen;
+		m_WasJustOpened = true;
 	}
 }
 

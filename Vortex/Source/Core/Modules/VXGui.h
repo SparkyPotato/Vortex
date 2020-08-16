@@ -24,6 +24,8 @@ namespace Vortex
 
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
+		void SetVortexColors();
+
 	private:
 		Window* m_Window;
 	};

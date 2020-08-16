@@ -33,12 +33,54 @@ namespace Vortex
 
 	void VXInput::OnConsoleCommand(ConsoleCommand command)
 	{
-		
+		if (command.command == "bindings")
+		{
+			VX_INFO(LogConsole, "Input: Current Bindings: ");
+			for (auto& binder : m_Binders)
+			{
+				std::string binding;
+				if (binder.binding == Binding::Pressed)
+					binding = "Pressed";
+				else
+					binding = "Released";
+
+				VX_WARN(LogConsole, "Function: {0} on Key: {1} ({2})", binder.functionName, binder.code, binding);
+			}
+		}
+		else if (command.command == "help")
+		{
+			VX_INFO(LogConsole, "Input: Functions: ");
+			VX_INFO(LogConsole, "Input:     bindings - Displays the current key bindigs.");
+		}
+		else
+		{
+			VX_ERROR(LogConsole, "'{0}' is not a valid command for module input!", command.command);
+		}
+	}
+
+	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, std::string functionName, InputCode key, Binding bindingType)
+	{
+		m_Binders.emplace_back(keyFunction, functionName, key, bindingType);
 	}
 
 	void VXInput::AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType)
 	{
 		m_Binders.emplace_back(keyFunction, key, bindingType);
+	}
+
+	void VXInput::RemoveKeyBinding(InputCode key, Binding bindingType)
+	{
+		Binder binder(nullptr, key, bindingType);
+		auto it = std::find(m_Binders.begin(), m_Binders.end(), binder);
+
+		if (it != m_Binders.end())
+		{
+			m_Binders.erase(it);
+		}
+		else
+		{
+			VX_WARN(LogInput, "Tried to remove input binding that doesn't exist. Doing nothing.");
+		}
 	}
 
 	void VXInput::ClearInputState()

@@ -30,6 +30,8 @@ namespace Vortex
 
 	void VXConsole::SubmitCommand(std::string commandString)
 	{
+		VX_WARN(LogConsole, "# {0}", commandString);
+
 		std::string delimiter = ".";
 		std::string module = commandString.substr(0, commandString.find(delimiter));
 		commandString.erase(0, commandString.find(delimiter) + delimiter.length());
@@ -49,6 +51,13 @@ namespace Vortex
 		else if (module == "renderer" || module == "r")
 		{
 			GRenderer->OnConsoleCommand({ commandString });
+		}
+		else if (module == "help")
+		{
+			VX_INFO(LogConsole, "The Vortex Console uses a specific format for console commands: ");
+			VX_INFO(LogConsole, "<module>.<function>, or <module>.<variable>(.<subvariable>) <value>.");
+			VX_INFO(LogConsole, "Run <module>.help to get help for the commands available in each module.");
+			VX_INFO(LogConsole, "The available modules are: core(c), gui(g), input(i), renderer(r).");
 		}
 		else
 		{

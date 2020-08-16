@@ -67,18 +67,31 @@ namespace Vortex
 		*/
 		bool IsKeyDown(InputCode keyCode) { return m_KeyStates[(int) keyCode]; }
 
+		void AddKeyBinding(std::function<void(void)> keyFunction, std::string functionName, InputCode key, Binding bindingType);
 		void AddKeyBinding(std::function<void(void)> keyFunction, InputCode key, Binding bindingType);
+
+		void RemoveKeyBinding(InputCode key, Binding bindingType);
 
 		void ClearInputState();
 
 	private:
 		struct Binder
 		{
-			Binder(std::function<void(void)> fn, InputCode iCode, Binding bnding)
-				: function(fn), code(iCode), binding(bnding)
+			Binder(std::function<void(void)> func, std::string funcName, InputCode iCode, Binding bnding)
+				: function(func), functionName(funcName), code(iCode), binding(bnding)
 			{}
 
+			Binder(std::function<void(void)> func, InputCode iCode, Binding bnding)
+				: function(func), functionName("unset"), code(iCode), binding(bnding)
+			{}
+
+			bool operator==(const Binder& other)
+			{
+				return (code == other.code && binding == other.binding);
+			}
+
 			std::function<void(void)> function;
+			std::string functionName;
 			InputCode code;
 			Binding binding;
 		};

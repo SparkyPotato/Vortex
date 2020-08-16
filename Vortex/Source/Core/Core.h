@@ -23,3 +23,6 @@
 #else
 	#error "Windows is the only supported platform as of yet!"
 #endif
+
+#define BIND_INPUT(function) [&]() { function(); }
+#define BIND_EVENT(function) [&](auto&&... args) -> decltype(auto) { return function(std::forward<decltype(args)>(args)...); }
