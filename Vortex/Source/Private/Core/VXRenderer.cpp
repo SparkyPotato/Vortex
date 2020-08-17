@@ -51,7 +51,9 @@ namespace Vortex
 		m_Target->Bind();
 		m_Target->Clear(0.f, 0.5f, 0.5f, 1.f);
 
-		auto camera = m_World->GetCameras().begin();
+		auto camera = m_World->GetMainCamera();
+		if (!camera) return;
+
 		m_ConstantBuffer->Bind();
 
 		for (auto& sprite : m_World->GetSprites())
@@ -116,9 +118,9 @@ namespace Vortex
 
 	void VXRenderer::PostFrambufferResize(int width, int height)
 	{
-		auto camera = m_World->GetCameras().begin();
-		if (camera == m_World->GetCameras().end()) return;
-
-		camera->Resize((float) width / (float) height);
+		for (auto& camera : m_World->GetCameras())
+		{
+			camera.Resize((float)width / (float)height);
+		}
 	}
 }

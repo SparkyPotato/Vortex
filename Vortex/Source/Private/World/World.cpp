@@ -181,6 +181,8 @@ namespace Vortex
 		{
 			if (it->GetOwnerID() == entityID)
 			{
+				if (&(*it) == m_MainCamera)
+					m_MainCamera = nullptr;
 				m_Cameras.erase(it);
 				break;
 			}

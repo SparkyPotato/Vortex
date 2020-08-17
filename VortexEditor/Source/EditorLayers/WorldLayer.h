@@ -28,6 +28,8 @@ private:
 
 	Vortex::Entity* m_CurrentlySelectedEntity = nullptr;
 	float m_Position[3];
+	float m_Rotation[3];
+	float m_Scale[3];
 
 	bool* m_IsWorldOpen;
 
