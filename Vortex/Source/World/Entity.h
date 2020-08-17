@@ -12,6 +12,8 @@ namespace Vortex
 	class Entity
 	{
 	public:
+		friend class World;
+
 		Entity(unsigned int id, std::string name, World* world);
 		~Entity();
 
@@ -24,8 +26,8 @@ namespace Vortex
 
 		Entity* GetParent();
 		unsigned int GetParentID() { return m_ParentID; }
-		void SetParent(Entity* parent) { m_ParentID = parent->GetID(); }
-		void SetParentFromID(unsigned int parentID) { m_ParentID = parentID; }
+		void SetParent(Entity* parent);
+		void SetParentFromID(unsigned int parentID);
 
 		std::string GetName() { return m_Name; }
 		void SetName(std::string name) { m_Name = name; }
@@ -49,6 +51,9 @@ namespace Vortex
 
 		World* m_World;
 
-		TransformComponent* m_Transform;
+		TransformComponent* m_Transform = nullptr;
+		MeshComponent* m_Mesh = nullptr;
+		SpriteComponent* m_Sprite = nullptr;
+		CameraComponent* m_Camera = nullptr;
 	};
 }

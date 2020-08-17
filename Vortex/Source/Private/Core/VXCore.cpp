@@ -34,7 +34,6 @@ namespace Vortex
 
 		// Creates the layer stack.
 		m_LayerStack = new LayerStack();
-		GLayerStack = m_LayerStack;
 
 		// Creates the application and binds all the required Modules.
 		m_App = CreateApplication();
@@ -54,6 +53,9 @@ namespace Vortex
 		m_Renderer = new VXRenderer();
 		m_Renderer->Startup();
 
+		::GInput = m_Input;
+		::GLayerStack = m_LayerStack;
+		::GRenderer = m_Renderer;
 		::GCore = this;
 
 		// Starts the user-defined application.
@@ -69,22 +71,26 @@ namespace Vortex
 
 		m_IsTicking = false;
 
+		// Destroys the layer stack.
+		delete m_LayerStack;
+		GLayerStack = m_LayerStack = nullptr;
+
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
 		m_App = nullptr;
 
 		m_Renderer->Shutdown();
 		delete m_Renderer;
+		GRenderer = m_Renderer = nullptr;
 
 		// Deletes the Vortex GUI Module.
 		m_Gui->Shutdown();
 		delete m_Gui;
-
-		// Destroys the layer stack.
-		delete m_LayerStack;
+		m_Gui = nullptr;
 
 		// Destroys the window.
 		delete m_Window;
+		GWindow = m_Window = nullptr;
 
 		// Destroys Graphics Context.
 		GraphicsContext::Destroy();
@@ -92,6 +98,7 @@ namespace Vortex
 		// Deletes the Vortex Input Module.
 		m_Input->Shutdown();
 		delete m_Input;
+		GInput = m_Input = nullptr;
 
 		::GCore = nullptr;
 
@@ -232,6 +239,8 @@ namespace Vortex
 		ENG_PROFILE("Event Dispatching");
 		auto dispatcher = EventDispatcher(event);
 
+		if (!m_App || !m_LayerStack || !m_Input) return;
+
 		// Dispatches all Input related events to the Vortex Input Module.
 		dispatcher.Dispatch<KeyDownEvent>(BIND_EVENT(m_Input->KDEvent));
 		dispatcher.Dispatch<KeyUpEvent>(BIND_EVENT(m_Input->KUEvent));
@@ -246,7 +255,7 @@ namespace Vortex
 
 		if (event.GetType() == EventType::WindowDeactivate)
 		{
-			GInput->ClearInputState();
+			m_Input->ClearInputState();
 		}
 
 		m_LayerStack->PassEvent(event);

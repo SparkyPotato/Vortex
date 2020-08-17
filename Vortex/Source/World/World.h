@@ -17,7 +17,24 @@ namespace Vortex
 		World();
 		~World();
 
+		struct WorldNode
+		{
+			WorldNode(Entity* node)
+			{
+				entity = node;
+			}
+
+			bool operator==(Entity* node)
+			{
+				return entity == node;
+			}
+
+			Entity* entity;
+			std::vector<WorldNode> children;
+		};
+
 		Entity* CreateEntity(std::string name);
+		Entity* CreateChildEntity(Entity* parent, std::string name);
 
 		void DestroyEntity(unsigned int entityID);
 		void DestroyEntity(Entity* entity);
@@ -30,13 +47,30 @@ namespace Vortex
 		std::vector<SpriteComponent>& GetSprites() { return m_Sprites; }
 		std::vector<CameraComponent>& GetCameras() { return m_Cameras; }
 
+		const WorldNode& GetHierarchy() { return m_RootNode; }
+
+		void SetEntityParent(Entity* entity, Entity* parent);
+
 		TransformComponent* CreateTransformComponent(unsigned int entityID);
+		void DeleteTransformComponent(unsigned int entityID);
+
 		MeshComponent* CreateMeshComponent(unsigned int entityID);
+		void DeleteMeshComponent(unsigned int entityID);
+
 		SpriteComponent* CreateSpriteComponent(unsigned int entityID, float width = 1.f, float height = 1.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
+		void DeleteSpriteComponent(unsigned int entityID);
+
 		CameraComponent* CreateCameraComponent(unsigned int entityID);
+		void DeleteCameraComponent(unsigned int entityID);
 
 	private:
-		unsigned int m_NextID = 1;
+		WorldNode* FindEntityNodeParent(WorldNode* root, Entity* entity);
+		WorldNode* FindEntityNode(WorldNode* root, Entity* entity);
+		void DeleteComponents(unsigned int owner);
+
+		unsigned int m_NextID = 0;
+
+		WorldNode m_RootNode;
 
 		std::vector<Entity> m_Entities;
 		std::vector<TransformComponent> m_Transforms;

@@ -5,7 +5,7 @@
 namespace Vortex
 {
 	Entity::Entity(unsigned int id, std::string name, World* world)
-		: m_ID(id), m_Name(name), m_World(world), m_Transform(m_World->CreateTransformComponent(m_ID))
+		: m_ID(id), m_Name(name), m_World(world)
 	{
 		
 	}
@@ -27,10 +27,7 @@ namespace Vortex
 
 	Entity* Entity::AddChild(std::string name)
 	{
-		Entity* child = m_World->CreateEntity(name);
-		child->SetParentFromID(m_ID);
-
-		return child;
+		return m_World->CreateChildEntity(this, name);
 	}
 
 	Entity* Entity::GetParent()
@@ -38,63 +35,45 @@ namespace Vortex
 		return m_World->GetEntityFromID(m_ParentID);
 	}
 
+	void Entity::SetParent(Entity* parent)
+	{
+		m_ParentID = parent->GetID();
+		m_World->SetEntityParent(this, parent);
+	}
+
+	void Entity::SetParentFromID(unsigned int parentID)
+	{
+		m_ParentID = parentID;
+		m_World->SetEntityParent(this, m_World->GetEntityFromID(parentID));
+	}
+
 	MeshComponent* Entity::AddMeshComponent()
 	{
-		return m_World->CreateMeshComponent(m_ID);
+		return m_Mesh = m_World->CreateMeshComponent(m_ID);
 	}
 
 	MeshComponent* Entity::GetMeshComponent()
 	{
-		auto& meshes = m_World->GetMeshes();
-
-		for (MeshComponent& mesh : meshes)
-		{
-			if (mesh.GetOwnerID() == m_ID)
-			{
-				return &mesh;
-			}
-		}
-
-		return nullptr;
+		return m_Mesh;
 	}
 
 	SpriteComponent* Entity::AddSpriteComponent(float width, float height, Math::Matrix colors)
 	{
-		return m_World->CreateSpriteComponent(m_ID);
+		return  m_Sprite = m_World->CreateSpriteComponent(m_ID);
 	}
 
 	SpriteComponent* Entity::GetSpriteComponent()
 	{
-		auto& sprites = m_World->GetSprites();
-
-		for (SpriteComponent& sprite : sprites)
-		{
-			if (sprite.GetOwnerID() == m_ID)
-			{
-				return &sprite;
-			}
-		}
-
-		return nullptr;
+		return m_Sprite;
 	}
 
 	CameraComponent* Entity::AddCameraComponent()
 	{
-		return m_World->CreateCameraComponent(m_ID);
+		return m_Camera = m_World->CreateCameraComponent(m_ID);
 	}
 
 	CameraComponent* Entity::GetCameraComponent()
 	{
-		auto& cameras = m_World->GetCameras();
-
-		for (CameraComponent& camera : cameras)
-		{
-			if (camera.GetOwnerID() == m_ID)
-			{
-				return &camera;
-			}
-		}
-
-		return nullptr;
+		return m_Camera;
 	}
 }

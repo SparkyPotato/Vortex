@@ -17,9 +17,9 @@ namespace Vortex
 		const Math::Vector& GetRotation() { return m_Rotation; }
 		const Math::Vector& GetScale() { return m_Scale; }
 
-		const Math::Matrix& GetTransform() { return m_Transformation; }
-		const Math::Matrix& GetTransformInverse() { return m_InverseTransformation; }
-		const Math::Matrix& GetRotationMatrix() { return m_RotationMatrix; }
+		const Math::Matrix GetTransform();
+		const Math::Matrix GetTransformInverse();
+		const Math::Matrix GetRotationMatrix();
 
 		void SetPosition(const Math::Vector& position);
 		void SetRotation(const Math::Vector& rotation);
@@ -30,6 +30,8 @@ namespace Vortex
 
 		unsigned int m_Owner;
 		World* m_World;
+
+		TransformComponent* m_ParentTransform = nullptr;
 
 		Math::Vector m_Position;
 		Math::Vector m_Rotation;

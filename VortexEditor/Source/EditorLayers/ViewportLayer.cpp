@@ -9,16 +9,12 @@ using namespace Vortex;
 ViewportLayer::ViewportLayer(bool* isViewportCurrentlyOpen)
 	: m_IsOpen(isViewportCurrentlyOpen)
 {
-	m_World = new Vortex::World;
 
-	m_EditorEntity = m_World->CreateEntity("Editor Entity");
-	m_EditorCamera = m_EditorEntity->AddCameraComponent();
-	m_EditorCamera->SetCameraSettings(CameraProjection::Perspective, 1.f, 0.5f, 1000.f);
 }
 
 ViewportLayer::~ViewportLayer()
 {
-	delete m_World;
+	
 }
 
 void ViewportLayer::OnAttach()
@@ -26,14 +22,7 @@ void ViewportLayer::OnAttach()
 	m_Texture = GPTexture::Create(400, 400);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 
-	m_EditorEntity->GetTransform().SetPosition({ 0.f, 0.f, 0.f });
-
-	auto sprite = m_World->CreateEntity("Sprite");
-	sprite->AddSpriteComponent(2.f, 2.f);
-	sprite->GetTransform().SetPosition({ 0.f, 0.f, 1.f });
-
 	GRenderer->RenderToFramebuffer(m_Framebuffer);
-	GRenderer->RenderWorld(m_World);
 }
 
 void ViewportLayer::OnDetach()

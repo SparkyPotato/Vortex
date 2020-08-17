@@ -33,8 +33,6 @@ namespace Vortex
 
 		m_BasicVertexShader->Bind();
 		m_BasicPixelShader->Bind();
-
-		::GRenderer = this;
 	}
 
 	void VXRenderer::Shutdown()
@@ -47,6 +45,8 @@ namespace Vortex
 	void VXRenderer::Tick(float deltaTime)
 	{
 		VX_PROFILE("Rendering");
+
+		if (!m_World) return;
 
 		m_Target->Bind();
 		m_Target->Clear(0.f, 0.5f, 0.5f, 1.f);
@@ -117,6 +117,8 @@ namespace Vortex
 	void VXRenderer::PostFrambufferResize(int width, int height)
 	{
 		auto camera = m_World->GetCameras().begin();
+		if (camera == m_World->GetCameras().end()) return;
+
 		camera->Resize((float) width / (float) height);
 	}
 }

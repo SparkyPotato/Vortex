@@ -13,8 +13,6 @@ namespace Vortex
 		CREATE_LOGGER(LogInput, spdlog::level::trace);
 
 		VX_TRACE(LogInput, "Started Vortex Input Module.");
-
-		::GInput = this;
 	}
 
 	void VXInput::Shutdown()

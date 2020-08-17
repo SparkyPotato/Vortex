@@ -36,10 +36,20 @@ namespace Vortex
 		SpriteComponent(unsigned int owner, World* world, float width = 1.f, float height = 1.f, Math::Matrix colors = {1.f, 1.f, 1.f, 1.f});
 		~SpriteComponent();
 
+		SpriteComponent& operator=(const SpriteComponent& other)
+		{
+			m_Owner = other.m_Owner;
+			m_World = other.m_World;
+			m_Transform = other.m_Transform;
+			m_Quad = other.m_Quad;
+
+			return *this;
+		}
+
 		unsigned int GetOwnerID() { return m_Owner; }
 
 		Quad& GetQuad() { return m_Quad; }
-		const Math::Matrix& GetTransform() { return m_Transform.GetTransform(); }
+		const Math::Matrix GetTransform() { return m_Transform.GetTransform(); }
 
 	private:
 		unsigned int m_Owner;

@@ -32,4 +32,6 @@ private:
 	bool m_IsViewportOpen = true;
 	bool m_IsLogOpen = false;
 	bool m_IsProfilerOpen = false;
+	bool m_IsWorldOpen = true;
+	bool m_IsPropertiesOpen = true;
 };
