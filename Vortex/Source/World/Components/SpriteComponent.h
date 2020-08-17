@@ -19,6 +19,11 @@ namespace Vortex
 		void SetSize(float width, float height);
 		void SetColors(Math::Matrix colors);
 
+		float GetWidth() { return m_Vertices[1].position.x * 2; }
+		float GetHeight() { return m_Vertices[0].position.y * 2; }
+
+		Math::Matrix GetColors();
+
 	private:
 		struct Vertex
 		{

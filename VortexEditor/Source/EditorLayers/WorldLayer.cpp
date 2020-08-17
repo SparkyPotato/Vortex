@@ -78,6 +78,8 @@ void WorldLayer::OnGuiRender()
 			else
 			{
 				DrawProperties();
+
+				DrawAddComponent();
 			}
 
 			ImGui::End();
@@ -95,7 +97,7 @@ void WorldLayer::DisplayChildren(const World::WorldNode& node)
 	{
 		if (child.children.empty())
 		{
-			if (ImGui::Selectable(child.entity->GetName().c_str(), m_CurrentlySelectedEntity == child.entity))
+			if (ImGui::Selectable((child.entity->GetName() + "##" + std::to_string(child.entity->GetID())).c_str(), m_CurrentlySelectedEntity == child.entity))
 			{
 				SetCurrentEntity(child.entity);
 				memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
@@ -130,17 +132,51 @@ void WorldLayer::SetCurrentEntity(Entity* entity)
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
 	memcpy(m_EntityNameBuffer, entity->GetName().c_str(), entity->GetName().size());
 
-	m_Position[0] = m_CurrentlySelectedEntity->GetTransform().GetPosition().x;
-	m_Position[1] = m_CurrentlySelectedEntity->GetTransform().GetPosition().y;
-	m_Position[2] = m_CurrentlySelectedEntity->GetTransform().GetPosition().z;
+	auto transform = m_CurrentlySelectedEntity->GetTransform();
 
-	m_Rotation[0] = m_CurrentlySelectedEntity->GetTransform().GetRotation().x;
-	m_Rotation[1] = m_CurrentlySelectedEntity->GetTransform().GetRotation().y;
-	m_Rotation[2] = m_CurrentlySelectedEntity->GetTransform().GetRotation().z;
+	m_Position[0] = transform.GetPosition().x;
+	m_Position[1] = transform.GetPosition().y;
+	m_Position[2] = transform.GetPosition().z;
 
-	m_Scale[0] = m_CurrentlySelectedEntity->GetTransform().GetScale().x;
-	m_Scale[1] = m_CurrentlySelectedEntity->GetTransform().GetScale().y;
-	m_Scale[2] = m_CurrentlySelectedEntity->GetTransform().GetScale().z;
+	m_Rotation[0] = transform.GetRotation().x;
+	m_Rotation[1] = transform.GetRotation().y;
+	m_Rotation[2] = transform.GetRotation().z;
+
+	m_Scale[0] = transform.GetScale().x;
+	m_Scale[1] = transform.GetScale().y;
+	m_Scale[2] = transform.GetScale().z;
+
+	if (auto sprite = m_CurrentlySelectedEntity->GetSpriteComponent())
+	{
+		m_QuadSize[0] = sprite->GetQuad().GetHeight();
+		m_QuadSize[1] = sprite->GetQuad().GetWidth();
+
+		auto colors = sprite->GetQuad().GetColors();
+
+		m_VertexCol1[0] = colors.columns[0].x;
+		m_VertexCol1[1] = colors.columns[0].y;
+		m_VertexCol1[2] = colors.columns[0].z;
+
+		m_VertexCol2[0] = colors.columns[1].x;
+		m_VertexCol2[1] = colors.columns[1].y;
+		m_VertexCol2[2] = colors.columns[1].z;
+
+		m_VertexCol3[0] = colors.columns[2].x;
+		m_VertexCol3[1] = colors.columns[2].y;
+		m_VertexCol3[2] = colors.columns[2].z;
+
+		m_VertexCol4[0] = colors.columns[3].x;
+		m_VertexCol4[1] = colors.columns[3].y;
+		m_VertexCol4[2] = colors.columns[3].z;
+	}
+
+	if (auto camera = m_CurrentlySelectedEntity->GetCameraComponent())
+	{
+		m_Projection = (int) camera->GetProjectionMode();
+		m_AspectRatio = camera->GetAspectRatio();
+		m_NearPlane = camera->GetNearPlane();
+		m_FarPlane = camera->GetFarPlane();
+	}
 }
 
 void WorldLayer::DrawAddEntity()
@@ -177,6 +213,42 @@ void WorldLayer::DrawAddEntity()
 	}
 }
 
+void WorldLayer::DrawAddComponent()
+{
+	if (m_OpenAddComponent)
+	{
+		ImGui::OpenPopup("Choose Component");
+		m_OpenAddComponent = false;
+	}
+
+	if (ImGui::BeginPopup("Choose Component"))
+	{
+		if (!m_CurrentlySelectedEntity->GetSpriteComponent())
+		{
+			if (ImGui::Selectable("Sprite Component"))
+			{
+				m_CurrentlySelectedEntity->AddSpriteComponent();
+			}
+		}
+		if (!m_CurrentlySelectedEntity->GetMeshComponent())
+		{
+			if (ImGui::Selectable("Mesh Component"))
+			{
+				m_CurrentlySelectedEntity->AddMeshComponent();
+			}
+		}
+		if (!m_CurrentlySelectedEntity->GetCameraComponent())
+		{
+			if (ImGui::Selectable("Camera Component"))
+			{
+				m_CurrentlySelectedEntity->AddCameraComponent();
+			}
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
 void WorldLayer::DrawProperties()
 {
 	if (ImGui::InputTextWithHint("###Entity Name Input", "Entity Name", 
@@ -188,6 +260,15 @@ void WorldLayer::DrawProperties()
 	ImGui::Separator();
 
 	DrawTransform();
+
+	DrawSprite();
+
+	DrawCamera();
+
+	if (ImGui::Button("Add Component", { ImGui::GetContentRegionAvail().x, 0 }))
+	{
+		m_OpenAddComponent = true;
+	}
 }
 
 void WorldLayer::DrawTransform()
@@ -225,4 +306,102 @@ void WorldLayer::DrawTransform()
 
 		m_CurrentlySelectedEntity->GetTransform().SetScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
 	}
+
+	ImGui::Separator();
+}
+
+void WorldLayer::DrawSprite()
+{
+	if (!m_CurrentlySelectedEntity->GetSpriteComponent()) return;
+
+	ImGui::Text("Sprite Component");
+
+	if (ImGui::DragFloat2("Quad Size", m_QuadSize, 0.1f))
+	{
+		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetSize(m_QuadSize[0], m_QuadSize[1]);
+	}
+
+	if (ImGui::ColorEdit3("1###Vertex1", m_VertexCol1))
+	{
+		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
+		({
+			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
+			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
+			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
+			{ 1.f,             1.f,             1.f,             1.f,            }
+		});
+	}
+
+	if (ImGui::ColorEdit3("2###Vertex2", m_VertexCol2))
+	{
+		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
+		({
+			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
+			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
+			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
+			{ 1.f,             1.f,             1.f,             1.f,            }
+		});
+	}
+
+	if (ImGui::ColorEdit3("3###Vertex3", m_VertexCol3))
+	{
+		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
+		({
+			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
+			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
+			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
+			{ 1.f,             1.f,             1.f,             1.f,            }
+		});
+	}
+
+	if (ImGui::ColorEdit3("4###Vertex4", m_VertexCol4))
+	{
+		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
+		({
+			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
+			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
+			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
+			{ 1.f,             1.f,             1.f,             1.f,            }
+		});
+	}
+
+	ImGui::Separator();
+}
+
+void WorldLayer::DrawCamera()
+{
+	if (!m_CurrentlySelectedEntity->GetCameraComponent()) return;
+
+	ImGui::Text("Camera Component");
+
+	std::string proj;
+	if (m_Projection == (int) CameraProjection::Perspective)
+	{
+		proj = "Perspective";
+	}
+	else
+	{
+		proj = "Orthographic";
+	}
+	if (ImGui::SliderInt("Projection", &m_Projection, 0, 1, proj.c_str()))
+	{
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection) m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+	}
+
+	if (ImGui::DragFloat("Near Plane", &m_NearPlane, 0.05f))
+	{
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection)m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+	}
+
+	if (ImGui::DragFloat("Far Plane", &m_FarPlane, 0.05f))
+	{
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection)m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+	}
+
+	if (ImGui::Button("Set Main Camera", { ImGui::GetContentRegionAvail().x, 0.f }))
+	{
+		m_World->SetMainCamera(m_CurrentlySelectedEntity->GetCameraComponent());
+	}
+
+	ImGui::Separator();
 }

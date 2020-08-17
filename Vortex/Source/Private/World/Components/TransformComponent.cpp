@@ -68,11 +68,11 @@ namespace Vortex
 	{
 		using namespace Math;
 
-		m_Transformation = Matrix::Rotate(m_Rotation) * Matrix::Scale(m_Scale) * Matrix::Translate(m_Position);
+		m_Transformation = Matrix::Scale(m_Scale) * Matrix::Rotate(m_Rotation) * Matrix::Translate(m_Position);
 
-		m_InverseTransformation = Matrix::Translate(-m_Position) 
-			* Matrix::Rotate(-m_Rotation) 
-			* Matrix::Scale({ 1.f / m_Scale.x, 1.f / m_Scale.y, 1.f / m_Scale.z });
+		m_InverseTransformation = Matrix::Translate(-m_Position)
+			* Matrix::Scale({ 1.f / m_Scale.x, 1.f / m_Scale.y, 1.f / m_Scale.z })
+			* Matrix::Rotate(-m_Rotation);
 
 		m_RotationMatrix = Matrix::Rotate(m_Rotation);
 	}

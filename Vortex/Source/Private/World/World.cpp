@@ -8,6 +8,9 @@ namespace Vortex
 	{
 		m_Entities.reserve(100);
 		m_Transforms.reserve(100);
+		m_Meshes.reserve(100);
+		m_Sprites.reserve(100);
+		m_Cameras.reserve(100);
 
 		m_RootNode.entity->m_ParentID = -1;
 	}
@@ -45,17 +48,18 @@ namespace Vortex
 		DeleteComponents(entityID);
 
 		WorldNode* oldNode;
-		if (oldNode = FindEntityNodeParent(&m_RootNode, &(*it)))
-		{
-			auto newit = std::find(oldNode->children.begin(), oldNode->children.end(), &(*it));
-			oldNode->children.erase(newit);
-		}
 		if (oldNode = FindEntityNode(&m_RootNode, &(*it)))
 		{
 			for (auto& child : oldNode->children)
 			{
 				DestroyEntity(child.entity);
 			}
+		}
+
+		if (oldNode = FindEntityNodeParent(&m_RootNode, &(*it)))
+		{
+			auto newit = std::find(oldNode->children.begin(), oldNode->children.end(), &(*it));
+			oldNode->children.erase(newit);
 		}
 
 		it = std::find(m_Entities.begin(), m_Entities.end(), entityID);
@@ -71,17 +75,18 @@ namespace Vortex
 		DeleteComponents(entity->GetID());
 
 		WorldNode* oldNode;
-		if (oldNode = FindEntityNodeParent(&m_RootNode, entity))
-		{
-			auto it = std::find(oldNode->children.begin(), oldNode->children.end(), entity);
-			oldNode->children.erase(it);
-		}
 		if (oldNode = FindEntityNode(&m_RootNode, entity))
 		{
 			for (auto& child : oldNode->children)
 			{
 				DestroyEntity(child.entity);
 			}
+		}
+
+		if (oldNode = FindEntityNodeParent(&m_RootNode, entity))
+		{
+			auto it = std::find(oldNode->children.begin(), oldNode->children.end(), entity);
+			oldNode->children.erase(it);
 		}
 
 		auto it = std::find(m_Entities.begin(), m_Entities.end(), *entity);

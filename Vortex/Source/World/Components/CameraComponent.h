@@ -34,6 +34,11 @@ namespace Vortex
 		void SetCameraSettings(CameraProjection projection = CameraProjection::Perspective, float aspectRatio = 1.f, float nearPlane = 0.1f, float farPlane = 1000.f);
 		void Resize(float aspectRatio);
 
+		CameraProjection GetProjectionMode() { return m_Projection; }
+		float GetAspectRatio() { return m_AspectRatio; }
+		float GetNearPlane() { return m_NearPlane; }
+		float GetFarPlane() { return m_FarPlane; }
+
 		unsigned int GetOwnerID() { return m_Owner; }
 
 		const Math::Matrix GetViewProjectionMatrix() { return m_Transform.GetTransformInverse() * m_ProjectionMatrix; }

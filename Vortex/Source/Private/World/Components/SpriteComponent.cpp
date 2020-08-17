@@ -67,6 +67,17 @@ namespace Vortex
 		vertices->Set(m_Vertices, 4);
 	}
 
+	Math::Matrix Quad::GetColors()
+	{
+		return
+		{
+			{ m_Vertices[0].color.x, m_Vertices[1].color.x, m_Vertices[2].color.x, m_Vertices[3].color.x },
+			{ m_Vertices[0].color.y, m_Vertices[1].color.y, m_Vertices[2].color.y, m_Vertices[3].color.y },
+			{ m_Vertices[0].color.z, m_Vertices[1].color.z, m_Vertices[2].color.z, m_Vertices[3].color.z },
+			{ m_Vertices[0].color.w, m_Vertices[1].color.w, m_Vertices[2].color.w, m_Vertices[3].color.w }
+		};
+	}
+
 	SpriteComponent::SpriteComponent(unsigned int owner, World* world, float width, float height, Math::Matrix colors)
 		: m_Owner(owner), m_World(world), m_Quad(width, height, colors), m_Transform(m_World->GetEntityFromID(m_Owner)->GetTransform())
 	{
