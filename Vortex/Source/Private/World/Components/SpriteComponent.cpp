@@ -79,9 +79,9 @@ namespace Vortex
 	}
 
 	SpriteComponent::SpriteComponent(unsigned int owner, World* world, float width, float height, Math::Matrix colors)
-		: m_Owner(owner), m_World(world), m_Quad(width, height, colors), m_Transform(m_World->GetEntityFromID(m_Owner)->GetTransform())
+		: m_Owner(owner), m_World(world), m_Quad(width, height, colors)
 	{
-
+		m_Transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
 	}
 
 	SpriteComponent::~SpriteComponent()

@@ -32,7 +32,7 @@ namespace Vortex
 		std::string GetName() { return m_Name; }
 		void SetName(std::string name) { m_Name = name; }
 
-		TransformComponent& GetTransform() { return *m_Transform; }
+		TransformComponent* GetTransform() { return m_Transform; }
 
 		MeshComponent* AddMeshComponent();
 		MeshComponent* GetMeshComponent();

@@ -10,7 +10,7 @@ namespace Vortex
 		Entity* parent = m_World->GetEntityFromID(m_Owner)->GetParent();
 		if (parent)
 		{
-			m_ParentTransform = &parent->GetTransform();
+			m_ParentTransform = parent->GetTransform();
 		}
 	}
 

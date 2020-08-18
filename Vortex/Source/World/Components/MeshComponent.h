@@ -32,13 +32,13 @@ namespace Vortex
 		GPVertexBuffer* GetVertexBuffer() { return m_Vertices; }
 		GPIndexBuffer* GetIndexBuffer() { return m_Indices; }
 
-		Math::Matrix GetTransform() { return m_Transform.GetTransform(); }
+		Math::Matrix GetTransform() { return m_Transform->GetTransform(); }
 
 	private:
 		unsigned int m_Owner;
 		World* m_World;
 
-		TransformComponent& m_Transform;
+		TransformComponent* m_Transform;
 
 		GPVertexBuffer* m_Vertices  = nullptr;
 		GPIndexBuffer* m_Indices = nullptr;

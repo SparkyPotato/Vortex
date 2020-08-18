@@ -13,6 +13,12 @@ namespace Vortex
 
 	DX11VertexShader::~DX11VertexShader()
 	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+		if (context->GetVertexShader() == this)
+		{
+			context->SetVertexShader(nullptr);
+		}
+
 		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Shader->Release();

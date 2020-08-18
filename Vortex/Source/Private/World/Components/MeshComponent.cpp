@@ -5,9 +5,9 @@
 namespace Vortex
 {
 	MeshComponent::MeshComponent(unsigned int owner, World* world)
-		: m_Owner(owner), m_World(world), m_Transform(m_World->GetEntityFromID(m_Owner)->GetTransform())
+		: m_Owner(owner), m_World(world)
 	{
-		
+		m_Transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
 	}
 
 	MeshComponent::~MeshComponent()

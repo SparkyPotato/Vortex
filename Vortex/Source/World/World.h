@@ -41,11 +41,11 @@ namespace Vortex
 
 		Entity* GetEntityFromID(unsigned int id);
 
-		std::vector<Entity>& GetEntities() { return m_Entities; }
-		std::vector<TransformComponent>& GetTransforms() { return m_Transforms; }
-		std::vector<MeshComponent>& GetMeshes() { return m_Meshes; }
-		std::vector<SpriteComponent>& GetSprites() { return m_Sprites; }
-		std::vector<CameraComponent>& GetCameras() { return m_Cameras; }
+		std::vector<Entity*>& GetEntities() { return m_Entities; }
+		std::vector<TransformComponent*>& GetTransforms() { return m_Transforms; }
+		std::vector<MeshComponent*>& GetMeshes() { return m_Meshes; }
+		std::vector<SpriteComponent*>& GetSprites() { return m_Sprites; }
+		std::vector<CameraComponent*>& GetCameras() { return m_Cameras; }
 
 		CameraComponent* GetMainCamera() { return m_MainCamera; }
 		void SetMainCamera(CameraComponent* camera) { m_MainCamera = camera; }
@@ -75,11 +75,11 @@ namespace Vortex
 
 		WorldNode m_RootNode;
 
-		std::vector<Entity> m_Entities;
-		std::vector<TransformComponent> m_Transforms;
-		std::vector<MeshComponent> m_Meshes;
-		std::vector<SpriteComponent> m_Sprites;
-		std::vector<CameraComponent> m_Cameras;
+		std::vector<Entity*> m_Entities;
+		std::vector<TransformComponent*> m_Transforms;
+		std::vector<MeshComponent*> m_Meshes;
+		std::vector<SpriteComponent*> m_Sprites;
+		std::vector<CameraComponent*> m_Cameras;
 		CameraComponent* m_MainCamera =  nullptr;
 	};
 }

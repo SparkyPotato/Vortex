@@ -7,8 +7,9 @@ constexpr float PHI = 1.618f;
 namespace Vortex
 {
 	CameraComponent::CameraComponent(unsigned int owner, World* world)
-		: m_Owner(owner), m_World(world), m_Transform(m_World->GetEntityFromID(m_Owner)->GetTransform())
+		: m_Owner(owner), m_World(world)
 	{
+		m_Transform = m_World->GetEntityFromID(m_Owner)->GetTransform();
 		SetCameraSettings();
 	}
 
@@ -41,7 +42,7 @@ namespace Vortex
 
 	Math::Vector CameraComponent::GetForwardVector()
 	{
-		auto rotation = m_Transform.GetRotationMatrix();
+		auto rotation = m_Transform->GetRotationMatrix();
 		return Math::Vector(0.f, 0.f, 1.f) * rotation;
 	}
 }

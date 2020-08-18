@@ -105,6 +105,12 @@ namespace Vortex
 	{
 		if (m_CurrentVertexBuffer)
 		{
+			if (!buffer)
+			{
+				m_CurrentVertexBuffer = buffer;
+				return;
+			}
+
 			if (buffer->GetLayout() != m_CurrentVertexBuffer->GetLayout())
 			{
 				m_CurrentVertexBuffer = buffer;

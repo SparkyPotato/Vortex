@@ -33,6 +33,9 @@ namespace Vortex
 		void SetVertexBuffer(DX11VertexBuffer* buffer);
 		void SetVertexShader(DX11VertexShader* shader);
 
+		DX11VertexBuffer* GetVertexBuffer() { return m_CurrentVertexBuffer; }
+		DX11VertexShader* GetVertexShader() { return m_CurrentVertexShader; }
+
 		void GenerateInputLayout();
 
 	private:

@@ -41,7 +41,7 @@ namespace Vortex
 
 		unsigned int GetOwnerID() { return m_Owner; }
 
-		const Math::Matrix GetViewProjectionMatrix() { return m_Transform.GetTransformInverse() * m_ProjectionMatrix; }
+		const Math::Matrix GetViewProjectionMatrix() { return m_Transform->GetTransformInverse() * m_ProjectionMatrix; }
 
 		Math::Vector GetForwardVector();
 
@@ -51,7 +51,7 @@ namespace Vortex
 
 		Math::Matrix m_ProjectionMatrix;
 
-		TransformComponent& m_Transform;
+		TransformComponent* m_Transform;
 
 		CameraProjection m_Projection;
 		float m_AspectRatio;

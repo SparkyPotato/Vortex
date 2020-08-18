@@ -13,6 +13,12 @@ namespace Vortex
 
 	DX11VertexBuffer::~DX11VertexBuffer()
 	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+		if (context->GetVertexBuffer() == this)
+		{
+			context->SetVertexBuffer(nullptr);
+		}
+
 		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Buffer->Release();

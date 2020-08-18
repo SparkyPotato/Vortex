@@ -71,15 +71,15 @@ void ProfilerLayer::OnGuiRender()
 				for (auto profile : m_PausedProfiles)
 				{
 					if (profile.second >= m_PausedDeltaTime / 2.f)
-						ImGui::TextColored({ 0.5f, 0.f, 0.f, 1.f }, "%s: %f ms", profile.first.c_str(), profile.second);
+						ImGui::TextColored({ 0.5f, 0.f, 0.f, 1.f }, "%s: %.4f ms", profile.first.c_str(), profile.second);
 					else if (profile.second >= m_PausedDeltaTime / 4.f)
-						ImGui::TextColored({ 1.f, 0.f, 0.f, 1.f }, "%s: %f ms", profile.first.c_str(), profile.second);
+						ImGui::TextColored({ 1.f, 0.f, 0.f, 1.f }, "%s: %.4f ms", profile.first.c_str(), profile.second);
 					else if (profile.second >= m_PausedDeltaTime / 5.f)
-						ImGui::TextColored({ 1.f, 1.f, 0.f, 1.f }, "%s: %f ms", profile.first.c_str(), profile.second);
+						ImGui::TextColored({ 1.f, 1.f, 0.f, 1.f }, "%s: %.4f ms", profile.first.c_str(), profile.second);
 					else if (profile.second >= m_PausedDeltaTime / 10.f)
-						ImGui::TextColored({ 0.f, 1.f, 0.f, 1.f }, "%s: %f ms", profile.first.c_str(), profile.second);
+						ImGui::TextColored({ 0.f, 1.f, 0.f, 1.f }, "%s: %.4f ms", profile.first.c_str(), profile.second);
 					else
-						ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, "%s: %f ms", profile.first.c_str(), profile.second);
+						ImGui::TextColored({ 1.f, 1.f, 1.f, 1.f }, "%s: %.4f ms", profile.first.c_str(), profile.second);
 				}
 
 				ImGui::End();

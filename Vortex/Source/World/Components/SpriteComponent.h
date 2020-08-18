@@ -54,13 +54,13 @@ namespace Vortex
 		unsigned int GetOwnerID() { return m_Owner; }
 
 		Quad& GetQuad() { return m_Quad; }
-		const Math::Matrix GetTransform() { return m_Transform.GetTransform(); }
+		const Math::Matrix GetTransform() { return m_Transform->GetTransform(); }
 
 	private:
 		unsigned int m_Owner;
 		World* m_World;
 
-		TransformComponent& m_Transform;
+		TransformComponent* m_Transform;
 
 		Quad m_Quad;
 	};

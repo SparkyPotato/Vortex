@@ -56,16 +56,16 @@ namespace Vortex
 
 		m_ConstantBuffer->Bind();
 
-		for (auto& sprite : m_World->GetSprites())
+		for (auto sprite : m_World->GetSprites())
 		{
- 			m_ConstantBufferData.worldViewProjectionMatrix = sprite.GetTransform()* camera->GetViewProjectionMatrix();
+ 			m_ConstantBufferData.worldViewProjectionMatrix = sprite->GetTransform()* camera->GetViewProjectionMatrix();
 
 			m_ConstantBuffer->Set(&m_ConstantBufferData);
 
-			sprite.GetQuad().vertices->Bind();
-			sprite.GetQuad().indices->Bind();
+			sprite->GetQuad().vertices->Bind();
+			sprite->GetQuad().indices->Bind();
 
-			GraphicsContext::Get()->Draw(sprite.GetQuad().indices->GetSize());
+			GraphicsContext::Get()->Draw(sprite->GetQuad().indices->GetSize());
 		}
 	}
 
@@ -118,9 +118,9 @@ namespace Vortex
 
 	void VXRenderer::PostFrambufferResize(int width, int height)
 	{
-		for (auto& camera : m_World->GetCameras())
+		for (auto camera : m_World->GetCameras())
 		{
-			camera.Resize((float)width / (float)height);
+			camera->Resize((float)width / (float)height);
 		}
 	}
 }

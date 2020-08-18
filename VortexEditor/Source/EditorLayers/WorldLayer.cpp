@@ -12,11 +12,11 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	m_World = new World;
 	auto test = m_World->CreateEntity("Test Entity");
 	m_World->SetMainCamera(test->AddCameraComponent());
-	test->GetTransform().SetPosition({ 0.f, 0.f, -2.f });
+	test->GetTransform()->SetPosition({ 0.f, 0.f, -2.f });
 
 	auto square = m_World->CreateEntity("Square");
 	square->AddSpriteComponent();
-	square->GetTransform().SetPosition({ 0.f, 0.f, 2.f });
+	square->GetTransform()->SetPosition({ 0.f, 0.f, 2.f });
 
 	memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
@@ -134,17 +134,17 @@ void WorldLayer::SetCurrentEntity(Entity* entity)
 
 	auto transform = m_CurrentlySelectedEntity->GetTransform();
 
-	m_Position[0] = transform.GetPosition().x;
-	m_Position[1] = transform.GetPosition().y;
-	m_Position[2] = transform.GetPosition().z;
+	m_Position[0] = transform->GetPosition().x;
+	m_Position[1] = transform->GetPosition().y;
+	m_Position[2] = transform->GetPosition().z;
 
-	m_Rotation[0] = transform.GetRotation().x;
-	m_Rotation[1] = transform.GetRotation().y;
-	m_Rotation[2] = transform.GetRotation().z;
+	m_Rotation[0] = transform->GetRotation().x;
+	m_Rotation[1] = transform->GetRotation().y;
+	m_Rotation[2] = transform->GetRotation().z;
 
-	m_Scale[0] = transform.GetScale().x;
-	m_Scale[1] = transform.GetScale().y;
-	m_Scale[2] = transform.GetScale().z;
+	m_Scale[0] = transform->GetScale().x;
+	m_Scale[1] = transform->GetScale().y;
+	m_Scale[2] = transform->GetScale().z;
 
 	if (auto sprite = m_CurrentlySelectedEntity->GetSpriteComponent())
 	{
@@ -196,17 +196,9 @@ void WorldLayer::DrawAddEntity()
 		if (ImGui::InputTextWithHint("###New Entity Name Input", "Entity Name",
 			m_NewEntityNameBuffer, sizeof(m_NewEntityNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			if (std::string(m_NewEntityNameBuffer).empty())
-			{
-				VX_ERROR(LogWorld, "Cannot create entity with no name!");
-				ImGui::CloseCurrentPopup();
-			}
-			else
-			{
-				m_World->CreateEntity(m_NewEntityNameBuffer);
-				memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
-				ImGui::CloseCurrentPopup();
-			}
+			m_World->CreateEntity(m_NewEntityNameBuffer);
+			memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
+			ImGui::CloseCurrentPopup();
 		}
 
 		ImGui::EndPopup();
@@ -276,7 +268,7 @@ void WorldLayer::DrawTransform()
 	ImGui::Text("Transform");
 	if (ImGui::DragFloat3("Position", m_Position, 0.05f))
 	{
-		m_CurrentlySelectedEntity->GetTransform().SetPosition({ m_Position[0], m_Position[1], m_Position[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetPosition({ m_Position[0], m_Position[1], m_Position[2] });
 	}
 	if (ImGui::DragFloat3("Rotation", m_Rotation, 2.f))
 	{
@@ -292,7 +284,7 @@ void WorldLayer::DrawTransform()
 			}
 		}
 
-		m_CurrentlySelectedEntity->GetTransform().SetRotation({ m_Rotation[0], m_Rotation[1], m_Rotation[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetRotation({ m_Rotation[0], m_Rotation[1], m_Rotation[2] });
 	}
 	if (ImGui::DragFloat3("Scale", m_Scale, 0.05f))
 	{
@@ -304,7 +296,7 @@ void WorldLayer::DrawTransform()
 			}
 		}
 
-		m_CurrentlySelectedEntity->GetTransform().SetScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
 	}
 
 	ImGui::Separator();
