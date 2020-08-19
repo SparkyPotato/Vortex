@@ -32,6 +32,11 @@ namespace Vortex
 		static GPTexture* Create(int width, int height, TextureUsage usage);
 
 		/*
+			Creates a texture from a file.
+		*/
+		static GPTexture* Create(std::string file);
+
+		/*
 			Binding a texture does nothing.
 			It will probably bind it to the current Pixel Shader in the future.
 		*/
@@ -54,5 +59,7 @@ namespace Vortex
 			Resizes the texture to the specified width and height.
 		*/
 		virtual void Resize(int width, int height) = 0;
+
+		virtual void LoadFromFile(std::string file) = 0;
 	};
 }

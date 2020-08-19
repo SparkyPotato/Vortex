@@ -19,8 +19,6 @@ namespace Vortex
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.MiscFlags = NULL;
 
-		m_Data = new char[size];
-
 		D3D11_SUBRESOURCE_DATA subData;
 		subData.pSysMem = data;
 
@@ -29,12 +27,9 @@ namespace Vortex
 
 	DX11ConstantBuffer::~DX11ConstantBuffer()
 	{
-		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
-
-		context->UnregisterPrimitive(this);
+		GraphicsContext::Get()->UnregisterPrimitive(this);
 
 		m_Buffer->Release();
-		delete m_Data;
 	}
 
 	void DX11ConstantBuffer::Bind()

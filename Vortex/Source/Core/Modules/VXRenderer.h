@@ -50,7 +50,8 @@ namespace Vortex
 		World* m_World;
 
 		GPVertexShader* m_BasicVertexShader;
-		GPPixelShader* m_BasicPixelShader;
+		GPPixelShader* m_ColorPixelShader;
+		GPPixelShader* m_TexturePixelShader;
 
 		GPConstantBuffer* m_ConstantBuffer;
 		ConstantBuffer m_ConstantBufferData;

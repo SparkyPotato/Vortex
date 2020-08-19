@@ -14,9 +14,13 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	m_World->SetMainCamera(test->AddCameraComponent());
 	test->GetTransform()->SetPosition({ 0.f, 0.f, -2.f });
 
-	auto square = m_World->CreateEntity("Square");
+	auto square = m_World->CreateEntity("Textured Square");
 	square->AddSpriteComponent();
+	
 	square->GetTransform()->SetPosition({ 0.f, 0.f, 2.f });
+
+	auto csquare = m_World->CreateEntity("Colored Square");
+	csquare->AddSpriteComponent();
 
 	memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
@@ -73,7 +77,7 @@ void WorldLayer::OnGuiRender()
 		{
 			if (!m_CurrentlySelectedEntity)
 			{
-				ImGui::Text("Select an Entity to view it's properties");
+				ImGui::Text("Select an Entity to view its properties");
 			}
 			else
 			{

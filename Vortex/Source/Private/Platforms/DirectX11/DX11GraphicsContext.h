@@ -4,9 +4,12 @@
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <wincodec.h>
+
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "DXGI.lib")
+#pragma comment(lib, "windowscodecs.lib")
 
 namespace Vortex
 {
@@ -39,9 +42,9 @@ namespace Vortex
 		void GenerateInputLayout();
 
 	private:
-		ID3D11Device* p_Device;
-		ID3D11DeviceContext* p_Context;
-		IDXGIFactory1* p_Factory;
+		ID3D11Device* p_Device = nullptr;
+		ID3D11DeviceContext* p_Context = nullptr;
+		IDXGIFactory1* p_Factory = nullptr;
 
 		std::mutex m_ContextMutex;
 

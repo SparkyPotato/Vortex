@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <Core/Event.h>
 #include <Graphics/Primitives/GPSwapChain.h>
 

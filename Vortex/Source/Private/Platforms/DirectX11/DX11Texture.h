@@ -8,6 +8,8 @@ namespace Vortex
 	public:
 		DX11Texture(int width, int height);
 		DX11Texture(int width, int height, TextureUsage usage);
+		DX11Texture(std::string file);
+
 		DX11Texture(ID3D11Texture2D* texture);
 		virtual ~DX11Texture();
 
@@ -18,6 +20,8 @@ namespace Vortex
 		virtual int GetHeight() override { return m_Height; }
 
 		virtual void Resize(int width, int height) override;
+
+		virtual void LoadFromFile(std::string file) override;
 
 		ID3D11Texture2D* GetTexture() { return p_Texture; }
 

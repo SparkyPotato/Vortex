@@ -1,7 +1,5 @@
 #pragma once
 #include <Graphics/Primitives/GraphicsPrimitive.h>
-#include <string>
-#include <vector>
 
 namespace Vortex
 {

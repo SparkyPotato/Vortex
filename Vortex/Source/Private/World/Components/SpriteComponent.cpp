@@ -12,7 +12,8 @@ namespace Vortex
 		{
 			{ "POSITION", ShaderDataType::float4 },
 			{ "NORMAL", ShaderDataType::float4 },
-			{ "COLOR", ShaderDataType::float4 }
+			{ "COLOR", ShaderDataType::float4 },
+			{ "TEXCOORD", ShaderDataType::float2 }
 		};
 
 		m_Vertices[0].position = { -width / 2, height / 2, 0.f };
@@ -29,6 +30,11 @@ namespace Vortex
 		m_Vertices[1].normal = { 0.f, 0.f, -1.f, 0.f };
 		m_Vertices[2].normal = { 0.f, 0.f, -1.f, 0.f };
 		m_Vertices[3].normal = { 0.f, 0.f, -1.f, 0.f };
+
+		m_Vertices[0].texcoord = { 0.f, 0.f };
+		m_Vertices[1].texcoord = { 1.f, 0.f };
+		m_Vertices[2].texcoord = { 0.f, 1.f };
+		m_Vertices[3].texcoord = { 1.f, 1.f };
 
 		unsigned int indexArray[6] =
 		{

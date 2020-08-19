@@ -58,9 +58,17 @@ namespace Vortex
 		flags = D3DCOMPILE_DEBUG;
 		#endif
 
-		HRESULT hr = D3DCompileFromFile(wfile.c_str(), NULL, NULL, "main", "vs_5_0", flags, NULL, &m_Blob, NULL);
-		if (hr == E_FAIL)
+		ID3DBlob* compilerErrors;
+
+		HRESULT hr = D3DCompileFromFile(wfile.c_str(), NULL, NULL, "main", "vs_5_0", flags, NULL, &m_Blob, &compilerErrors);
+		if (FAILED(hr))
 		{
+			auto errorString = std::string((char*)compilerErrors->GetBufferPointer());
+			VX_ERROR(LogGraphicsAPI, "Pixel Shader Compilation failed: {0}", errorString);
+			compilerErrors->Release();
+			__debugbreak();
+
+			GraphicsContext::Get()->UnregisterPrimitive(this);
 			throw std::exception("Failed to compile shader!");
 		}
 

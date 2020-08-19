@@ -14,17 +14,6 @@ namespace Vortex
 		MeshComponent(unsigned int owner, World* world);
 		~MeshComponent();
 
-		MeshComponent& operator=(const MeshComponent& other)
-		{
-			m_Owner = other.m_Owner;
-			m_World = other.m_World;
-			m_Transform = other.m_Transform;
-			m_Vertices = other.m_Vertices;
-			m_Indices = other.m_Indices;
-
-			return *this;
-		}
-
 		void LoadFromFile(std::string file);
 
 		unsigned int GetOwnerID() { return m_Owner; }

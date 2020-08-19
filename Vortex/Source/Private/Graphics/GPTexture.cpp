@@ -28,4 +28,15 @@ namespace Vortex
 			return nullptr;
 		}
 	}
+
+	GPTexture* GPTexture::Create(std::string file)
+	{
+		switch (GraphicsContext::Get()->GetAPI())
+		{
+		case GraphicsAPI::DirectX11:
+			return new DX11Texture(file);
+		default:
+			return nullptr;
+		}
+	}
 }

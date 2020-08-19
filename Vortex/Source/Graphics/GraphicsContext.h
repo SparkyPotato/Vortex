@@ -45,7 +45,7 @@ namespace Vortex
 
 		/*
 			Memory management functions. 
-			Have to be called in every Graphics Primitive's constructor and destructors.
+			Have to be called in every Graphics Primitive's constructor and destructor.
 		*/
 		void RegisterPrimitive(GraphicsPrimitive* primitive);
 		void UnregisterPrimitive(GraphicsPrimitive* primitive);
@@ -69,6 +69,6 @@ namespace Vortex
 
 		GraphicsAPI m_API;
 		// Holds every primitive currently registered with the Graphics Context.
-		std::vector<std::unique_ptr<GraphicsPrimitive>> m_Primitives;
+		std::vector<GraphicsPrimitive*> m_Primitives;
 	};
 }

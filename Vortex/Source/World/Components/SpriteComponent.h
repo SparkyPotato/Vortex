@@ -1,6 +1,7 @@
 #pragma once
 #include <Graphics/Primitives/GPVertexBuffer.h>
 #include <Graphics/Primitives/GPIndexBuffer.h>
+#include <Graphics/Primitives/GPTexture.h>
 #include <Math/Matrix.h>
 #include <World/Components/TransformComponent.h>
 
@@ -30,6 +31,11 @@ namespace Vortex
 			Math::Vector position;
 			Math::Vector normal;
 			Math::Vector color;
+			struct
+			{
+				float u;
+				float v;
+			} texcoord;
 		};
 
 		Vertex* m_Vertices;
@@ -41,19 +47,11 @@ namespace Vortex
 		SpriteComponent(unsigned int owner, World* world, float width = 1.f, float height = 1.f, Math::Matrix colors = {1.f, 1.f, 1.f, 1.f});
 		~SpriteComponent();
 
-		SpriteComponent& operator=(const SpriteComponent& other)
-		{
-			m_Owner = other.m_Owner;
-			m_World = other.m_World;
-			m_Transform = other.m_Transform;
-			m_Quad = other.m_Quad;
-
-			return *this;
-		}
-
 		unsigned int GetOwnerID() { return m_Owner; }
 
 		Quad& GetQuad() { return m_Quad; }
+		GPTexture* GetTexture() { return m_Texture; }
+		void SetTexture(GPTexture* texture) { m_Texture = texture; }
 		const Math::Matrix GetTransform() { return m_Transform->GetTransform(); }
 
 	private:
@@ -63,5 +61,6 @@ namespace Vortex
 		TransformComponent* m_Transform;
 
 		Quad m_Quad;
+		GPTexture* m_Texture = nullptr;
 	};
 }

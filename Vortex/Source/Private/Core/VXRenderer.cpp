@@ -29,17 +29,18 @@ namespace Vortex
 		ConstantBuffer buffer;
 		m_ConstantBuffer = GPConstantBuffer::Create(&buffer, sizeof(ConstantBuffer), ConstantBufferTarget::VertexShader);
 		m_BasicVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl");
-		m_BasicPixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/BasicPixelShader.hlsl");
+		m_ColorPixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/ColorPixelShader.hlsl");
+		m_TexturePixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/TexturePixelShader.hlsl");
 
 		m_BasicVertexShader->Bind();
-		m_BasicPixelShader->Bind();
 	}
 
 	void VXRenderer::Shutdown()
 	{
 		delete m_ConstantBuffer;
 		delete m_BasicVertexShader;
-		delete m_BasicPixelShader;
+		delete m_ColorPixelShader;
+		delete m_TexturePixelShader;
 	}
 
 	void VXRenderer::Tick(float deltaTime)
@@ -64,6 +65,16 @@ namespace Vortex
 
 			sprite->GetQuad().vertices->Bind();
 			sprite->GetQuad().indices->Bind();
+
+			if (sprite->GetTexture())
+			{
+				m_TexturePixelShader->Bind();
+				sprite->GetTexture()->Bind();
+			}
+			else
+			{
+				m_ColorPixelShader->Bind();
+			}
 
 			GraphicsContext::Get()->Draw(sprite->GetQuad().indices->GetSize());
 		}

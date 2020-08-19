@@ -27,8 +27,6 @@ int wmain(int argc, wchar_t** argv)
 	{
 		// Outputting to Visual Studio debugger because the logger creation failed.
 		OutputDebugStringA("Failed to initialize Logger!");
-		OutputDebugStringA("Sleeping for 10 seconds before exiting...");
-		Sleep(10000);
 		return -1;
 	}
 
@@ -40,8 +38,6 @@ int wmain(int argc, wchar_t** argv)
 	{
 		VX_ERROR(LogEntry, "Failed to initialize Window Class!");
 		VX_ERROR(LogEntry, "Error: {0}", e.what());
-		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
-		Sleep(10000);
 		return -1;
 	}
 
@@ -59,8 +55,6 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
-		Sleep(10000);
 		return -1;
 	}
 
@@ -77,8 +71,6 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
-		Sleep(10000);
 		return -1;
 	}
 
@@ -95,8 +87,6 @@ int wmain(int argc, wchar_t** argv)
 			GraphicsContext::Destroy();
 		}
 
-		VX_ERROR(LogEntry, "Sleeping for 10 seconds before exiting...");
-		Sleep(10000);
 		return -1;
 	}
 

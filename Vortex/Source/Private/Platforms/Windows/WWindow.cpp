@@ -38,6 +38,7 @@ namespace Vortex
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
 		std::wstring name(size_needed, 0);
 		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &name[0], size_needed);
+
 		// Create window.
 		m_WindowHandle = CreateWindow
 		(
@@ -143,8 +144,20 @@ namespace Vortex
 
 		if (variable == "syncinterval")
 		{
-			m_Properties.syncInterval = std::stoi(command.command);
-			VX_INFO(LogConsole, "Window: Set Sync Interval to {0}", m_Properties.syncInterval);
+			int syncInterval = std::stoi(command.command);
+			if (syncInterval > 3)
+			{
+				VX_ERROR(LogConsole, "Window: Sync interval has to be less than 4!");
+			}
+			else if (syncInterval < 0)
+			{
+				VX_ERROR(LogConsole, "Window: The minimum value of sync inverval 0!");
+			}
+			else
+			{
+				m_Properties.syncInterval = syncInterval;
+				VX_INFO(LogConsole, "Window: Set Sync Interval to {0}", m_Properties.syncInterval);
+			}
 		}
 		else if (variable == "title")
 		{

@@ -3,6 +3,7 @@
 #include <Core/Modules/VXInput.h>
 #include <Core/Modules/VXGui.h>
 #include <Core/Modules/VXRenderer.h>
+#include <Core/Modules/VXScriptManager.h>
 #include <Core/Application.h>
 #include <Core/Layers/LayerStack.h>
 
@@ -93,6 +94,8 @@ namespace Vortex
 		VXGui* m_Gui = nullptr;
 		// The Vortex Renderer.
 		VXRenderer* m_Renderer = nullptr;
+		// The Vortex Scripting Manager.
+		VXScriptManager* m_ScriptManager = nullptr;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;

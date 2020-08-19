@@ -1,6 +1,7 @@
 #include <VXpch.h>
 #include <Core/Logger.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/msvc_sink.h>
 
 DEFINE_LOGGER(LogDefault);
 
@@ -8,7 +9,12 @@ namespace Vortex
 {
 	// Creating spdlog sinks.
 	std::shared_ptr<EditorSink_mt> Logger::s_EditorSink = std::make_shared<EditorSink_mt>();
-	std::vector<spdlog::sink_ptr> Logger::s_Sinks = { Logger::GetEditorSink(), std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true) };
+	std::vector<spdlog::sink_ptr> Logger::s_Sinks = 
+	{ 
+		Logger::GetEditorSink(), 
+		std::make_shared<spdlog::sinks::basic_file_sink_mt>("Temp/Log.txt", true),
+		std::make_shared<spdlog::sinks::msvc_sink_mt>()
+	};
 
 	void Logger::Init()
 	{

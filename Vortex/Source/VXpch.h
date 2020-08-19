@@ -11,6 +11,7 @@
 // STL includes
 #include <iostream>
 #include <string>
+#include <map>
 #include <vector>
 #include <memory>
 #include <thread>

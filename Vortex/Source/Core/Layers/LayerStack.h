@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <Core/Layers/Layer.h>
 
 DECLARE_LOGGER(LogLayerStack);

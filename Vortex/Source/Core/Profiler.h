@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <map>
 #ifdef PLATFORM_WINDOWS
 #include <winnt.h>

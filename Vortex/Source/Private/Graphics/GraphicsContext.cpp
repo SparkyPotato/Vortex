@@ -45,11 +45,14 @@ namespace Vortex
 		if (s_Context->m_Primitives.size() != 0)
 		{
 			// ... Throw a warning.
-			VX_WARN(LogGraphicsAPI, "{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
-			VX_WARN(LogGraphicsAPI, "Deleting...");
+			VX_ERROR(LogGraphicsAPI, "{0} Graphics Primitives have not been deleted.", s_Context->m_Primitives.size());
+			VX_ERROR(LogGraphicsAPI, "Deleting...");
 
-			// Deletion is handled by the unique_ptr. Doesn't seem to be working as of now.
-			// Please manage your memory.
+			// ... And delete all.
+			while (!s_Context->m_Primitives.empty())
+			{
+				delete* (s_Context->m_Primitives.begin());
+			}
 		}
 
 		delete s_Context;
@@ -80,24 +83,21 @@ namespace Vortex
 	void GraphicsContext::RegisterPrimitive(GraphicsPrimitive* primitive)
 	{
 		VX_TRACE(LogGraphicsAPI, "Registered primitive.");
-		m_Primitives.push_back(std::unique_ptr<GraphicsPrimitive>(primitive));
+		m_Primitives.push_back(primitive);
 	}
 
 	void GraphicsContext::UnregisterPrimitive(GraphicsPrimitive* primitive)
 	{
-		VX_TRACE(LogGraphicsAPI, "Unregistered primitive.");
+		auto it = std::find(m_Primitives.begin(), m_Primitives.end(), primitive);
 
-		int i = 0;
-		for (auto& prim : m_Primitives)
+		if (it != m_Primitives.end())
 		{
-			if (prim.get() == primitive)
-			{
-				prim.release();
-				m_Primitives.erase(m_Primitives.begin() + i);
-				break;
-			}
-
-			i++;
+			m_Primitives.erase(it);
+			VX_TRACE(LogGraphicsAPI, "Unregistered primitive.");
+		}
+		else
+		{
+			VX_ERROR(LogGraphicsAPI, "Trying to unregister primitive that was never registered!");
 		}
 	}
 }

@@ -53,6 +53,10 @@ namespace Vortex
 		{
 			GRenderer->OnConsoleCommand({ commandString });
 		}
+		else if (module == "script" || module == "s")
+		{
+			GScriptManager->OnConsoleCommand({ commandString });
+		}
 		else if (module == "app" || module == "a")
 		{
 			GCore->GetApplication()->OnConsoleCommand({ commandString });

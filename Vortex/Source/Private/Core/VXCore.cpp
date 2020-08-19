@@ -53,9 +53,13 @@ namespace Vortex
 		m_Renderer = new VXRenderer();
 		m_Renderer->Startup();
 
+		m_ScriptManager = new VXScriptManager();
+		m_ScriptManager->Startup();
+
 		::GInput = m_Input;
 		::GLayerStack = m_LayerStack;
 		::GRenderer = m_Renderer;
+		::GScriptManager = m_ScriptManager;
 		::GCore = this;
 
 		// Starts the user-defined application.
@@ -78,6 +82,10 @@ namespace Vortex
 		// Deletes the application, so the user doesn't have to worry about it.
 		delete m_App;
 		m_App = nullptr;
+
+		m_ScriptManager->Shutdown();
+		delete m_ScriptManager;
+		GScriptManager = m_ScriptManager = nullptr;
 
 		m_Renderer->Shutdown();
 		delete m_Renderer;
@@ -120,6 +128,8 @@ namespace Vortex
 
 		// Calls the layer stack tick.
 		m_LayerStack->Tick(deltaTime);
+
+		m_ScriptManager->Tick(deltaTime);
 
 		m_Renderer->Tick(deltaTime);
 
@@ -172,6 +182,7 @@ namespace Vortex
 			m_Gui->Quit();
 			m_Input->Quit();
 			m_Renderer->Quit();
+			m_ScriptManager->Quit();
 			m_App->Quit();
 
 			m_IsTicking = false;
@@ -274,6 +285,8 @@ namespace Vortex
 		/*
 			We are replacing constructors and destructors with Startup() and Shutdown() methods 
 			so that we don 't have to keep reallocating memory for the Module if it is being started and stopped many times.
+			This also helps in handling module restarting easily. We just wait for the tick to finish, and then call
+			Shutdown() and Startup(). This way, a module can shut itself down and restart itself as well.
 		*/
 	}
 
