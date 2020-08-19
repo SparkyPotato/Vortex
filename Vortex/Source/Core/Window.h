@@ -85,9 +85,9 @@ namespace Vortex
 		*/
 		virtual void SetEventCallback(EventCallback callback) = 0;
 		/*
-			Presents the next frame and gets all window events.
+			Gets all window events.
 		*/
-		virtual void Update() = 0;
+		virtual void GetEvents() = 0;
 
 		virtual const Properties& GetProperties() = 0;
 

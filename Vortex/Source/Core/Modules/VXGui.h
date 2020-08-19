@@ -19,6 +19,7 @@ namespace Vortex
 		virtual void Shutdown() override;
 
 		virtual void Tick(float deltaTime) override;
+		void Draw();
 
 		virtual void Quit() override;
 

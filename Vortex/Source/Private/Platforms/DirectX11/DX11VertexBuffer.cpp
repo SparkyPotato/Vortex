@@ -57,11 +57,14 @@ namespace Vortex
 		}
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+		context->Lock();
 
 		D3D11_MAPPED_SUBRESOURCE sub;
 		context->GetContext()->Map(m_Buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &sub);
 		memcpy(sub.pData, vertices, m_Layout.GetStride() * count);
 		context->GetContext()->Unmap(m_Buffer, NULL);
+
+		context->Unlock();
 	}
 
 	void DX11VertexBuffer::Create(void* vertices)

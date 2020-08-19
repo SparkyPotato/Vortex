@@ -15,7 +15,7 @@ namespace Vortex
 		virtual ~WWindow();
 
 		virtual void SetEventCallback(EventCallback callback) { m_Callback = callback; }
-		virtual void Update() override;
+		virtual void GetEvents() override;
 
 		virtual const Properties& GetProperties() override { return m_Properties; }
 

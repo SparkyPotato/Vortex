@@ -62,9 +62,6 @@ namespace Vortex
 			m_ShouldRestart = false;
 		}
 
-		// Bind main window framebuffer.
-		m_Window->GetFramebuffer()->Bind();
-
 		// Start ImGui frame.
 		ImGuiImplementation::NewFrame();
 		ImGui::NewFrame();
@@ -72,6 +69,12 @@ namespace Vortex
 		// Call all GUI Render functions.
 		GCore->GetApplication()->OnGuiRender();
 		GLayerStack->RenderGui();
+	}
+
+	void VXGui::Draw()
+	{
+		// Bind main window framebuffer.
+		m_Window->GetFramebuffer()->Bind();
 
 		// Render ImGui.
 		ImGui::Render();

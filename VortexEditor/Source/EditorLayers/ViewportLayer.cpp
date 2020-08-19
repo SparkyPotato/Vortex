@@ -36,7 +36,7 @@ void ViewportLayer::Tick(float deltaTime)
 {
 	if (!*m_IsOpen) return;
 
-	HandleResize((int) m_ViewportSize.x, (int) m_ViewportSize.y);
+	
 }
 
 void ViewportLayer::OnGuiRender()
@@ -49,7 +49,9 @@ void ViewportLayer::OnGuiRender()
 	{
 		if (ImGui::Begin("Viewport", m_IsOpen, windowFlags))
 		{
-			m_ViewportSize = ImGui::GetContentRegionAvail();
+			auto size = ImGui::GetContentRegionAvail();
+			
+			HandleResize((int) size.x, (int) size.y);
 
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
@@ -73,6 +75,6 @@ void ViewportLayer::HandleResize(int width, int height)
 		return;
 	else if (width != m_Texture->GetWidth() || height != m_Texture->GetHeight())
 	{
-		GRenderer->ResizeFramebuffer(width, height);
+		GRenderer->RequestFramebufferResize(width, height);
 	}
 }

@@ -52,6 +52,8 @@ namespace Vortex
 		*/
 		void AllowQuit();
 
+		bool HasGuiBeenRendered() { return m_RenderedGui; }
+
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
 		/*
@@ -87,6 +89,8 @@ namespace Vortex
 			Passes on event to respective modules and then to the application.
 		*/
 		void OnWindowEvent(Window* window, Event& event);
+		void RunRenderLoop();
+		void RenderGui();
 
 		// The Vortex Input Module.
 		VXInput* m_Input = nullptr;
@@ -96,6 +100,12 @@ namespace Vortex
 		VXRenderer* m_Renderer = nullptr;
 		// The Vortex Scripting Manager.
 		VXScriptManager* m_ScriptManager = nullptr;
+
+		std::thread* p_RenderThread = nullptr;
+		std::thread* p_GuiThread = nullptr;
+		bool m_RenderedGui = false;
+		int64_t m_MainThreadFrameCount = 0;
+		int64_t m_RenderThreadFrameCount = 0;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;

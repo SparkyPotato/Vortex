@@ -80,11 +80,8 @@ namespace Vortex
 		VX_TRACE(LogWindow, "Destroyed window.");
 	}
 
-	void WWindow::Update()
+	void WWindow::GetEvents()
 	{
-		// Show the last frame.
-		m_SwapChain->Swap(m_Properties.syncInterval);
-
 		// Message loop.
 		MSG message;
 		while (PeekMessage(&message, m_WindowHandle, NULL, NULL, PM_REMOVE))
@@ -92,8 +89,6 @@ namespace Vortex
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
-
-		m_Framebuffer->Clear(0.f, 0.f, 0.f, 1.f);
 	}
 
 	void WWindow::Activate()

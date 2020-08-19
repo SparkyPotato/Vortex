@@ -74,6 +74,7 @@ namespace Vortex
 		VX_TRACE(LogCore, "Shutting down Vortex Core Module.");
 
 		m_IsTicking = false;
+		p_RenderThread->join();
 
 		// Destroys the layer stack.
 		delete m_LayerStack;
@@ -119,7 +120,7 @@ namespace Vortex
 		m_Input->Tick(deltaTime);
 
 		// Updates the application window, getting all window events.
-		m_Window->Update();
+		m_Window->GetEvents();
 
 		ENG_PROFILESTART("Application Tick");
 		// Calls the application tick.
@@ -130,45 +131,6 @@ namespace Vortex
 		m_LayerStack->Tick(deltaTime);
 
 		m_ScriptManager->Tick(deltaTime);
-
-		m_Renderer->Tick(deltaTime);
-
-		m_Gui->Tick(deltaTime);
-	}
-
-	void VXCore::RunTickLoop()
-	{
-		VX_TRACE(LogCore, "Starting Vortex Core Module Tick.");
-
-		if (!m_IsTicking)
-			throw std::exception("Module has not been started!");
-
-		while (m_IsTicking)
-		{
-			// Quit application if required.
-			if (m_WantsQuit && m_CanQuit)
-				Quit();
-
-			if (m_ShouldRestart)
-			{
-				Quit();
-				Shutdown();
-				Startup();
-				m_ShouldRestart = false;
-			}
-
-			// Get time before frame.
-			QueryPerformanceCounter(&m_LastTime);
-
-			Tick(m_DeltaTime);
-
-			// Measure frame delta.
-			QueryPerformanceCounter(&m_CurrentTime);
-			m_DeltaTime = (float) (m_CurrentTime.QuadPart - m_LastTime.QuadPart);
-			m_DeltaTime /= m_Frequency.QuadPart;
-		}
-
-		VX_TRACE(LogCore, "Ended Vortex Core Module Tick.");
 	}
 
 	void VXCore::Quit()
@@ -278,6 +240,90 @@ namespace Vortex
 		// Quit the application if the window was closed. Doing it after everything so they have a chance to block the quit.
 		if (event.GetType() == EventType::WindowClose)
 			Quit();
+	}
+
+	void VXCore::RunTickLoop()
+	{
+		VX_TRACE(LogCore, "Starting Vortex Core Module Tick.");
+
+		if (!m_IsTicking)
+			throw std::exception("Module has not been started!");
+
+		p_RenderThread = new std::thread(&VXCore::RunRenderLoop, this);
+
+		while (m_IsTicking)
+		{
+			// Quit application if required.
+			if (m_WantsQuit && m_CanQuit)
+				Quit();
+
+			if (m_ShouldRestart)
+			{
+				Quit();
+				Shutdown();
+				Startup();
+				m_ShouldRestart = false;
+			}
+
+			if (m_MainThreadFrameCount - 5 > m_RenderThreadFrameCount)
+				continue;
+
+			Tick(m_DeltaTime);
+
+			m_MainThreadFrameCount++;
+		}
+
+		VX_TRACE(LogCore, "Ended Vortex Core Module Tick.");
+	}
+
+	void VXCore::RunRenderLoop()
+	{
+		VX_TRACE(LogCore, "Started Render Thread ({0}).", p_RenderThread->get_id());
+
+		p_GuiThread = new std::thread(&VXCore::RenderGui, this);
+
+		while (m_IsTicking)
+		{
+			// Get time before frame.
+			QueryPerformanceCounter(&m_LastTime);
+
+			if (m_RenderThreadFrameCount > m_MainThreadFrameCount - 2)
+				continue;
+
+			m_Renderer->ResizeIfRequired();
+			m_RenderedGui = false;
+
+			m_Renderer->Tick(m_DeltaTime);
+
+			while (!m_RenderedGui) {}
+			m_Gui->Draw();
+
+			m_Window->GetSwapChain()->Swap(m_Window->GetProperties().syncInterval);
+
+			// Measure frame delta.
+			QueryPerformanceCounter(&m_CurrentTime);
+			m_DeltaTime = (float)(m_CurrentTime.QuadPart - m_LastTime.QuadPart);
+			m_DeltaTime /= m_Frequency.QuadPart;
+
+			m_RenderThreadFrameCount++;
+		}
+
+		VX_TRACE(LogCore, "Ended Render Thread.");
+	}
+
+	void VXCore::RenderGui()
+	{
+		VX_TRACE(LogCore, "Started GUI Thread ({0}).", p_GuiThread->get_id());
+
+		while (m_IsTicking)
+		{
+			if (m_RenderedGui) continue;
+
+			m_Gui->Tick(m_DeltaTime);
+			m_RenderedGui = true;
+		}
+
+		VX_TRACE(LogCore, "Ended GUI Thread.");
 	}
 
 	VXCore::VXCore()

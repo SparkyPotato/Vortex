@@ -102,6 +102,24 @@ namespace Vortex
 		m_Target = window->GetFramebuffer();
 	}
 
+	void VXRenderer::RequestFramebufferResize(int width, int height)
+	{
+		m_Width = width;
+		m_Height = height;
+		m_ShouldResize = true;
+	}
+
+	void VXRenderer::ResizeIfRequired()
+	{
+		if (m_IsOnWindow) return;
+
+		if (m_ShouldResize)
+		{
+			ResizeFramebuffer(m_Width, m_Height);
+			m_ShouldResize = false;
+		}
+	}
+
 	void VXRenderer::ResizeFramebuffer(int width, int height)
 	{
 		if (m_IsOnWindow)
