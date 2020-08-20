@@ -269,6 +269,8 @@ static HRESULT CreateTextureFromWIC(_In_ ID3D11Device* d3dDevice,
 	_In_ IWICBitmapFrameDecode* frame,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
+	_Out_ int* textureWidth,
+	_Out_ int* textureHeight,
 	_In_ size_t maxsize)
 {
 	UINT width, height;
@@ -329,6 +331,9 @@ static HRESULT CreateTextureFromWIC(_In_ ID3D11Device* d3dDevice,
 		twidth = width;
 		theight = height;
 	}
+
+	*textureWidth = twidth;
+	*textureHeight = theight;
 
 	// Determine format
 	WICPixelFormatGUID pixelFormat;
@@ -545,6 +550,8 @@ HRESULT CreateWICTextureFromMemory(_In_ ID3D11Device* d3dDevice,
 	_In_ size_t wicDataSize,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
+	_Out_ int* textureWidth,
+	_Out_ int* textureHeight,
 	_In_ size_t maxsize
 )
 {
@@ -588,7 +595,7 @@ HRESULT CreateWICTextureFromMemory(_In_ ID3D11Device* d3dDevice,
 	if (FAILED(hr))
 		return hr;
 
-	hr = CreateTextureFromWIC(d3dDevice, d3dContext, frame.Get(), texture, textureView, maxsize);
+	hr = CreateTextureFromWIC(d3dDevice, d3dContext, frame.Get(), texture, textureView, textureWidth, textureHeight, maxsize);
 	if (FAILED(hr))
 		return hr;
 
@@ -619,6 +626,8 @@ HRESULT CreateWICTextureFromFile(_In_ ID3D11Device* d3dDevice,
 	_In_z_ const wchar_t* fileName,
 	_Out_opt_ ID3D11Resource** texture,
 	_Out_opt_ ID3D11ShaderResourceView** textureView,
+	_Out_ int* textureWidth,
+	_Out_ int* textureHeight,
 	_In_ size_t maxsize)
 {
 	if (!d3dDevice || !fileName || (!texture && !textureView))
@@ -641,7 +650,7 @@ HRESULT CreateWICTextureFromFile(_In_ ID3D11Device* d3dDevice,
 	if (FAILED(hr))
 		return hr;
 
-	hr = CreateTextureFromWIC(d3dDevice, d3dContext, frame.Get(), texture, textureView, maxsize);
+	hr = CreateTextureFromWIC(d3dDevice, d3dContext, frame.Get(), texture, textureView, textureWidth, textureHeight, maxsize);
 	if (FAILED(hr))
 		return hr;
 

@@ -116,10 +116,14 @@ namespace Vortex
 		sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
+		context->Lock();
+
 		ID3D11SamplerState* sState;
 		context->GetDevice()->CreateSamplerState(&sDesc, &sState);
 		context->GetContext()->PSSetSamplers(0, 1, &sState);
 		sState->Release();
+
+		context->Unlock();
 
 		VX_TRACE(LogGraphicsAPI, "Created texture.");
 	}
@@ -180,16 +184,18 @@ namespace Vortex
 		HRESULT hr = CreateWICTextureFromFile
 		(
 			context->GetDevice(),
-			context->GetContext(),
+			NULL,
 			wfile.c_str(),
 			(ID3D11Resource**) &p_Texture,
-			&p_ShaderResource
+			&p_ShaderResource,
+			&m_Width,
+			&m_Height
 		);
 
 		if (FAILED(hr))
 		{
 			VX_ERROR(LogGraphicsAPI, "Failed to load texture from file \"{0}\"", file);
-			__debugbreak();
+			GraphicsContext::Get()->UnregisterPrimitive(this);
 			throw std::exception("Failed to load texture from file!");
 		}
 	}

@@ -116,6 +116,9 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
+		// Ticks the Vortex Input module.
+		m_Input->Tick(m_DeltaTime);
+
 		// Updates the application window, getting all window events.
 		m_Window->GetEvents();
 
@@ -267,6 +270,10 @@ namespace Vortex
 
 			Tick(m_DeltaTime);
 
+			if (m_RenderedGui) continue;
+			m_Gui->Tick(m_DeltaTime);
+			m_RenderedGui = true;
+
 			m_MainThreadFrameCount++;
 		}
 
@@ -277,18 +284,13 @@ namespace Vortex
 	{
 		VX_TRACE(LogCore, "Started Render Thread ({0}).", p_RenderThread->get_id());
 
-		p_GuiThread = new std::thread(&VXCore::RenderGui, this);
-
 		while (m_IsTicking)
 		{
 			// Get time before frame.
 			QueryPerformanceCounter(&m_LastTime);
 
-			if (m_RenderThreadFrameCount > m_MainThreadFrameCount - 2)
+			if (m_RenderThreadFrameCount > m_MainThreadFrameCount)
 				continue;
-
-			// Ticks the Vortex Input module.
-			m_Input->Tick(m_DeltaTime);
 
 			m_Renderer->ResizeIfRequired();
 			m_RenderedGui = false;
@@ -309,21 +311,6 @@ namespace Vortex
 		}
 
 		VX_TRACE(LogCore, "Ended Render Thread.");
-	}
-
-	void VXCore::RenderGui()
-	{
-		VX_TRACE(LogCore, "Started GUI Thread ({0}).", p_GuiThread->get_id());
-
-		while (m_IsTicking)
-		{
-			if (m_RenderedGui) continue;
-
-			m_Gui->Tick(m_DeltaTime);
-			m_RenderedGui = true;
-		}
-
-		VX_TRACE(LogCore, "Ended GUI Thread.");
 	}
 
 	VXCore::VXCore()

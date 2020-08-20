@@ -1,4 +1,5 @@
 #include <EditorLayers/WorldLayer.h>
+#include <EditorLayers/AssetLayer.h>
 
 using namespace Vortex;
 
@@ -48,6 +49,7 @@ void WorldLayer::Tick(float deltaTime)
 
 void WorldLayer::OnGuiRender()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 200, 200 });
 	if (*m_IsWorldOpen)
 	{
 		if (ImGui::Begin("World", m_IsWorldOpen))
@@ -93,6 +95,7 @@ void WorldLayer::OnGuiRender()
 			ImGui::End();
 		}
 	}
+	ImGui::PopStyleVar();
 }
 
 void WorldLayer::DisplayChildren(const World::WorldNode& node)
@@ -172,6 +175,21 @@ void WorldLayer::SetCurrentEntity(Entity* entity)
 		m_VertexCol4[0] = colors.columns[3].x;
 		m_VertexCol4[1] = colors.columns[3].y;
 		m_VertexCol4[2] = colors.columns[3].z;
+
+		bool set = false;
+		for (auto pair : GTextureAssets)
+		{
+			if (pair.second == sprite->GetTexture())
+			{
+				m_CurrentTexture = pair.first;
+				set = true;
+				break;
+			}
+		}
+		if (!set)
+		{
+			m_CurrentTexture = "None";
+		}
 	}
 
 	if (auto camera = m_CurrentlySelectedEntity->GetCameraComponent())
@@ -370,6 +388,26 @@ void WorldLayer::DrawSprite()
 			m_VertexCol3,
 			m_VertexCol4
 		));
+	}
+
+	if (ImGui::BeginCombo("Texture", m_CurrentTexture.c_str()))
+	{
+		if (ImGui::Selectable("None", false))
+		{
+			m_CurrentTexture = "None";
+			m_CurrentlySelectedEntity->GetSpriteComponent()->SetTexture(nullptr);
+		}
+
+		for (auto pair : GTextureAssets)
+		{
+			if (ImGui::Selectable(pair.first.c_str(), false))
+			{
+				m_CurrentTexture = pair.first;
+				m_CurrentlySelectedEntity->GetSpriteComponent()->SetTexture(pair.second);
+			}
+		}
+
+		ImGui::EndCombo();
 	}
 
 	ImGui::Separator();

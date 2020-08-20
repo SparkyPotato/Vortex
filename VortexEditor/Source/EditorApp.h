@@ -34,4 +34,5 @@ private:
 	bool m_IsProfilerOpen = false;
 	bool m_IsWorldOpen = true;
 	bool m_IsPropertiesOpen = true;
+	bool m_IsAssetManagerOpen = true;
 };

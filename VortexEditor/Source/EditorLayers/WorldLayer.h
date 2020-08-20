@@ -39,6 +39,7 @@ private:
 	float m_VertexCol2[3];
 	float m_VertexCol3[3];
 	float m_VertexCol4[3];
+	std::string m_CurrentTexture = "None";
 
 	int m_Projection;
 	float m_AspectRatio;

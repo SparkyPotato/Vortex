@@ -5,6 +5,7 @@
 #include <EditorLayers/ViewportLayer.h>
 #include <EditorLayers/ProfilerLayer.h>
 #include <EditorLayers/WorldLayer.h>
+#include <EditorLayers/AssetLayer.h>
 
 using namespace Vortex;
 
@@ -32,6 +33,7 @@ void EditorApp::Start()
 
 	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
 	GLayerStack->PushLayer(new WorldLayer(&m_IsWorldOpen, &m_IsPropertiesOpen));
+	GLayerStack->PushLayer(new AssetLayer(&m_IsAssetManagerOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 	GLayerStack->PushLayer(new ProfilerLayer(&m_IsProfilerOpen));
 }
@@ -88,6 +90,7 @@ void EditorApp::OnGuiRender()
 			ImGui::MenuItem("Viewport", "", &m_IsViewportOpen, true);
 			ImGui::MenuItem("World", "", &m_IsWorldOpen, true);
 			ImGui::MenuItem("Properties", "", &m_IsPropertiesOpen, true);
+			ImGui::MenuItem("Asset Manager", "", &m_IsAssetManagerOpen, true);
 			ImGui::Separator();
 			ImGui::MenuItem("Log", "", &m_IsLogOpen, true);
 			ImGui::MenuItem("Profiler", "", &m_IsProfilerOpen, true);
@@ -174,6 +177,13 @@ void EditorApp::LoadLayout(std::string file)
 		else	   
 			m_IsPropertiesOpen = false;
 
+		getline(prefsFile, line);
+		line.erase(0, 11);
+		if (line == "1")
+			m_IsAssetManagerOpen = true;
+		else
+			m_IsAssetManagerOpen = false;
+
 		prefsFile.close();
 	}
 	else
@@ -197,6 +207,7 @@ void EditorApp::SaveLayout(std::string file)
 		prefsFile << "profstate " << m_IsProfilerOpen << "\n";
 		prefsFile << "worldstate " << m_IsWorldOpen << "\n";
 		prefsFile << "propstate " << m_IsPropertiesOpen << "\n";
+		prefsFile << "assetstate " << m_IsAssetManagerOpen << "\n";
 
 		prefsFile.close();
 	}

@@ -90,7 +90,6 @@ namespace Vortex
 		*/
 		void OnWindowEvent(Window* window, Event& event);
 		void RunRenderLoop();
-		void RenderGui();
 
 		// The Vortex Input Module.
 		VXInput* m_Input = nullptr;
@@ -102,10 +101,9 @@ namespace Vortex
 		VXScriptManager* m_ScriptManager = nullptr;
 
 		std::thread* p_RenderThread = nullptr;
-		std::thread* p_GuiThread = nullptr;
 		bool m_RenderedGui = false;
-		int64_t m_MainThreadFrameCount = 0;
-		int64_t m_RenderThreadFrameCount = 0;
+		uint64_t m_MainThreadFrameCount = 5;
+		uint64_t m_RenderThreadFrameCount = 5;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;

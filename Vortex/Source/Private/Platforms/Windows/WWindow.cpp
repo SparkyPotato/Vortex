@@ -35,9 +35,9 @@ namespace Vortex
 
 		// Convert name to Unicode.
 		std::string temp = m_Properties.name;
-		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), NULL, 0);
+		int size_needed = MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int) temp.size(), NULL, 0);
 		std::wstring name(size_needed, 0);
-		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int)temp.size(), &name[0], size_needed);
+		MultiByteToWideChar(CP_UTF8, 0, temp.c_str(), (int) temp.size(), &name[0], size_needed);
 
 		// Create window.
 		m_WindowHandle = CreateWindow
