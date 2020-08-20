@@ -41,6 +41,14 @@ namespace Math
 		w = other.w;
 	}
 
+	Vector::Vector(float values[3])
+	{
+		x = values[0];
+		y = values[1];
+		z = values[2];
+		w = 1.f;
+	}
+
 	Vector Vector::operator+(const Vector& other)
 	{
 		return Vector(x + other.x, y + other.y, z + other.z);

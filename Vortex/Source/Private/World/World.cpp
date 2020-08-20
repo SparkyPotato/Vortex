@@ -1,5 +1,6 @@
 #include <VXpch.h>
 #include <World/World.h>
+#include <Core/Modules/VXRenderer.h>
 
 namespace Vortex
 {

@@ -109,6 +109,11 @@ namespace Vortex
 		m_ShouldResize = true;
 	}
 
+	void VXRenderer::ResizeAllCameras()
+	{
+		PostFrambufferResize(m_Width, m_Height);
+	}
+
 	void VXRenderer::ResizeIfRequired()
 	{
 		if (m_IsOnWindow) return;

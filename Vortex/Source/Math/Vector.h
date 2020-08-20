@@ -17,6 +17,7 @@ namespace Math
 		Vector(float all);
 		Vector(float x, float y, float z);
 		Vector(float x, float y, float z, float w);
+		Vector(float values[3]);
 		Vector(const Vector& other);
 
 		Vector operator+(const Vector& other);

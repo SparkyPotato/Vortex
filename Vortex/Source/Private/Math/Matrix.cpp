@@ -16,7 +16,7 @@ namespace Math
 		columns[3] = { 0.f, 0.f, 0.f, 1.f };
 	}
 
-	Matrix::Matrix(Vector row1, Vector row2, Vector row3, Vector row4)
+	Matrix::Matrix(const Vector& row1, const Vector& row2, const Vector& row3, const Vector& row4)
 	{
 		columns[0].x = row1.x;
 		columns[1].x = row1.y;
@@ -97,6 +97,44 @@ namespace Math
 		*this = *this * other;
 
 		return *this;
+	}
+
+	Matrix& Matrix::SetColumns(Vector newColumns[4])
+	{
+		columns[0] = newColumns[0];
+		columns[1] = newColumns[1];
+		columns[2] = newColumns[2];
+		columns[3] = newColumns[3];
+		return *this;
+	}
+
+	Matrix& Matrix::SetColumns(const Vector& column1, const Vector& column2, const Vector& column3, const Vector& column4)
+	{
+		columns[0] = column1;
+		columns[1] = column2;
+		columns[2] = column3;
+		columns[3] = column4;
+		return *this;
+	}
+
+	Matrix Matrix::Columns(Vector columns[4])
+	{
+		Matrix mat;
+		mat.columns[0] = columns[0];
+		mat.columns[1] = columns[1];
+		mat.columns[2] = columns[2];
+		mat.columns[3] = columns[3];
+		return mat;
+	}
+
+	Matrix Matrix::Columns(const Vector& column1, const Vector& column2, const Vector& column3, const Vector& column4)
+	{
+		Matrix mat;
+		mat.columns[0] = column1;
+		mat.columns[1] = column2;
+		mat.columns[2] = column3;
+		mat.columns[3] = column4;
+		return mat;
 	}
 
 	Matrix Matrix::Scale(float scaleFactor)

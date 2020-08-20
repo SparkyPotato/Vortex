@@ -32,20 +32,20 @@ namespace Vortex
 		void RenderToWindow(Window* window);
 
 		void RequestFramebufferResize(int width, int height);
+		void ResizeAllCameras();
 		void ResizeIfRequired();
 		bool ResizeOnWindow(WindowResizeEvent& event);
 
 		void RenderWorld(World* worldToRender);
 
 	private:
+		void PostFrambufferResize(int width, int height);
 		void ResizeFramebuffer(int width, int height);
 
 		struct ConstantBuffer
 		{
 			Math::Matrix worldViewProjectionMatrix;
 		};
-
-		void PostFrambufferResize(int width, int height);
 
 		bool m_ShouldResize = false;
 		int m_Width, m_Height = 0;

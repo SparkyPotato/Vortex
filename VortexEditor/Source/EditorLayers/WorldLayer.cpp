@@ -16,7 +16,7 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 
 	auto square = m_World->CreateEntity("Textured Square");
 	square->AddSpriteComponent();
-	
+
 	square->GetTransform()->SetPosition({ 0.f, 0.f, 2.f });
 
 	auto csquare = m_World->CreateEntity("Colored Square");
@@ -107,7 +107,7 @@ void WorldLayer::DisplayChildren(const World::WorldNode& node)
 				memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
 				memcpy(m_EntityNameBuffer, child.entity->GetName().c_str(), child.entity->GetName().size());
 			}
-			
+
 			if (ImGui::BeginPopupContextItem(NULL, ImGuiPopupFlags_MouseButtonRight))
 			{
 				SetCurrentEntity(child.entity);
@@ -176,7 +176,7 @@ void WorldLayer::SetCurrentEntity(Entity* entity)
 
 	if (auto camera = m_CurrentlySelectedEntity->GetCameraComponent())
 	{
-		m_Projection = (int) camera->GetProjectionMode();
+		m_Projection = (int)camera->GetProjectionMode();
 		m_AspectRatio = camera->GetAspectRatio();
 		m_NearPlane = camera->GetNearPlane();
 		m_FarPlane = camera->GetFarPlane();
@@ -224,6 +224,7 @@ void WorldLayer::DrawAddComponent()
 			if (ImGui::Selectable("Sprite Component"))
 			{
 				m_CurrentlySelectedEntity->AddSpriteComponent();
+				SetCurrentEntity(m_CurrentlySelectedEntity);
 			}
 		}
 		if (!m_CurrentlySelectedEntity->GetMeshComponent())
@@ -231,6 +232,7 @@ void WorldLayer::DrawAddComponent()
 			if (ImGui::Selectable("Mesh Component"))
 			{
 				m_CurrentlySelectedEntity->AddMeshComponent();
+				SetCurrentEntity(m_CurrentlySelectedEntity);
 			}
 		}
 		if (!m_CurrentlySelectedEntity->GetCameraComponent())
@@ -238,6 +240,8 @@ void WorldLayer::DrawAddComponent()
 			if (ImGui::Selectable("Camera Component"))
 			{
 				m_CurrentlySelectedEntity->AddCameraComponent();
+				GRenderer->ResizeAllCameras();
+				SetCurrentEntity(m_CurrentlySelectedEntity);
 			}
 		}
 
@@ -247,7 +251,7 @@ void WorldLayer::DrawAddComponent()
 
 void WorldLayer::DrawProperties()
 {
-	if (ImGui::InputTextWithHint("###Entity Name Input", "Entity Name", 
+	if (ImGui::InputTextWithHint("###Entity Name Input", "Entity Name",
 		m_EntityNameBuffer, sizeof(m_EntityNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
 	{
 		m_CurrentlySelectedEntity->SetName(m_EntityNameBuffer);
@@ -272,8 +276,9 @@ void WorldLayer::DrawTransform()
 	ImGui::Text("Transform");
 	if (ImGui::DragFloat3("Position", m_Position, 0.05f))
 	{
-		m_CurrentlySelectedEntity->GetTransform()->SetPosition({ m_Position[0], m_Position[1], m_Position[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
 	}
+
 	if (ImGui::DragFloat3("Rotation", m_Rotation, 2.f))
 	{
 		for (float& val : m_Rotation)
@@ -288,8 +293,9 @@ void WorldLayer::DrawTransform()
 			}
 		}
 
-		m_CurrentlySelectedEntity->GetTransform()->SetRotation({ m_Rotation[0], m_Rotation[1], m_Rotation[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetRotation(m_Rotation);
 	}
+
 	if (ImGui::DragFloat3("Scale", m_Scale, 0.05f))
 	{
 		for (float& val : m_Scale)
@@ -300,7 +306,7 @@ void WorldLayer::DrawTransform()
 			}
 		}
 
-		m_CurrentlySelectedEntity->GetTransform()->SetScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
+		m_CurrentlySelectedEntity->GetTransform()->SetScale(m_Scale);
 	}
 
 	ImGui::Separator();
@@ -320,45 +326,45 @@ void WorldLayer::DrawSprite()
 	if (ImGui::ColorEdit3("1###Vertex1", m_VertexCol1))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
-		({
-			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
-			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
-			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
-			{ 1.f,             1.f,             1.f,             1.f,            }
-		});
+		(Math::Matrix::Columns(
+			m_VertexCol1,
+			m_VertexCol2,
+			m_VertexCol3,
+			m_VertexCol4
+		));
 	}
 
 	if (ImGui::ColorEdit3("2###Vertex2", m_VertexCol2))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
-		({
-			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
-			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
-			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
-			{ 1.f,             1.f,             1.f,             1.f,            }
-		});
+		(Math::Matrix::Columns(
+			m_VertexCol1,
+			m_VertexCol2,
+			m_VertexCol3,
+			m_VertexCol4
+		));
 	}
 
 	if (ImGui::ColorEdit3("3###Vertex3", m_VertexCol3))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
-		({
-			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
-			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
-			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
-			{ 1.f,             1.f,             1.f,             1.f,            }
-		});
+		(Math::Matrix::Columns(
+			m_VertexCol1,
+			m_VertexCol2,
+			m_VertexCol3,
+			m_VertexCol4
+		));
 	}
 
 	if (ImGui::ColorEdit3("4###Vertex4", m_VertexCol4))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
-		({
-			{ m_VertexCol1[0], m_VertexCol2[0], m_VertexCol3[0], m_VertexCol4[0] },
-			{ m_VertexCol1[1], m_VertexCol2[1], m_VertexCol3[1], m_VertexCol4[1] },
-			{ m_VertexCol1[2], m_VertexCol2[2], m_VertexCol3[2], m_VertexCol4[2] },
-			{ 1.f,             1.f,             1.f,             1.f,            }
-		});
+		(Math::Matrix::Columns(
+			m_VertexCol1,
+			m_VertexCol2,
+			m_VertexCol3,
+			m_VertexCol4
+		));
 	}
 
 	ImGui::Separator();
@@ -371,7 +377,7 @@ void WorldLayer::DrawCamera()
 	ImGui::Text("Camera Component");
 
 	std::string proj;
-	if (m_Projection == (int) CameraProjection::Perspective)
+	if (m_Projection == (int)CameraProjection::Perspective)
 	{
 		proj = "Perspective";
 	}
@@ -381,17 +387,17 @@ void WorldLayer::DrawCamera()
 	}
 	if (ImGui::SliderInt("Projection", &m_Projection, 0, 1, proj.c_str()))
 	{
-		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection) m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetProjection((CameraProjection) m_Projection);
 	}
 
 	if (ImGui::DragFloat("Near Plane", &m_NearPlane, 0.05f))
 	{
-		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection)m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetNearPlane(m_NearPlane);
 	}
 
 	if (ImGui::DragFloat("Far Plane", &m_FarPlane, 0.05f))
 	{
-		m_CurrentlySelectedEntity->GetCameraComponent()->SetCameraSettings((CameraProjection)m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane);
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetFarPlane(m_FarPlane);
 	}
 
 	if (ImGui::Button("Set Main Camera", { ImGui::GetContentRegionAvail().x, 0.f }))

@@ -75,13 +75,13 @@ namespace Vortex
 
 	Math::Matrix Quad::GetColors()
 	{
-		return
-		{
-			{ m_Vertices[0].color.x, m_Vertices[1].color.x, m_Vertices[2].color.x, m_Vertices[3].color.x },
-			{ m_Vertices[0].color.y, m_Vertices[1].color.y, m_Vertices[2].color.y, m_Vertices[3].color.y },
-			{ m_Vertices[0].color.z, m_Vertices[1].color.z, m_Vertices[2].color.z, m_Vertices[3].color.z },
-			{ m_Vertices[0].color.w, m_Vertices[1].color.w, m_Vertices[2].color.w, m_Vertices[3].color.w }
-		};
+		return Math::Matrix::Columns
+		(
+			m_Vertices[0].color, 
+			m_Vertices[1].color, 
+			m_Vertices[2].color, 
+			m_Vertices[3].color
+		);
 	}
 
 	SpriteComponent::SpriteComponent(unsigned int owner, World* world, float width, float height, Math::Matrix colors)

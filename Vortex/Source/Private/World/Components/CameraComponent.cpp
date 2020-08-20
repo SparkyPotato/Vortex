@@ -2,8 +2,6 @@
 #include <World/Components/CameraComponent.h>
 #include <World/World.h>
 
-constexpr float PHI = 1.618f;
-
 namespace Vortex
 {
 	CameraComponent::CameraComponent(unsigned int owner, World* world)
@@ -18,21 +16,42 @@ namespace Vortex
 
 	}
 
-	void CameraComponent::SetCameraSettings(CameraProjection projection, float aspectRatio, float nearPlane, float farPlane)
+	void CameraComponent::SetCameraSettings(CameraProjection projection, float aspectRatio, float nearPlane, float farPlane, float FOVMultiple)
 	{
 		m_Projection = projection;
 		m_AspectRatio = aspectRatio;
 		m_NearPlane = nearPlane;
 		m_FarPlane = farPlane;
+		m_Multiple = FOVMultiple;
 
 		if (m_Projection == CameraProjection::Orthographic)
 		{
-			m_ProjectionMatrix = Math::Matrix::Orthographic(m_AspectRatio * PHI, PHI, m_FarPlane, m_NearPlane);
+			m_ProjectionMatrix = Math::Matrix::Orthographic(m_AspectRatio * m_Multiple, m_Multiple, m_FarPlane, m_NearPlane);
 		}
 		else
 		{
-			m_ProjectionMatrix = Math::Matrix::Perspective(m_AspectRatio * PHI, PHI, m_FarPlane, m_NearPlane);
+			m_ProjectionMatrix = Math::Matrix::Perspective(m_AspectRatio * m_Multiple, m_Multiple, m_FarPlane, m_NearPlane);
 		}
+	}
+
+	void CameraComponent::SetProjection(CameraProjection projection)
+	{
+		SetCameraSettings(projection, m_AspectRatio, m_NearPlane, m_FarPlane, m_Multiple);
+	}
+
+	void CameraComponent::SetNearPlane(float nearPlane)
+	{
+		SetCameraSettings(m_Projection, m_AspectRatio, nearPlane, m_FarPlane, m_Multiple);
+	}
+
+	void CameraComponent::SetFarPlane(float farPlane)
+	{
+		SetCameraSettings(m_Projection, m_AspectRatio, m_NearPlane, farPlane, m_Multiple);
+	}
+
+	void CameraComponent::SetFOVMultiple(float FOVMultiple)
+	{
+		SetCameraSettings(m_Projection, m_AspectRatio, m_NearPlane, m_FarPlane, FOVMultiple);
 	}
 
 	void CameraComponent::Resize(float aspectRatio)

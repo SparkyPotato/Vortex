@@ -4,6 +4,8 @@
 
 namespace Vortex
 {
+	constexpr float PHI = 1.618f;
+
 	class World;
 
 	enum class CameraProjection
@@ -20,7 +22,12 @@ namespace Vortex
 
 		unsigned int GetOwnerID() { return m_Owner; }
 
-		void SetCameraSettings(CameraProjection projection = CameraProjection::Perspective, float aspectRatio = 1.f, float nearPlane = 0.1f, float farPlane = 1000.f);
+		void SetCameraSettings(CameraProjection projection = CameraProjection::Perspective, float aspectRatio = 1.f, float nearPlane = 0.5f, float farPlane = 1000.f, float FOVMultiple = PHI);
+		void SetProjection(CameraProjection projection = CameraProjection::Perspective);
+		void SetNearPlane(float nearPlane = 0.5f);
+		void SetFarPlane(float farPlane = 1000.f);
+		void SetFOVMultiple(float FOVMultiple = PHI);
+
 		void Resize(float aspectRatio);
 
 		CameraProjection GetProjectionMode() { return m_Projection; }
@@ -41,6 +48,7 @@ namespace Vortex
 		TransformComponent* m_Transform;
 
 		CameraProjection m_Projection;
+		float m_Multiple;
 		float m_AspectRatio;
 		float m_NearPlane;
 		float m_FarPlane;
