@@ -180,6 +180,7 @@ void WorldLayer::SetCurrentEntity(Entity* entity)
 		m_AspectRatio = camera->GetAspectRatio();
 		m_NearPlane = camera->GetNearPlane();
 		m_FarPlane = camera->GetFarPlane();
+		m_FOVMultiple = camera->GetFOVMultiple();
 	}
 }
 
@@ -274,12 +275,12 @@ void WorldLayer::DrawProperties()
 void WorldLayer::DrawTransform()
 {
 	ImGui::Text("Transform");
-	if (ImGui::DragFloat3("Position", m_Position, 0.05f))
+	if (ImGui::DragScalarN("Position", ImGuiDataType_Float, m_Position, 3, 0.05f, nullptr, nullptr, "%.3f vu"))
 	{
 		m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
 	}
 
-	if (ImGui::DragFloat3("Rotation", m_Rotation, 2.f))
+	if (ImGui::DragScalarN("Rotation", ImGuiDataType_Float, m_Rotation, 3, 2.f, nullptr, nullptr, "%.3f deg"))
 	{
 		for (float& val : m_Rotation)
 		{
@@ -296,7 +297,7 @@ void WorldLayer::DrawTransform()
 		m_CurrentlySelectedEntity->GetTransform()->SetRotation(m_Rotation);
 	}
 
-	if (ImGui::DragFloat3("Scale", m_Scale, 0.05f))
+	if (ImGui::DragScalarN("Scale", ImGuiDataType_Float, m_Scale, 3, 0.05f, nullptr, nullptr, "%.3f"))
 	{
 		for (float& val : m_Scale)
 		{
@@ -318,12 +319,12 @@ void WorldLayer::DrawSprite()
 
 	ImGui::Text("Sprite Component");
 
-	if (ImGui::DragFloat2("Quad Size", m_QuadSize, 0.1f))
+	if (ImGui::DragScalarN("Quad Size", ImGuiDataType_Float, m_QuadSize, 2, 0.1f, nullptr, nullptr, "%.3f vu"))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetSize(m_QuadSize[0], m_QuadSize[1]);
 	}
 
-	if (ImGui::ColorEdit3("1###Vertex1", m_VertexCol1))
+	if (ImGui::ColorEdit3("###Vertex1", m_VertexCol1, ImGuiColorEditFlags_NoInputs))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
 		(Math::Matrix::Columns(
@@ -334,7 +335,9 @@ void WorldLayer::DrawSprite()
 		));
 	}
 
-	if (ImGui::ColorEdit3("2###Vertex2", m_VertexCol2))
+	ImGui::SameLine();
+
+	if (ImGui::ColorEdit3("###Vertex2", m_VertexCol2, ImGuiColorEditFlags_NoInputs))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
 		(Math::Matrix::Columns(
@@ -345,7 +348,7 @@ void WorldLayer::DrawSprite()
 		));
 	}
 
-	if (ImGui::ColorEdit3("3###Vertex3", m_VertexCol3))
+	if (ImGui::ColorEdit3("###Vertex3", m_VertexCol3, ImGuiColorEditFlags_NoInputs))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
 		(Math::Matrix::Columns(
@@ -356,7 +359,9 @@ void WorldLayer::DrawSprite()
 		));
 	}
 
-	if (ImGui::ColorEdit3("4###Vertex4", m_VertexCol4))
+	ImGui::SameLine();
+
+	if (ImGui::ColorEdit3("###Vertex4", m_VertexCol4, ImGuiColorEditFlags_NoInputs))
 	{
 		m_CurrentlySelectedEntity->GetSpriteComponent()->GetQuad().SetColors
 		(Math::Matrix::Columns(
@@ -398,6 +403,11 @@ void WorldLayer::DrawCamera()
 	if (ImGui::DragFloat("Far Plane", &m_FarPlane, 0.05f))
 	{
 		m_CurrentlySelectedEntity->GetCameraComponent()->SetFarPlane(m_FarPlane);
+	}
+	
+	if (ImGui::InputScalar("FOV Multiple", ImGuiDataType_Float, &m_FOVMultiple, nullptr, nullptr, "%.3f"))
+	{
+		m_CurrentlySelectedEntity->GetCameraComponent()->SetFOVMultiple(m_FOVMultiple);
 	}
 
 	if (ImGui::Button("Set Main Camera", { ImGui::GetContentRegionAvail().x, 0.f }))

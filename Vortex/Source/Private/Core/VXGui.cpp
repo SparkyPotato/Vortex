@@ -62,6 +62,9 @@ namespace Vortex
 			m_ShouldRestart = false;
 		}
 
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheel = GInput->GetMouseState().scrollDelta;
+
 		// Start ImGui frame.
 		ImGuiImplementation::NewFrame();
 		ImGui::NewFrame();

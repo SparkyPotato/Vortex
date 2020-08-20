@@ -44,6 +44,7 @@ private:
 	float m_AspectRatio;
 	float m_NearPlane;
 	float m_FarPlane;
+	float m_FOVMultiple;
 
 	bool* m_IsWorldOpen;
 

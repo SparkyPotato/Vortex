@@ -116,9 +116,6 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
-		// Ticks the Vortex Input module.
-		m_Input->Tick(deltaTime);
-
 		// Updates the application window, getting all window events.
 		m_Window->GetEvents();
 
@@ -209,10 +206,10 @@ namespace Vortex
 
 	void VXCore::OnWindowEvent(Window* window, Event& event)
 	{
+		if (!m_IsTicking) return;
+
 		ENG_PROFILE("Event Dispatching");
 		auto dispatcher = EventDispatcher(event);
-
-		if (!m_App || !m_LayerStack || !m_Input) return;
 
 		// Dispatches all Input related events to the Vortex Input Module.
 		dispatcher.Dispatch<KeyDownEvent>(BIND_EVENT(m_Input->KDEvent));
@@ -289,6 +286,9 @@ namespace Vortex
 
 			if (m_RenderThreadFrameCount > m_MainThreadFrameCount - 2)
 				continue;
+
+			// Ticks the Vortex Input module.
+			m_Input->Tick(m_DeltaTime);
 
 			m_Renderer->ResizeIfRequired();
 			m_RenderedGui = false;

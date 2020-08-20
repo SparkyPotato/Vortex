@@ -105,6 +105,7 @@ namespace Vortex
 		VX_TRACE(LogGraphicsAPI, "Creating texture.");
 
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+		context->RegisterPrimitive(this);
 
 		LoadFromFile(file);
 

@@ -34,6 +34,7 @@ namespace Vortex
 		float GetAspectRatio() { return m_AspectRatio; }
 		float GetNearPlane() { return m_NearPlane; }
 		float GetFarPlane() { return m_FarPlane; }
+		float GetFOVMultiple() { return m_Multiple; }
 
 		const Math::Matrix GetViewProjectionMatrix() { return m_Transform->GetTransformInverse() * m_ProjectionMatrix; }
 

@@ -377,46 +377,57 @@ namespace Vortex
 		{
 			POINTS points = MAKEPOINTS(lParam);
 			if (m_Callback) m_Callback(this, MouseMoveEvent(points.x, points.y));
+			break;
 		}
 		case WM_LBUTTONDOWN:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int) InputCode::LeftButton));
+			break;
 		}
 		case WM_LBUTTONUP:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::LeftButton));
+			break;
 		}
 		case WM_LBUTTONDBLCLK:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::LeftButton));
+			break;
 		}
 		case WM_RBUTTONDOWN:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int)InputCode::RightButton));
+			break;
 		}
 		case WM_RBUTTONUP:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::RightButton));
+			break;
 		}
 		case WM_RBUTTONDBLCLK:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::RightButton));
+			break;
 		}
 		case WM_MBUTTONDOWN:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDownEvent((int)InputCode::MiddleButton));
+			break;
 		}
 		case WM_MBUTTONUP:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonUpEvent((int)InputCode::MiddleButton));
+			break;
 		}
 		case WM_MBUTTONDBLCLK:
 		{
 			if (m_Callback) m_Callback(this, MouseButtonDoubleClickEvent((int)InputCode::MiddleButton));
+			break;
 		}
 		case WM_MOUSEWHEEL:
 		{
 			if (m_Callback) m_Callback(this, MouseScrollEvent((float) GET_WHEEL_DELTA_WPARAM(wParam) / (float) WHEEL_DELTA));
+			break;
 		}
 		}
 		return DefWindowProc(window, message, wParam, lParam);
