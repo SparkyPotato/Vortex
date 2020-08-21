@@ -67,10 +67,10 @@ void ViewportLayer::Tick(float deltaTime)
 
 		auto rotation = transform->GetRotation() + Math::Vector(-yDelta, -xDelta, 0.f) * m_Sensitivity / 5.f;
 
-		if (rotation.x > 180.f)
-			rotation.x = 180.f;
-		else if (rotation.x < -180.f)
-			rotation.x = -180.f;
+		if (rotation.x > 90.f)
+			rotation.x = 90.f;
+		else if (rotation.x < -90.f)
+			rotation.x = -90.f;
 
 		transform->SetRotation(rotation);
 	}

@@ -29,10 +29,10 @@ namespace Vortex
 		ConstantBuffer buffer;
 		m_ConstantBuffer = GPConstantBuffer::Create(&buffer, sizeof(ConstantBuffer), ConstantBufferTarget::VertexShader);
 		m_BasicVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl");
+		m_GridVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/GridVertexShader.hlsl");
+
 		m_ColorPixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/ColorPixelShader.hlsl");
 		m_TexturePixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/TexturePixelShader.hlsl");
-
-		m_BasicVertexShader->Bind();
 	}
 
 	void VXRenderer::Shutdown()
@@ -57,10 +57,11 @@ namespace Vortex
 
 		m_ConstantBuffer->Bind();
 
+		GraphicsContext::Get()->SetTopology(Topology::TriangleList);
+		m_BasicVertexShader->Bind();
 		for (auto sprite : m_World->GetSprites())
 		{
- 			m_ConstantBufferData.worldViewProjectionMatrix = sprite->GetTransform()* camera->GetViewProjectionMatrix();
-
+ 			m_ConstantBufferData.worldViewProjectionMatrix = sprite->GetTransform() * camera->GetViewProjectionMatrix();
 			m_ConstantBuffer->Set(&m_ConstantBufferData);
 
 			sprite->GetQuad().vertices->Bind();
@@ -77,6 +78,21 @@ namespace Vortex
 			}
 
 			GraphicsContext::Get()->Draw(sprite->GetQuad().indices->GetSize());
+		}
+
+		if (m_World->GetGrid())
+		{
+			GraphicsContext::Get()->SetTopology(Topology::LineList);
+
+			m_GridVertexShader->Bind();
+			m_ColorPixelShader->Bind();
+			m_ConstantBufferData.worldViewProjectionMatrix = camera->GetViewProjectionMatrix();
+			m_ConstantBuffer->Set(&m_ConstantBufferData);
+
+			m_World->GetGrid()->vertices->Bind();
+			m_World->GetGrid()->indices->Bind();
+
+			GraphicsContext::Get()->Draw(m_World->GetGrid()->indices->GetSize());
 		}
 	}
 

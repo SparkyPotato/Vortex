@@ -244,6 +244,13 @@ namespace Vortex
 		}
 	}
 
+	void World::AddGrid(float sideLength, float largeLineDistance, float smallLineDistance, const Math::Vector& color)
+	{
+		if (m_Grid) delete m_Grid;
+
+		m_Grid = new Grid(sideLength, largeLineDistance, smallLineDistance, color);
+	}
+
 	World::WorldNode* World::FindEntityNodeParent(WorldNode* root, Entity* entity)
 	{
 		for (auto& child : root->children)

@@ -4,6 +4,7 @@
 #include <World/Components/MeshComponent.h>
 #include <World/Components/SpriteComponent.h>
 #include <World/Components/CameraComponent.h>
+#include <World/Components/GridComponent.h>
 
 namespace Vortex
 {
@@ -67,6 +68,9 @@ namespace Vortex
 		CameraComponent* CreateCameraComponent(unsigned int entityID);
 		void DeleteCameraComponent(unsigned int entityID);
 
+		void AddGrid(float sideLength, float largeLineDistance, float smallLineDistance, const Math::Vector& color);
+		Grid* GetGrid() { return m_Grid; }
+
 	private:
 		WorldNode* FindEntityNodeParent(WorldNode* root, Entity* entity);
 		WorldNode* FindEntityNode(WorldNode* root, Entity* entity);
@@ -81,6 +85,9 @@ namespace Vortex
 		std::vector<MeshComponent*> m_Meshes;
 		std::vector<SpriteComponent*> m_Sprites;
 		std::vector<CameraComponent*> m_Cameras;
+
+		Grid* m_Grid = nullptr;
+
 		CameraComponent* m_MainCamera =  nullptr;
 	};
 }

@@ -11,10 +11,15 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	CREATE_LOGGER(LogWorld, spdlog::level::trace);
 
 	m_World = new World;
+
 	m_EditorEntity = m_World->CreateNonHierarchicalEntity("Editor Entity");
+	m_EditorEntity->GetTransform()->SetPosition({ 0.f, 5.f, 0.f });
+
 	auto camera = m_EditorEntity->AddCameraComponent();
 	m_World->SetMainCamera(camera);
 	camera->SetNearPlane(2.f);
+
+	m_World->AddGrid(1000.f, 10.f, 1.f, { 0.25f, 0.25f, 0.25f, 1.f });
 
 	memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
