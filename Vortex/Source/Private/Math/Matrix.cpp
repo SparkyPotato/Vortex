@@ -255,6 +255,56 @@ namespace Math
 
 		return mat;
 	}
+
+	// Please don't read. This is why most people use a library!
+	Matrix Matrix::Inverse(const Matrix& m)
+	{
+		float A2323 = m.columns[2].z * m.columns[3].w - m.columns[2].w * m.columns[3].z;
+		float A1323 = m.columns[2].y * m.columns[3].w - m.columns[2].w * m.columns[3].y;
+		float A1223 = m.columns[2].y * m.columns[3].z - m.columns[2].z * m.columns[3].y;
+		float A0323 = m.columns[2].x * m.columns[3].w - m.columns[2].w * m.columns[3].x;
+		float A0223 = m.columns[2].x * m.columns[3].z - m.columns[2].z * m.columns[3].x;
+		float A0123 = m.columns[2].x * m.columns[3].y - m.columns[2].y * m.columns[3].x;
+		float A2313 = m.columns[1].z * m.columns[3].w - m.columns[1].w * m.columns[3].z;
+		float A1313 = m.columns[1].y * m.columns[3].w - m.columns[1].w * m.columns[3].y;
+		float A1213 = m.columns[1].y * m.columns[3].z - m.columns[1].z * m.columns[3].y;
+		float A2312 = m.columns[1].z * m.columns[2].w - m.columns[1].w * m.columns[2].z;
+		float A1312 = m.columns[1].y * m.columns[2].w - m.columns[1].w * m.columns[2].y;
+		float A1212 = m.columns[1].y * m.columns[2].z - m.columns[1].z * m.columns[2].y;
+		float A0313 = m.columns[1].x * m.columns[3].w - m.columns[1].w * m.columns[3].x;
+		float A0213 = m.columns[1].x * m.columns[3].z - m.columns[1].z * m.columns[3].x;
+		float A0312 = m.columns[1].x * m.columns[2].w - m.columns[1].w * m.columns[2].x;
+		float A0212 = m.columns[1].x * m.columns[2].z - m.columns[1].z * m.columns[2].x;
+		float A0113 = m.columns[1].x * m.columns[3].y - m.columns[1].y * m.columns[3].x;
+		float A0112 = m.columns[1].x * m.columns[2].y - m.columns[1].y * m.columns[2].x;
+
+		float det = m.columns[0].x * (m.columns[1].y * A2323 - m.columns[1].z * A1323 + m.columns[1].w * A1223)
+					- m.columns[0].y * (m.columns[1].x * A2323 - m.columns[1].z * A0323 + m.columns[1].w * A0223)
+					+ m.columns[0].z * (m.columns[1].x * A1323 - m.columns[1].y * A0323 + m.columns[1].w * A0123)
+					- m.columns[0].w * (m.columns[1].x * A1223 - m.columns[1].y * A0223 + m.columns[1].z * A0123);
+		det = 1.f / det;
+
+		Matrix mat;
+
+		mat.columns[0].x = det * (m.columns[1].y * A2323 - m.columns[1].z * A1323 + m.columns[1].w * A1223);
+		mat.columns[0].y = det * -(m.columns[0].y * A2323 - m.columns[0].z * A1323 + m.columns[0].w * A1223);
+		mat.columns[0].z = det * (m.columns[0].y * A2313 - m.columns[0].z * A1313 + m.columns[0].w * A1213);
+		mat.columns[0].w = det * -(m.columns[0].y * A2312 - m.columns[0].z * A1312 + m.columns[0].w * A1212);
+		mat.columns[1].x = det * -(m.columns[1].x * A2323 - m.columns[1].z * A0323 + m.columns[1].w * A0223);
+		mat.columns[1].y = det * (m.columns[0].x * A2323 - m.columns[0].z * A0323 + m.columns[0].w * A0223);
+		mat.columns[1].z = det * -(m.columns[0].x * A2313 - m.columns[0].z * A0313 + m.columns[0].w * A0213);
+		mat.columns[1].w = det * (m.columns[0].x * A2312 - m.columns[0].z * A0312 + m.columns[0].w * A0212);
+		mat.columns[2].x = det * (m.columns[1].x * A1323 - m.columns[1].y * A0323 + m.columns[1].w * A0123);
+		mat.columns[2].y = det * -(m.columns[0].x * A1323 - m.columns[0].y * A0323 + m.columns[0].w * A0123);
+		mat.columns[2].z = det * (m.columns[0].x * A1313 - m.columns[0].y * A0313 + m.columns[0].w * A0113);
+		mat.columns[2].w = det * -(m.columns[0].x * A1312 - m.columns[0].y * A0312 + m.columns[0].w * A0112);
+		mat.columns[3].x = det * -(m.columns[1].x * A1223 - m.columns[1].y * A0223 + m.columns[1].z * A0123);
+		mat.columns[3].y = det * (m.columns[0].x * A1223 - m.columns[0].y * A0223 + m.columns[0].z * A0123);
+		mat.columns[3].z = det * -(m.columns[0].x * A1213 - m.columns[0].y * A0213 + m.columns[0].z * A0113);
+		mat.columns[3].w = det * (m.columns[0].x * A1212 - m.columns[0].y * A0212 + m.columns[0].z * A0112);
+
+		return mat;
+	}
 }
 }
  

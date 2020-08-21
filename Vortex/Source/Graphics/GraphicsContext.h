@@ -11,6 +11,11 @@ namespace Vortex
 		None, DirectX11, DirectX12, Vulkan
 	};
 
+	enum class Topology
+	{
+		LineList, LineStrip, TriangleList, TriangleStrip
+	};
+
 	/*
 		Singleton base class for all API-specific implementations. 
 		All GraphicsPrimitives have to be written for each API as well.
@@ -49,6 +54,8 @@ namespace Vortex
 		*/
 		void RegisterPrimitive(GraphicsPrimitive* primitive);
 		void UnregisterPrimitive(GraphicsPrimitive* primitive);
+
+		virtual void SetTopology(Topology topology) = 0;
 
 		/*
 			Draws to the screen.

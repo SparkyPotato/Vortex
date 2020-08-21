@@ -70,9 +70,7 @@ namespace Vortex
 
 		m_Transformation = Matrix::Scale(m_Scale) * Matrix::Rotate(m_Rotation) * Matrix::Translate(m_Position);
 
-		m_InverseTransformation = Matrix::Translate(-m_Position)
-			* Matrix::Scale({ 1.f / m_Scale.x, 1.f / m_Scale.y, 1.f / m_Scale.z })
-			* Matrix::Rotate(-m_Rotation);
+		m_InverseTransformation = Matrix::Inverse(m_Transformation);
 
 		m_RotationMatrix = Matrix::Rotate(m_Rotation);
 	}

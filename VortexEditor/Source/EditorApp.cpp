@@ -31,8 +31,11 @@ void EditorApp::Start()
 {
 	LoadLayout(m_LayoutFilePath);
 
-	GLayerStack->PushLayer(new ViewportLayer(&m_IsViewportOpen));
-	GLayerStack->PushLayer(new WorldLayer(&m_IsWorldOpen, &m_IsPropertiesOpen));
+	m_WorldLayer = new WorldLayer(&m_IsWorldOpen, &m_IsPropertiesOpen);
+	m_ViewportLayer = new ViewportLayer(&m_IsViewportOpen, m_WorldLayer);
+
+	GLayerStack->PushLayer(m_ViewportLayer);
+	GLayerStack->PushLayer(m_WorldLayer);
 	GLayerStack->PushLayer(new AssetLayer(&m_IsAssetManagerOpen));
 	GLayerStack->PushLayer(new LogLayer(&m_IsLogOpen));
 	GLayerStack->PushLayer(new ProfilerLayer(&m_IsProfilerOpen));

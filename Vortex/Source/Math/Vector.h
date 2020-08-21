@@ -20,23 +20,23 @@ namespace Math
 		Vector(float values[3]);
 		Vector(const Vector& other);
 
-		Vector operator+(const Vector& other);
-		Vector operator+(float all);
+		Vector operator+(const Vector& other) const;
+		Vector operator+(float all) const;
 		Vector& operator+=(const Vector& other);
 		Vector& operator+=(float all);
 
 		Vector operator-() const;
-		Vector operator-(const Vector& other);
-		Vector operator-(float all);
+		Vector operator-(const Vector& other) const;
+		Vector operator-(float all) const;
 		Vector& operator-=(const Vector& other);
 		Vector& operator-=(float all);
 
-		Vector operator*(float scalar);
+		Vector operator*(float scalar) const;
 		Vector& operator*=(float scalar);
-		Vector operator*(const Matrix& transform);
+		Vector operator*(const Matrix& transform) const;
 		Vector& operator*=(const Matrix& transform);
 
-		Vector operator/(float scalar);
+		Vector operator/(float scalar) const;
 		Vector& operator/=(float scalar);
 
 		/*

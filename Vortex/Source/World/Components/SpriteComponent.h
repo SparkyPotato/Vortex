@@ -11,7 +11,7 @@ namespace Vortex
 
 	struct Quad
 	{
-		Quad(float width = 1.f, float height = 1.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
+		Quad(float width = 10.f, float height = 10.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
 		~Quad();
 
 		GPVertexBuffer* vertices = nullptr;

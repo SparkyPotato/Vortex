@@ -37,7 +37,7 @@ namespace Vortex
 		MeshComponent* AddMeshComponent();
 		MeshComponent* GetMeshComponent();
 
-		SpriteComponent* AddSpriteComponent(float width = 1.f, float height = 1.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
+		SpriteComponent* AddSpriteComponent(float width = 10.f, float height = 10.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
 		SpriteComponent* GetSpriteComponent();
 
 		CameraComponent* AddCameraComponent();

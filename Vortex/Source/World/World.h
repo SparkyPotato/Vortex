@@ -34,6 +34,7 @@ namespace Vortex
 		};
 
 		Entity* CreateEntity(std::string name);
+		Entity* CreateNonHierarchicalEntity(std::string name);
 		Entity* CreateChildEntity(Entity* parent, std::string name);
 
 		void DestroyEntity(unsigned int entityID);
@@ -60,7 +61,7 @@ namespace Vortex
 		MeshComponent* CreateMeshComponent(unsigned int entityID);
 		void DeleteMeshComponent(unsigned int entityID);
 
-		SpriteComponent* CreateSpriteComponent(unsigned int entityID, float width = 1.f, float height = 1.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
+		SpriteComponent* CreateSpriteComponent(unsigned int entityID, float width = 10.f, float height = 10.f, Math::Matrix colors = { 1.f, 1.f, 1.f, 1.f });
 		void DeleteSpriteComponent(unsigned int entityID);
 
 		CameraComponent* CreateCameraComponent(unsigned int entityID);

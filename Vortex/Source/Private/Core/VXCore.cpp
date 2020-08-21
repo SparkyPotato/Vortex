@@ -26,7 +26,7 @@ namespace Vortex
 		// Start the tick, and does frame delta calculation setup.
 		m_IsTicking = true;
 		QueryPerformanceFrequency(&m_Frequency);
-		m_DeltaTime = 0;
+		m_RenderDeltaTime = m_TickDeltaTime = 0;
 
 		// Create the Vortex Input Module.
 		m_Input = new VXInput();
@@ -117,7 +117,7 @@ namespace Vortex
 	void VXCore::Tick(float deltaTime)
 	{
 		// Ticks the Vortex Input module.
-		m_Input->Tick(m_DeltaTime);
+		m_Input->Tick(deltaTime);
 
 		// Updates the application window, getting all window events.
 		m_Window->GetEvents();
@@ -265,16 +265,50 @@ namespace Vortex
 				m_ShouldRestart = false;
 			}
 
+			// Get time before frame.
+			QueryPerformanceCounter(&m_TickLastTime);
+
 			if (m_MainThreadFrameCount - 5 > m_RenderThreadFrameCount)
+			{
+				if (m_RenderedGui)
+				{
+					QueryPerformanceCounter(&m_TickCurrentTime);
+					m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+					m_TickDeltaTime /= m_Frequency.QuadPart;
+
+					continue;
+				}
+				m_Gui->Tick(m_TickDeltaTime);
+				m_RenderedGui = true;
+
+				QueryPerformanceCounter(&m_TickCurrentTime);
+				m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+				m_TickDeltaTime /= m_Frequency.QuadPart;
+
+				m_MainThreadFrameCount++;
 				continue;
+			}
+			else
+			{
+				Tick(m_TickDeltaTime);
 
-			Tick(m_DeltaTime);
+				if (m_RenderedGui)
+				{
+					QueryPerformanceCounter(&m_TickCurrentTime);
+					m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+					m_TickDeltaTime /= m_Frequency.QuadPart;
 
-			if (m_RenderedGui) continue;
-			m_Gui->Tick(m_DeltaTime);
-			m_RenderedGui = true;
+					continue;
+				}
+				m_Gui->Tick(m_TickDeltaTime);
+				m_RenderedGui = true;
 
-			m_MainThreadFrameCount++;
+				QueryPerformanceCounter(&m_TickCurrentTime);
+				m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+				m_TickDeltaTime /= m_Frequency.QuadPart;
+
+				m_MainThreadFrameCount++;
+			}
 		}
 
 		VX_TRACE(LogCore, "Ended Vortex Core Module Tick.");
@@ -287,25 +321,30 @@ namespace Vortex
 		while (m_IsTicking)
 		{
 			// Get time before frame.
-			QueryPerformanceCounter(&m_LastTime);
+			QueryPerformanceCounter(&m_RenderLastTime);
 
 			if (m_RenderThreadFrameCount > m_MainThreadFrameCount)
+			{
+				QueryPerformanceCounter(&m_RenderCurrentTime);
+				m_RenderDeltaTime = (float)(m_RenderCurrentTime.QuadPart - m_RenderLastTime.QuadPart);
+				m_RenderDeltaTime /= m_Frequency.QuadPart;
+
 				continue;
+			}
 
 			m_Renderer->ResizeIfRequired();
 			m_RenderedGui = false;
 
-			m_Renderer->Tick(m_DeltaTime);
+			m_Renderer->Tick(m_RenderDeltaTime);
 
 			while (!m_RenderedGui) {}
 			m_Gui->Draw();
 
 			m_Window->GetSwapChain()->Swap(m_Window->GetProperties().syncInterval);
 
-			// Measure frame delta.
-			QueryPerformanceCounter(&m_CurrentTime);
-			m_DeltaTime = (float)(m_CurrentTime.QuadPart - m_LastTime.QuadPart);
-			m_DeltaTime /= m_Frequency.QuadPart;
+			QueryPerformanceCounter(&m_RenderCurrentTime);
+			m_RenderDeltaTime = (float)(m_RenderCurrentTime.QuadPart - m_RenderLastTime.QuadPart);
+			m_RenderDeltaTime /= m_Frequency.QuadPart;
 
 			m_RenderThreadFrameCount++;
 		}

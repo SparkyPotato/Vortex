@@ -64,4 +64,17 @@ namespace Vortex
 		auto rotation = m_Transform->GetRotationMatrix();
 		return Math::Vector(0.f, 0.f, 1.f) * rotation;
 	}
+
+	Math::Vector CameraComponent::GetRightVector()
+	{
+		auto rotation = m_Transform->GetRotationMatrix();
+		return Math::Vector(1.f, 0.f, 0.f) * rotation;
+	}
+
+	Math::Vector CameraComponent::GetUpVector()
+	{
+		auto rotation = m_Transform->GetRotationMatrix();
+		return Math::Vector(0.f, 1.f, 0.f) * rotation;
+	}
+
 }

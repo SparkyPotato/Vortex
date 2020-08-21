@@ -48,6 +48,18 @@ namespace Vortex
 		return entity;
 	}
 
+	Entity* World::CreateNonHierarchicalEntity(std::string name)
+	{
+		if (name.empty())
+			name = "Entity " + std::to_string(m_NextID);
+
+		auto entity = new Entity(m_NextID++, name, this);
+		m_Entities.push_back(entity);
+		entity->m_Transform = CreateTransformComponent(entity->m_ID);
+
+		return entity;
+	}
+
 	Entity* World::CreateChildEntity(Entity* parent, std::string name)
 	{
 		auto entity = new Entity(m_NextID++, name, this);

@@ -25,7 +25,8 @@ void ProfilerLayer::OnDetach()
 
 void ProfilerLayer::Tick(float deltaTime)
 {
-	m_CurrentDeltaTime = 1000.f * deltaTime;
+	m_CurrentDeltaTime = 1000.f * GCore->GetLastRenderDeltaTime();
+	m_TickDeltaTime = 1000.f * deltaTime;
 }
 
 void ProfilerLayer::OnGuiRender()
@@ -41,6 +42,7 @@ void ProfilerLayer::OnGuiRender()
 				{
 					m_IsPaused = true;
 					m_PausedDeltaTime = m_CurrentDeltaTime;
+					m_PausedTickDeltaTime = m_TickDeltaTime;
 					m_PausedProfiles = Profiler::GetProfiles();
 				}
 
@@ -54,6 +56,8 @@ void ProfilerLayer::OnGuiRender()
 				ImGui::Text("Delta Time: %.3f ms", m_CurrentDeltaTime);
 				ImGui::Text("FPS: %.1f", 1000.f / m_CurrentDeltaTime);
 
+				ImGui::Text("Tick Delta Time: %.3f ms", m_TickDeltaTime);
+
 				ImGui::End();
 			}
 			else
@@ -65,6 +69,8 @@ void ProfilerLayer::OnGuiRender()
 
 				ImGui::Text("Delta Time: %.3f ms", m_PausedDeltaTime);
 				ImGui::Text("FPS: %.1f", 1000.f / m_PausedDeltaTime);
+
+				ImGui::Text("Tick Delta Time: %.3f ms", m_PausedTickDeltaTime);
 
 				ImGui::Separator();
 

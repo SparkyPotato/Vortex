@@ -11,17 +11,10 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	CREATE_LOGGER(LogWorld, spdlog::level::trace);
 
 	m_World = new World;
-	auto test = m_World->CreateEntity("Test Entity");
-	m_World->SetMainCamera(test->AddCameraComponent());
-	test->GetTransform()->SetPosition({ 0.f, 0.f, -2.f });
-
-	auto square = m_World->CreateEntity("Textured Square");
-	square->AddSpriteComponent();
-
-	square->GetTransform()->SetPosition({ 0.f, 0.f, 2.f });
-
-	auto csquare = m_World->CreateEntity("Colored Square");
-	csquare->AddSpriteComponent();
+	m_EditorEntity = m_World->CreateNonHierarchicalEntity("Editor Entity");
+	auto camera = m_EditorEntity->AddCameraComponent();
+	m_World->SetMainCamera(camera);
+	camera->SetNearPlane(2.f);
 
 	memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));
@@ -34,12 +27,14 @@ WorldLayer::~WorldLayer()
 
 void WorldLayer::OnAttach()
 {
+	GInput->AddKeyBinding(BIND_INPUT(this->FocusEntity), InputCode::F, Binding::Pressed);
 	GRenderer->RenderWorld(m_World);
 }
 
 void WorldLayer::OnDetach()
 {
-	GRenderer->RenderWorld(m_World);
+	GInput->RemoveKeyBinding(InputCode::F, Binding::Pressed);
+	GRenderer->RenderWorld(nullptr);
 }
 
 void WorldLayer::Tick(float deltaTime)
@@ -54,6 +49,8 @@ void WorldLayer::OnGuiRender()
 	{
 		if (ImGui::Begin("World", m_IsWorldOpen))
 		{
+			m_IsWorldActive = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
+
 			ImGui::BeginChild("Entities", { 0, -ImGui::GetFontSize() * 1.8f });
 			DisplayChildren(m_World->GetHierarchy());
 			ImGui::EndChild();
@@ -96,6 +93,28 @@ void WorldLayer::OnGuiRender()
 		}
 	}
 	ImGui::PopStyleVar();
+}
+
+void WorldLayer::FocusEntity()
+{
+	if (m_CurrentlySelectedEntity && m_IsWorldActive)
+	{
+		auto editorTransfom = m_EditorEntity->GetTransform();
+		auto objectTransform = m_CurrentlySelectedEntity->GetTransform();
+
+		if (m_CurrentlySelectedEntity->GetSpriteComponent())
+		{
+			auto sprite = m_CurrentlySelectedEntity->GetSpriteComponent();
+			editorTransfom->SetPosition(objectTransform->GetPosition() + 
+				Math::Vector(0.f, 0.f, -sprite->GetQuad().GetHeight() * objectTransform->GetScale().y * 1.5f) * objectTransform->GetRotationMatrix());
+		}
+		else
+		{
+			editorTransfom->SetPosition(objectTransform->GetPosition() + Math::Vector(0.f, 0.f, -5.f) * objectTransform->GetRotationMatrix());
+		}
+
+		editorTransfom->SetRotation({ objectTransform->GetRotation().x, 0.f, 0.f });
+	}
 }
 
 void WorldLayer::DisplayChildren(const World::WorldNode& node)
@@ -448,9 +467,19 @@ void WorldLayer::DrawCamera()
 		m_CurrentlySelectedEntity->GetCameraComponent()->SetFOVMultiple(m_FOVMultiple);
 	}
 
-	if (ImGui::Button("Set Main Camera", { ImGui::GetContentRegionAvail().x, 0.f }))
+	if (m_World->GetMainCamera() != m_CurrentlySelectedEntity->GetCameraComponent())
 	{
-		m_World->SetMainCamera(m_CurrentlySelectedEntity->GetCameraComponent());
+		if (ImGui::Button("Preview###Preview Button", { ImGui::GetContentRegionAvail().x, 0.f }))
+		{
+			m_World->SetMainCamera(m_CurrentlySelectedEntity->GetCameraComponent());
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Stop Preview###Preview Button", { ImGui::GetContentRegionAvail().x, 0.f }))
+		{
+			m_World->SetMainCamera(m_EditorEntity->GetCameraComponent());
+		}
 	}
 
 	ImGui::Separator();

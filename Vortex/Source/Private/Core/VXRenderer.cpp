@@ -50,7 +50,7 @@ namespace Vortex
 		if (!m_World) return;
 
 		m_Target->Bind();
-		m_Target->Clear(0.f, 0.5f, 0.5f, 1.f);
+		m_Target->Clear(0.1f, 0.1f, 0.1f, 1.f);
 
 		auto camera = m_World->GetMainCamera();
 		if (!camera) return;

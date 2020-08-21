@@ -16,7 +16,11 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void OnGuiRender() override;
 
+	Vortex::Entity* GetEditorEntity() { return m_EditorEntity; }
+
 private:
+	void FocusEntity();
+
 	void DisplayChildren(const Vortex::World::WorldNode& node);
 
 	void SetCurrentEntity(Vortex::Entity* entity);
@@ -28,6 +32,8 @@ private:
 	void DrawTransform();
 	void DrawSprite();
 	void DrawCamera();
+
+	Vortex::Entity* m_EditorEntity = nullptr;
 
 	Vortex::Entity* m_CurrentlySelectedEntity = nullptr;
 	float m_Position[3];
@@ -48,6 +54,7 @@ private:
 	float m_FOVMultiple;
 
 	bool* m_IsWorldOpen;
+	bool m_IsWorldActive = false;
 
 	bool* m_IsPropertiesOpen;
 

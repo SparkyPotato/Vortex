@@ -3,6 +3,9 @@
 
 DECLARE_LOGGER(LogEditor);
 
+class ViewportLayer;
+class WorldLayer;
+
 class EditorApp : public Vortex::Application
 {
 public:
@@ -10,7 +13,7 @@ public:
 	virtual ~EditorApp();
 
 	virtual Vortex::Window::Properties GetWindowProperties() override 
-	{ return Vortex::Window::Properties("Vortex Editor", 1600, 900, 1280, 720); }
+	{ return Vortex::Window::Properties("Vortex Editor", 1600, 900, 1280, 720, false); }
 
 	virtual void Start() override;
 	virtual void Quit() override;
@@ -35,4 +38,7 @@ private:
 	bool m_IsWorldOpen = true;
 	bool m_IsPropertiesOpen = true;
 	bool m_IsAssetManagerOpen = true;
+
+	WorldLayer* m_WorldLayer = nullptr;
+	ViewportLayer* m_ViewportLayer = nullptr;
 };

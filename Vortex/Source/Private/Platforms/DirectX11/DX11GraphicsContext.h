@@ -22,6 +22,8 @@ namespace Vortex
 		DX11GraphicsContext();
 		virtual ~DX11GraphicsContext();
 
+		virtual void SetTopology(Topology topology) override;
+
 		virtual void Draw(int drawSize) override;
 
 		virtual void Lock() override;

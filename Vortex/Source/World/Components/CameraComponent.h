@@ -39,6 +39,8 @@ namespace Vortex
 		const Math::Matrix GetViewProjectionMatrix() { return m_Transform->GetTransformInverse() * m_ProjectionMatrix; }
 
 		Math::Vector GetForwardVector();
+		Math::Vector GetRightVector();
+		Math::Vector GetUpVector();
 
 	private:
 		unsigned int m_Owner;

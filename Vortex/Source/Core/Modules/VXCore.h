@@ -57,9 +57,13 @@ namespace Vortex
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
 		/*
-			Returns the last frame delta.
+			Returns the last tick delta.
 		*/
-		float GetLastDeltaTime() { return m_DeltaTime; }
+		float GetLastTickDeltaTime() { return m_TickDeltaTime; }
+		/*
+			Returns the last render tick delta.
+		*/
+		float GetLastRenderDeltaTime() { return m_RenderDeltaTime; }
 
 		/*
 			Returns the application owned by the Vortex Core. You shouldn't be needing this.
@@ -102,8 +106,8 @@ namespace Vortex
 
 		std::thread* p_RenderThread = nullptr;
 		bool m_RenderedGui = false;
-		uint64_t m_MainThreadFrameCount = 5;
-		uint64_t m_RenderThreadFrameCount = 5;
+		uint64_t m_MainThreadFrameCount = 10;
+		uint64_t m_RenderThreadFrameCount = 10;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;
@@ -119,10 +123,11 @@ namespace Vortex
 		bool m_ShouldRestart = false;
 		std::mutex m_QuitMutex;
 
-		// The last frame delta.
-		float m_DeltaTime = 0.f;
+		// Delta time calculations.
+		float m_RenderDeltaTime, m_TickDeltaTime = 0.f;
+		LARGE_INTEGER m_TickLastTime, m_TickCurrentTime;
+		LARGE_INTEGER m_RenderLastTime, m_RenderCurrentTime;
 		LARGE_INTEGER m_Frequency;
-		LARGE_INTEGER m_LastTime, m_CurrentTime;
 	};
 }
 

@@ -108,7 +108,17 @@ namespace Vortex
 			Sets the position of the window in screen-space.
 		*/
 		virtual void SetPosition(int x, int y) = 0;
-		
+
+		/*
+			Hides the cursor from the user.
+		*/
+		virtual void HideCursor() = 0;
+
+		/*
+			Shows the cursor.
+		*/
+		virtual void ShowCursor() = 0;
+
 		/*
 			Returns the swap chain owned by the window.
 		*/

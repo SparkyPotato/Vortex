@@ -20,5 +20,8 @@ private:
 	float m_CurrentDeltaTime;
 	float m_PausedDeltaTime;
 
+	float m_TickDeltaTime;
+	float m_PausedTickDeltaTime;
+
 	std::map<std::string, float> m_PausedProfiles;
 };

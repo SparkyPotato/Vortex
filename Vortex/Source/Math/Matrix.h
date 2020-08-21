@@ -54,6 +54,8 @@ namespace Math
 		*/
 		static Matrix Perspective(float width, float height, float farPlane, float nearPlane);
 
+		static Matrix Inverse(const Matrix& matrixToInvert);
+
 		// All the columns of the matrix.
 		Vector columns[4];
 	};

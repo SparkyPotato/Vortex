@@ -49,12 +49,12 @@ namespace Math
 		w = 1.f;
 	}
 
-	Vector Vector::operator+(const Vector& other)
+	Vector Vector::operator+(const Vector& other) const
 	{
 		return Vector(x + other.x, y + other.y, z + other.z);
 	}
 
-	Vector Vector::operator+(float all)
+	Vector Vector::operator+(float all) const
 	{
 		return Vector(x + all, y + all, z + all);
 	}
@@ -82,12 +82,12 @@ namespace Math
 		return Vector(-x, -y, -z);
 	}
 
-	Vector Vector::operator-(const Vector& other)
+	Vector Vector::operator-(const Vector& other) const
 	{
 		return Vector(x - other.x, y - other.y, z - other.z);
 	}
 
-	Vector Vector::operator-(float all)
+	Vector Vector::operator-(float all) const
 	{
 		return Vector(x - all, y - all, z - all);
 	}
@@ -110,7 +110,7 @@ namespace Math
 		return *this;
 	}
 
-	Vector Vector::operator*(float scalar)
+	Vector Vector::operator*(float scalar) const
 	{
 		return Vector(x * scalar, y * scalar, z * scalar);
 	}
@@ -124,7 +124,7 @@ namespace Math
 		return *this;
 	}
 
-	Vector Vector::operator*(const Matrix& transform)
+	Vector Vector::operator*(const Matrix& transform) const
 	{
 		Vector vec;
 
@@ -143,7 +143,7 @@ namespace Math
 		return *this;
 	}
 
-	Vector Vector::operator/(float scalar)
+	Vector Vector::operator/(float scalar) const
 	{
 		return Vector(x / scalar, y / scalar, z / scalar);
 	}

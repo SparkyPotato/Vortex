@@ -47,8 +47,6 @@ namespace Vortex
 		if (FAILED(hr))
 			throw std::exception("Failed to create DXGI 1.1 Factory.");
 
-		p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 		VX_TRACE(LogGraphicsAPI, "Created DirectX 11 Context.");
 	}
 
@@ -68,6 +66,25 @@ namespace Vortex
 
 		p_Device->Release();
 		p_Device = nullptr;
+	}
+
+	void DX11GraphicsContext::SetTopology(Topology topology)
+	{
+		switch (topology)
+		{
+		case Topology::LineList:
+			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			break;
+		case Topology::LineStrip:
+			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			break;
+		case Topology::TriangleList:
+			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			break;
+		case Topology::TriangleStrip:
+			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+			break;
+		}
 	}
 
 	void DX11GraphicsContext::Draw(int drawSize)

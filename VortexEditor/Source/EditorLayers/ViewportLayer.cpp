@@ -1,15 +1,18 @@
 #include <EditorLayers/ViewportLayer.h>
 #include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
-#include <World/World.h>
-#include <Math/Matrix.h>
+#include <EditorLayers/WorldLayer.h>
 
 using namespace Vortex;
 
-ViewportLayer::ViewportLayer(bool* isViewportCurrentlyOpen)
-	: m_IsOpen(isViewportCurrentlyOpen)
-{
+DEFINE_LOGGER(LogViewport);
 
+ViewportLayer::ViewportLayer(bool* isViewportCurrentlyOpen, WorldLayer* worldLayer)
+	: m_IsOpen(isViewportCurrentlyOpen), m_WorldLayer(worldLayer)
+{
+	CREATE_LOGGER(LogViewport, spdlog::level::trace);
+
+	m_EditorEntity = m_WorldLayer->GetEditorEntity();
 }
 
 ViewportLayer::~ViewportLayer()
@@ -34,9 +37,50 @@ void ViewportLayer::OnDetach()
 
 void ViewportLayer::Tick(float deltaTime)
 {
-	if (!*m_IsOpen) return;
+	if (!*m_IsOpen || !m_IsMouseInViewportBounds) return;
 
-	
+	auto transform = m_EditorEntity->GetTransform();
+	auto camera = m_EditorEntity->GetCameraComponent();
+
+	if (GInput->GetMouseState().rightButton)
+	{
+		GWindow->HideCursor();
+
+		m_MovementSpeed += GInput->GetMouseState().scrollDelta;
+		if (m_MovementSpeed < 0.5f) m_MovementSpeed = 0.5f;
+
+		if (GInput->IsKeyDown(InputCode::W))
+			transform->SetPosition(transform->GetPosition() + camera->GetForwardVector() * m_MovementSpeed * deltaTime);
+		if (GInput->IsKeyDown(InputCode::S))
+			transform->SetPosition(transform->GetPosition() - camera->GetForwardVector() * m_MovementSpeed * deltaTime);
+		if (GInput->IsKeyDown(InputCode::D))
+			transform->SetPosition(transform->GetPosition() + camera->GetRightVector() * m_MovementSpeed * deltaTime);
+		if (GInput->IsKeyDown(InputCode::A))
+			transform->SetPosition(transform->GetPosition() - camera->GetRightVector() * m_MovementSpeed * deltaTime);
+		if (GInput->IsKeyDown(InputCode::E))
+			transform->SetPosition(transform->GetPosition() + Math::Vector(0.f, 1.f, 0.f) * m_MovementSpeed * deltaTime);
+		if (GInput->IsKeyDown(InputCode::Q))
+			transform->SetPosition(transform->GetPosition() - Math::Vector(0.f, 1.f, 0.f) * m_MovementSpeed * deltaTime);
+
+		float yDelta = (float) GInput->GetMouseState().y - m_LastFrameMousePosition.y;
+		float xDelta = (float) GInput->GetMouseState().x - m_LastFrameMousePosition.x;
+
+		auto rotation = transform->GetRotation() + Math::Vector(-yDelta, -xDelta, 0.f) * m_Sensitivity / 5.f;
+
+		if (rotation.x > 180.f)
+			rotation.x = 180.f;
+		else if (rotation.x < -180.f)
+			rotation.x = -180.f;
+
+		transform->SetRotation(rotation);
+	}
+	else
+	{
+		GWindow->ShowCursor();
+	}
+
+	m_LastFrameMousePosition.x = (float) GInput->GetMouseState().x;
+	m_LastFrameMousePosition.y = (float) GInput->GetMouseState().y;
 }
 
 void ViewportLayer::OnGuiRender()
@@ -56,7 +100,15 @@ void ViewportLayer::OnGuiRender()
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
 				DX11Texture* texture = reinterpret_cast<DX11Texture*>(m_Texture);
-				ImGui::Image((void*)texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() });
+				ImGui::ImageButton(texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() }, { 0, 0 }, { 1, 1 }, 0);
+
+				m_ViewportTopLeft = ImGui::GetItemRectMin();
+				m_ViewportBottomRight = ImGui::GetItemRectMax();
+
+				if (ImGui::IsItemHovered())
+					m_IsMouseInViewportBounds = true;
+				else
+					m_IsMouseInViewportBounds = false;
 			}
 
 			ImGui::End();

@@ -81,7 +81,8 @@ void AssetLayer::OnGuiRender()
 				ImGui::SetCursorPos(offset);
 				if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 				{
-					if (ImGui::ImageButton(reinterpret_cast<DX11Texture*>(texture.second)->GetShaderResource(), { 100, 100 }))
+					ImGui::ImageButton(reinterpret_cast<DX11Texture*>(texture.second)->GetShaderResource(), { 100, 100 });
+					if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
 					{
 						m_ViewedTextureName = texture.first;
 						m_ViewedTexture = texture.second;
