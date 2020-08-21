@@ -44,6 +44,11 @@ namespace Vortex
 		virtual void Clear(float r, float g, float b, float a) = 0;
 
 		/*
+			Disables depth-testing till the framebuffer is rebound.
+		*/
+		virtual void DisableDepth() = 0;
+
+		/*
 			Creates a framebuffer from a texture.
 			The framebuffer now owns the texture, so it is deleted when the framebuffer is deleted.
 		*/

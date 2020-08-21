@@ -119,6 +119,9 @@ namespace Vortex
 		*/
 		virtual void ShowCursor() = 0;
 
+		virtual void TrapCursor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) = 0;
+		virtual void FreeCursor() = 0;
+
 		/*
 			Returns the swap chain owned by the window.
 		*/

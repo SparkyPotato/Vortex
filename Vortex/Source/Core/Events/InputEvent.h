@@ -34,7 +34,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on key release. Handles by Vortex Input Module.
+		Generated on key release. Handled by Vortex Input Module.
 	*/
 	class KeyUpEvent : public KeyEvent
 	{
@@ -47,7 +47,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on mouse move. Handles by Vortex Input Module.
+		Generated on mouse move. Handled by Vortex Input Module.
 	*/
 	class MouseMoveEvent : public Event
 	{
@@ -67,7 +67,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on mouse button press. Handles by Vortex Input Module.
+		Generated on mouse button press. Handled by Vortex Input Module.
 	*/
 	class MouseButtonDownEvent : public Event
 	{
@@ -85,7 +85,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on mouse button release. Handles by Vortex Input Module.
+		Generated on mouse button release. Handled by Vortex Input Module.
 	*/
 	class MouseButtonUpEvent : public Event
 	{
@@ -103,7 +103,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on mouse button double click. Handles by Vortex Input Module.
+		Generated on mouse button double click. Handled by Vortex Input Module.
 	*/
 	class MouseButtonDoubleClickEvent : public Event
 	{
@@ -121,7 +121,7 @@ namespace Vortex
 	};
 
 	/*
-		Generated on mouse scroll. Handles by Vortex Input Module.
+		Generated on mouse scroll. Handled by Vortex Input Module.
 	*/
 	class MouseScrollEvent : public Event
 	{
@@ -136,5 +136,24 @@ namespace Vortex
 
 	private:
 		float m_ScrollSteps;
+	};
+
+	/*
+		Generated on mouse Raw Input even. Handled by Vortex Input Module.
+	*/
+	class MouseRawEvent : public Event
+	{
+	public:
+		MouseRawEvent(int deltaX, int deltaY)
+			: m_DeltaX(deltaX), m_DeltaY(deltaY)
+		{}
+
+		int GetXDelta() const { return m_DeltaX; }
+		int GetYDelta() const { return m_DeltaY; }
+
+		DEFINETYPES(EventType::MouseRaw);
+
+	private:
+		int m_DeltaX, m_DeltaY;
 	};
 }

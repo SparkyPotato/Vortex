@@ -60,6 +60,8 @@ namespace Vortex
 
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
+		void UseRawInput(bool shouldUseRawInput) { m_IsUsingRawInput = shouldUseRawInput; }
+
 		/*
 			Get the current mouse state.
 		*/
@@ -108,6 +110,10 @@ namespace Vortex
 		bool MUEvent(const MouseButtonUpEvent& event);
 		bool MDCEvent(const MouseButtonDoubleClickEvent& event);
 		bool MSEvent(const MouseScrollEvent& event);
+
+		bool RMEvent(const MouseRawEvent& event);
+
+		bool m_IsUsingRawInput = false;
 
 		// Key states and mouse state.
 		std::bitset<256> m_KeyStates;

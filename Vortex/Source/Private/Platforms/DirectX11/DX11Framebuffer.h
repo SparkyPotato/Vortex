@@ -19,6 +19,8 @@ namespace Vortex
 
 		virtual void Clear(float r, float g, float b, float a) override;
 
+		virtual void DisableDepth() override;
+
 	private:
 		void Create(DX11Texture* texture);
 

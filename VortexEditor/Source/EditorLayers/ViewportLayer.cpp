@@ -2,6 +2,7 @@
 #include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
 #include <EditorLayers/WorldLayer.h>
+#include <im3d.h>
 
 using namespace Vortex;
 
@@ -45,6 +46,12 @@ void ViewportLayer::Tick(float deltaTime)
 	if (GInput->GetMouseState().rightButton)
 	{
 		GWindow->HideCursor();
+		GWindow->TrapCursor
+		(
+			(int) m_ViewportTopLeft.x, (int) m_ViewportTopLeft.y, 
+			(int) m_ViewportBottomRight.x, (int) m_ViewportBottomRight.y
+		);
+		GInput->UseRawInput(true);
 
 		m_MovementSpeed += GInput->GetMouseState().scrollDelta;
 		if (m_MovementSpeed < 0.5f) m_MovementSpeed = 0.5f;
@@ -74,10 +81,18 @@ void ViewportLayer::Tick(float deltaTime)
 
 		transform->SetRotation(rotation);
 	}
+	else if (GInput->GetMouseState().leftButton)
+	{
+		// Selecting stuff.
+	}
 	else
 	{
 		GWindow->ShowCursor();
+		GWindow->FreeCursor();
+		GInput->UseRawInput(false);
 	}
+
+
 
 	m_LastFrameMousePosition.x = (float) GInput->GetMouseState().x;
 	m_LastFrameMousePosition.y = (float) GInput->GetMouseState().y;
@@ -99,8 +114,8 @@ void ViewportLayer::OnGuiRender()
 
 			if (GraphicsContext::Get()->GetAPI() == GraphicsAPI::DirectX11)
 			{
-				DX11Texture* texture = reinterpret_cast<DX11Texture*>(m_Texture);
-				ImGui::ImageButton(texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() }, { 0, 0 }, { 1, 1 }, 0);
+				auto texture = reinterpret_cast<DX11Texture*>(m_Texture);
+				ImGui::Image(texture->GetShaderResource(), { (float) texture->GetWidth(), (float) texture->GetHeight() });
 
 				m_ViewportTopLeft = ImGui::GetItemRectMin();
 				m_ViewportBottomRight = ImGui::GetItemRectMax();

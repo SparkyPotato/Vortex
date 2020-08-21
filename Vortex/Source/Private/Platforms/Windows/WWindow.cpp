@@ -6,6 +6,7 @@
 #include <Core/Events/InputEvent.h>
 #include <Graphics/Primitives/GPFramebuffer.h>
 #include <Core/VXConsole.h>
+#include <hidusage.h>
 
 #include <examples/imgui_impl_win32.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -63,6 +64,18 @@ namespace Vortex
 		m_SwapChain = GPSwapChain::Create(this);
 		// Create the framebuffer.
 		m_Framebuffer = GPFramebuffer::Create(this);
+
+		VX_TRACE(LogWindow, "Registering Raw Input.");
+
+		RAWINPUTDEVICE device;
+		ZeroMemory(&device, sizeof(RAWINPUTDEVICE));
+		device.usUsagePage = HID_USAGE_PAGE_GENERIC;
+		device.usUsage = HID_USAGE_GENERIC_MOUSE;
+		device.hwndTarget = m_WindowHandle;
+
+		RegisterRawInputDevices(&device, 1, sizeof(RAWINPUTDEVICE));
+
+		VX_TRACE(LogWindow, "Registered Raw Input.");
 
 		VX_TRACE(LogWindow, "Created window.");
 	}
@@ -129,6 +142,23 @@ namespace Vortex
 		m_Properties.x = x;
 		m_Properties.y = y;
 		SetWindowPos(m_WindowHandle, HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
+	}
+
+	void WWindow::TrapCursor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+	{
+		POINT topLeft = { topLeftX, topLeftY };
+		POINT bottomRight = { bottomRightX, bottomRightY };
+
+		ClientToScreen(m_WindowHandle, &topLeft);
+		ClientToScreen(m_WindowHandle, &bottomRight);
+
+		RECT rect;
+		rect.left = topLeft.x;
+		rect.right = bottomRight.x;
+		rect.top = topLeft.y;
+		rect.bottom = bottomRight.y;
+
+		ClipCursor(&rect);
 	}
 
 	void WWindow::OnConsoleCommand(ConsoleCommand command)
@@ -427,6 +457,28 @@ namespace Vortex
 		case WM_MOUSEWHEEL:
 		{
 			if (m_Callback) m_Callback(this, MouseScrollEvent((float) GET_WHEEL_DELTA_WPARAM(wParam) / (float) WHEEL_DELTA));
+			break;
+		}
+		case WM_INPUT:
+		{
+			if (GET_RAWINPUT_CODE_WPARAM(wParam) == 0)
+			{
+				UINT dwSize = 0;
+				GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+				auto lpb = new BYTE[dwSize];
+				GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+				RAWINPUT* raw = (RAWINPUT*)lpb;
+
+				if (raw->header.dwType == RIM_TYPEMOUSE)
+				{
+					if (raw->data.mouse.usFlags == MOUSE_MOVE_RELATIVE)
+					{
+						if (m_Callback) m_Callback(this, MouseRawEvent(raw->data.mouse.lLastX, raw->data.mouse.lLastY));
+					}
+				}
+
+				delete[] lpb;
+			}
 			break;
 		}
 		}

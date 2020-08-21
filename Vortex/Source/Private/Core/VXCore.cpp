@@ -44,7 +44,7 @@ namespace Vortex
 
 		// Creates the window, using the application-defined properties.
 		m_Window = Window::Create(m_App->GetWindowProperties());
-		m_Window->SetEventCallback(std::bind(&VXCore::OnWindowEvent, this, std::placeholders::_1, std::placeholders::_2));
+		m_Window->SetEventCallback([&](Window* window, Event& event) { this->OnWindowEvent(window, event); });
 		GWindow = m_Window;
 
 		m_Gui = new VXGui();
@@ -223,6 +223,7 @@ namespace Vortex
 		dispatcher.Dispatch<MouseButtonUpEvent>(BIND_EVENT(m_Input->MUEvent));
 		dispatcher.Dispatch<MouseButtonDoubleClickEvent>(BIND_EVENT(m_Input->MDCEvent));
 		dispatcher.Dispatch<MouseScrollEvent>(BIND_EVENT(m_Input->MSEvent));
+		dispatcher.Dispatch<MouseRawEvent>(BIND_EVENT(m_Input->RMEvent));
 
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT(m_Renderer->ResizeOnWindow));
 

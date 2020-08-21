@@ -185,6 +185,18 @@ namespace Vortex
 		context->Unlock();
 	}
 
+	void DX11Framebuffer::DisableDepth()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+
+		context->GetContext()->RSSetViewports(1, &m_Viewport);
+		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, NULL);
+
+		context->Unlock();
+	}
+
 	void DX11Framebuffer::Create(DX11Texture* texture)
 	{
 		VX_TRACE(LogGraphicsAPI, "Creating DirectX 11 Framebuffer.");

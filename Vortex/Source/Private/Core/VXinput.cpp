@@ -133,6 +133,8 @@ namespace Vortex
 
 	bool VXInput::MMEvent(const MouseMoveEvent& event)
 	{
+		if (m_IsUsingRawInput) return false;
+
 		// Set the mouse position.
 		m_MouseState.x = event.GetX();
 		m_MouseState.y = event.GetY();
@@ -189,6 +191,15 @@ namespace Vortex
 	{
 		// Sets the scroll delta.
 		m_MouseState.scrollDelta += event.GetScrollSteps();
+		return true;
+	}
+
+	bool VXInput::RMEvent(const MouseRawEvent& event)
+	{
+		if (!m_IsUsingRawInput) return false;
+
+		m_MouseState.x += event.GetXDelta();
+		m_MouseState.y += event.GetYDelta();
 		return true;
 	}
 

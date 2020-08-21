@@ -10,7 +10,8 @@ namespace Vortex
 	{
 		WindowClose, WindowMinimize, WindowUnminimize, WindowMaximize, WindowUnmaximize,
 		WindowResize, WindowMove, WindowActivate, WindowDeactivate,
-		KeyDown, KeyUp, MouseMove, MouseButtonDown, MouseButtonUp, MouseButtonDoubleClick, MouseScroll
+		KeyDown, KeyUp, 
+		MouseMove, MouseButtonDown, MouseButtonUp, MouseButtonDoubleClick, MouseScroll, MouseRaw
 	};
 
 	/*

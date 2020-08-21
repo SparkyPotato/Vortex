@@ -47,6 +47,32 @@ namespace Vortex
 		if (FAILED(hr))
 			throw std::exception("Failed to create DXGI 1.1 Factory.");
 
+		VX_TRACE(LogGraphicsAPI, "Setting up blend state.");
+
+		D3D11_RENDER_TARGET_BLEND_DESC renderDesc;
+		ZeroMemory(&renderDesc, sizeof(D3D11_RENDER_TARGET_BLEND_DESC));
+		renderDesc.BlendEnable = false;
+		renderDesc.SrcBlend = D3D11_BLEND_ONE;
+		renderDesc.DestBlend = D3D11_BLEND_SRC1_COLOR;
+ 		renderDesc.BlendOp = D3D11_BLEND_OP_ADD;
+ 		renderDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+ 		renderDesc.DestBlendAlpha = D3D11_BLEND_SRC1_ALPHA;
+		renderDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		renderDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.IndependentBlendEnable = false;
+		blendDesc.RenderTarget[0] = renderDesc;
+
+		ID3D11BlendState* blendState = nullptr;
+		p_Device->CreateBlendState(&blendDesc, &blendState);
+		p_Context->OMSetBlendState(blendState, NULL, 0xffffffff);
+		blendState->Release();
+
+		VX_TRACE(LogGraphicsAPI, "Setup blend state.");
+
 		VX_TRACE(LogGraphicsAPI, "Created DirectX 11 Context.");
 	}
 
@@ -231,11 +257,13 @@ namespace Vortex
 			}
 		}
 
+		Lock();
 		ID3D11InputLayout* layout;
 		p_Device->CreateInputLayout(desc, size, m_CurrentVertexShader->GetBlob()->GetBufferPointer(),
 			m_CurrentVertexShader->GetBlob()->GetBufferSize(), &layout);
 		p_Context->IASetInputLayout(layout);
 		layout->Release();
+		Unlock();
 
 		delete[] desc;
 		delete[] semantics;

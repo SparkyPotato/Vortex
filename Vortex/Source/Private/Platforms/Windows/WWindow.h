@@ -27,6 +27,9 @@ namespace Vortex
 		virtual void HideCursor() override { SetCursor(NULL); }
 		virtual void ShowCursor() override { SetCursor(LoadCursor(NULL, IDC_ARROW)); }
 
+		virtual void TrapCursor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) override;
+		virtual void FreeCursor() override { ClipCursor(NULL); }
+
 		virtual GPSwapChain* GetSwapChain() override { return m_SwapChain; }
 		virtual GPFramebuffer* GetFramebuffer() override { return m_Framebuffer; }
 
