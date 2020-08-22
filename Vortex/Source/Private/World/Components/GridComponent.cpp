@@ -9,7 +9,7 @@ namespace Vortex
 
 		int vertexCount = (int) (sideLength / largeLineDistance + 1) * 4;
 		auto vertexArray = new Vertex[vertexCount];
-		auto indexArray = new unsigned int[vertexCount * 2];
+		auto indexArray = new unsigned int[vertexCount];
 
 		unsigned int i = 0;
 		for (; xPos <= sideLength / 2.f; xPos += largeLineDistance)
@@ -45,7 +45,7 @@ namespace Vortex
 		};
 
 		vertices = GPVertexBuffer::Create(vertexArray, vertexCount, layout, BufferAccessType::Static);
-		indices = GPIndexBuffer::Create(indexArray, vertexCount * 2);
+		indices = GPIndexBuffer::Create(indexArray, vertexCount);
 
 		delete[] vertexArray;
 		delete[] indexArray;

@@ -7,10 +7,11 @@ namespace Vortex
 	class DX11ConstantBuffer : public GPConstantBuffer
 	{
 	public:
-		DX11ConstantBuffer(void* data, int size, ConstantBufferTarget target);
+		DX11ConstantBuffer(void* data, int size, int target);
 		virtual ~DX11ConstantBuffer();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 		virtual void Set(void* newData) override;
@@ -18,7 +19,7 @@ namespace Vortex
 	private:
 		ID3D11Buffer* m_Buffer;
 
-		ConstantBufferTarget m_Target;
+		int m_Target;
 		int m_Size;
 	};
 }

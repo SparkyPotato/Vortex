@@ -11,6 +11,7 @@ namespace Vortex
 		virtual ~DX11GeometryShader();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 		ID3DBlob* GetBlob() { return m_Blob; }

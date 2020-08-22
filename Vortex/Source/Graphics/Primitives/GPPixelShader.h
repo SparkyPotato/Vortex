@@ -17,6 +17,7 @@ namespace Vortex
 		static GPPixelShader* Create(std::string file, std::string defines);
 
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		virtual void Recreate() = 0;
 	};
 }

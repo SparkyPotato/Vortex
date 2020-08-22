@@ -11,6 +11,7 @@ namespace Vortex
 		virtual ~DX11PixelShader();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 	private:

@@ -17,6 +17,7 @@ namespace Vortex
 		static GPIndexBuffer* Create(unsigned int* indices, int count);
 
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		virtual void Recreate() = 0;
 
 		virtual int GetSize() = 0;

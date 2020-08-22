@@ -17,6 +17,7 @@ namespace Vortex
 			Bind the framebuffer to the pipeline.
 		*/
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		/*
 			Recreates the framebuffer.
 		*/
@@ -47,6 +48,8 @@ namespace Vortex
 			Disables depth-testing till the framebuffer is rebound.
 		*/
 		virtual void DisableDepth() = 0;
+
+		virtual GPTexture* GetTexture() = 0;
 
 		/*
 			Creates a framebuffer from a texture.

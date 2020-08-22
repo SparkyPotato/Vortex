@@ -13,7 +13,7 @@ namespace Vortex
 
 	enum class Topology
 	{
-		LineList, LineStrip, TriangleList, TriangleStrip
+		PointList, LineList, LineStrip, TriangleList, TriangleStrip
 	};
 
 	/*
@@ -62,7 +62,7 @@ namespace Vortex
 		*/
 		virtual void Draw(unsigned int drawSize) = 0;
 
-		virtual void DrawIndexed(unsigned int drawSize)
+		virtual void DrawIndexed(unsigned int drawSize) = 0;
 
 		/*
 			Threading functions. 

@@ -6,7 +6,7 @@
 
 namespace Vortex
 {
-	GPConstantBuffer* GPConstantBuffer::Create(void* data, int size, ConstantBufferTarget target)
+	GPConstantBuffer* GPConstantBuffer::Create(void* data, int size, int target)
 	{
 		switch (GraphicsContext::Get()->GetAPI())
 		{

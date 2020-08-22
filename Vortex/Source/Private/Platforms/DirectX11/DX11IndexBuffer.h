@@ -11,6 +11,7 @@ namespace Vortex
 		virtual ~DX11IndexBuffer();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 		int GetSize() override { return m_Size; }

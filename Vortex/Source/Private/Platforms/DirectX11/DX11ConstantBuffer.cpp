@@ -3,7 +3,7 @@
 
 namespace Vortex
 {
-	DX11ConstantBuffer::DX11ConstantBuffer(void* data, int size, ConstantBufferTarget target)
+	DX11ConstantBuffer::DX11ConstantBuffer(void* data, int size, int target)
 		: m_Size(size), m_Target(target)
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
@@ -38,14 +38,39 @@ namespace Vortex
 
 		context->Lock();
 
-		switch (m_Target)
+		if (m_Target & (int) ConstantBufferTarget::VertexShader)
 		{
-		case ConstantBufferTarget::VertexShader:
 			context->GetContext()->VSSetConstantBuffers(0, 1, &m_Buffer);
-			break;
-		case ConstantBufferTarget::PixelShader:
+		}
+		if (m_Target & (int) ConstantBufferTarget::GeometryShader)
+		{
+			context->GetContext()->GSSetConstantBuffers(0, 1, &m_Buffer);
+		}
+		if (m_Target & (int) ConstantBufferTarget::PixelShader)
+		{
 			context->GetContext()->PSSetConstantBuffers(0, 1, &m_Buffer);
-			break;
+		}
+
+		context->Unlock();
+	}
+
+	void DX11ConstantBuffer::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+
+		if (m_Target & (int) ConstantBufferTarget::VertexShader)
+		{
+			context->GetContext()->VSSetConstantBuffers(0, 1, nullptr);
+		}
+		if (m_Target & (int) ConstantBufferTarget::GeometryShader)
+		{
+			context->GetContext()->GSSetConstantBuffers(0, 1, nullptr);
+		}
+		if (m_Target & (int) ConstantBufferTarget::PixelShader)
+		{
+			context->GetContext()->PSSetConstantBuffers(0, 1, nullptr);
 		}
 
 		context->Unlock();

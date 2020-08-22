@@ -17,6 +17,11 @@ namespace Vortex
 		*/
 		virtual void Bind() = 0;
 		/*
+			Unbinds the primitive from the pipeline.
+		*/
+		virtual void Unbind() = 0;
+
+		/*
 			Recreate the primitive.
 		*/
 		virtual void Recreate() = 0;

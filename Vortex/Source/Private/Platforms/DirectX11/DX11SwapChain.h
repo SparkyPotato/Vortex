@@ -12,6 +12,7 @@ namespace Vortex
 		virtual ~DX11SwapChain();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 		virtual GPTexture* GetBackBuffer() override;

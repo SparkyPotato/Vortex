@@ -7,7 +7,7 @@
 
 namespace Vortex 
 {
-	GPVertexBuffer* GPVertexBuffer::Create(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType)
+	GPVertexBuffer* GPVertexBuffer::Create(void* vertices, unsigned int count, const VertexLayout& layout, BufferAccessType accessType)
 	{
 		switch (GraphicsContext::Get()->GetAPI())
 		{

@@ -49,6 +49,18 @@ namespace Vortex
 		context->Unlock();
 	}
 
+	void DX11Framebuffer::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+
+		context->GetContext()->RSSetViewports(1, nullptr);
+		context->GetContext()->OMSetRenderTargets(1, nullptr, nullptr);
+
+		context->Unlock();
+	}
+
 	void DX11Framebuffer::Recreate()
 	{
 		Create(m_Texture);
@@ -192,7 +204,7 @@ namespace Vortex
 		context->Lock();
 
 		context->GetContext()->RSSetViewports(1, &m_Viewport);
-		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, NULL);
+		context->GetContext()->OMSetRenderTargets(1, &p_RenderTarget, nullptr);
 
 		context->Unlock();
 	}

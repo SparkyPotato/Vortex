@@ -25,6 +25,11 @@ namespace Vortex
 		VX_WARN(LogGraphicsAPI, "Binding a swap chain does nothing.");
 	}
 
+	void DX11SwapChain::Unbind()
+	{
+		VX_WARN(LogGraphicsAPI, "Unbinding a swap chain does nothing.");
+	}
+
 	void DX11SwapChain::Recreate()
 	{
 		VX_TRACE(LogGraphicsAPI, "Creating DirectX 11 Swap Chain.");

@@ -36,6 +36,17 @@ namespace Vortex
 		context->SetVertexShader(this);
 	}
 
+	void DX11VertexShader::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+		context->GetContext()->VSSetShader(nullptr, NULL, 0);
+		context->Unlock();
+
+		context->SetVertexShader(nullptr);
+	}
+
 	void DX11VertexShader::Recreate()
 	{
 		m_Blob->Release();

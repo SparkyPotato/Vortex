@@ -8,13 +8,17 @@ namespace Vortex
 	*/
 	enum class ShaderDataType
 	{
-		float1 = sizeof(float),
-		float2 = sizeof(float) * 2,
-		float3 = sizeof(float) * 3,
-		float4 = sizeof(float) * 4,
+		col1,
+		col2,
+		col4,
 
-		float3x3 = sizeof(float) * 3 * 3,
-		float4x4 = sizeof(float) * 4 * 4,
+		float1,
+		float2,
+		float3,
+		float4,
+
+		float3x3,
+		float4x4
 	};
 
 	/*
@@ -26,7 +30,23 @@ namespace Vortex
 			: semantic(Semantic), dataType(type), offset(0)
 		{}
 
-		int GetSize() { return (int) dataType; }
+		int GetSize()
+		{
+			switch (dataType)
+			{
+			case ShaderDataType::col1: return 1;
+			case ShaderDataType::col2: return 2;
+			case ShaderDataType::col4: return 4;
+			case ShaderDataType::float1: return sizeof(float);
+			case ShaderDataType::float2: return sizeof(float) * 2;
+			case ShaderDataType::float3: return sizeof(float) * 3;
+			case ShaderDataType::float4: return sizeof(float) * 4;
+			case ShaderDataType::float3x3: return sizeof(float) * 3 * 3;
+			case ShaderDataType::float4x4: return sizeof(float) * 4 * 4;
+			}
+
+			return 0;
+		}
 
 		bool operator==(const VertexElement& other) const
 		{
@@ -52,13 +72,13 @@ namespace Vortex
 		int GetElementCount() const
 		{
 			int i = 0;
-			for (auto element : m_Elements)
+			for (auto& element : m_Elements)
 			{
-				if ((int) element.dataType < sizeof(float) * 3 * 3)
+				if (element.dataType != ShaderDataType::float3x3 || element.dataType != ShaderDataType::float4x4)
 					i++;
 				else if (element.dataType == ShaderDataType::float3x3)
 					i += 3;
-				else
+				else if (element.dataType == ShaderDataType::float4x4)
 					i += 4;
 			}
 			return i;
@@ -102,11 +122,14 @@ namespace Vortex
 		/*
 			Creates a vertex buffer from `count` vertices according to the the layout.
 		*/
-		static GPVertexBuffer* Create(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType);
+		static GPVertexBuffer* Create(void* vertices, unsigned int count, const VertexLayout& layout, BufferAccessType accessType);
 
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		virtual void Recreate() = 0;
-		virtual void Set(void* vertices, int count) = 0;
+		virtual void Set(void* vertices, unsigned int count) = 0;
+
+		virtual unsigned int GetSize() = 0;
 
 		virtual const VertexLayout& GetLayout() = 0;
 	};

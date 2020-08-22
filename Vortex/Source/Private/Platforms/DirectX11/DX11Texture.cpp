@@ -139,7 +139,18 @@ namespace Vortex
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
 
+		context->Lock();
 		context->GetContext()->PSSetShaderResources(0, 1, &p_ShaderResource);
+		context->Unlock();
+	}
+
+	void DX11Texture::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+		context->GetContext()->PSSetShaderResources(0, 1, nullptr);
+		context->Unlock();
 	}
 
 	void DX11Texture::Recreate()

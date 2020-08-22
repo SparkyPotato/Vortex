@@ -27,6 +27,15 @@ namespace Vortex
 		context->Unlock();
 	}
 
+	void DX11IndexBuffer::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+		context->GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		context->Unlock();
+	}
+
 	void DX11IndexBuffer::Recreate()
 	{
 

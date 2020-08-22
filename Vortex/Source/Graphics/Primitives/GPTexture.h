@@ -37,10 +37,10 @@ namespace Vortex
 		static GPTexture* Create(std::string file);
 
 		/*
-			Binding a texture does nothing.
-			It will probably bind it to the current Pixel Shader in the future.
+			Binds the texture to the pixel shader.
 		*/
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		/*
 			Recreates the texuture.
 		*/

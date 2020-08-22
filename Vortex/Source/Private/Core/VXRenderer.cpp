@@ -2,7 +2,6 @@
 #include <Core/Modules/VXRenderer.h>
 #include <World/World.h>
 #include <Core/VXConsole.h>
-#include <im3d.h>
 
 Vortex::VXRenderer* GRenderer;
 
@@ -27,25 +26,13 @@ namespace Vortex
 		m_Target = GWindow->GetFramebuffer();
 		m_IsOnWindow = true;
 
-		ConstantBuffer buffer;
-		m_ConstantBuffer = GPConstantBuffer::Create(&buffer, sizeof(ConstantBuffer), ConstantBufferTarget::VertexShader);
+		m_ConstantBuffer = GPConstantBuffer::Create(&m_ConstantBufferData, sizeof(ConstantBuffer), (int) ConstantBufferTarget::VertexShader);
+
 		m_BasicVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/BasicVertexShader.hlsl", "");
 		m_GridVertexShader = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/GridVertexShader.hlsl", "");
 
 		m_ColorPixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/ColorPixelShader.hlsl", "");
 		m_TexturePixelShader = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/TexturePixelShader.hlsl", "");
-
-		// Im3d shaders.
-		m_Im3dVertexPoints = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "VERTEX_SHADER POINTS");
-		m_Im3dVertexLines = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "VERTEX_SHADER LINES");
-		m_Im3dVertexTriangles = GPVertexShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "VERTEX_SHADER TRIANGLES");
-
-		m_Im3dGeometryPoints = GPGeometryShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "GEOMETRY_SHADER POINTS");
-		m_Im3dGeometryLines = GPGeometryShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "GEOMETRY_SHADER LINES");
-
-		m_Im3dPixelPoints = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "PIXEL_SHADER POINTS");
-		m_Im3dPixelLines = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "PIXEL_SHADER LINES");
-		m_Im3dPixelTriangles = GPPixelShader::Create("../Vortex/Source/Graphics/Shaders/Im3dShaders.hlsl", "PIXEL_SHADER TRIANGLES");
 	}
 
 	void VXRenderer::Shutdown()
@@ -57,17 +44,6 @@ namespace Vortex
 
 		delete m_ColorPixelShader;
 		delete m_TexturePixelShader;
-
-		delete m_Im3dVertexPoints;
-		delete m_Im3dVertexLines;
-		delete m_Im3dVertexTriangles;
-
-		delete m_Im3dGeometryPoints;
-		delete m_Im3dGeometryLines;
-
-		delete m_Im3dPixelPoints;
-		delete m_Im3dPixelLines;
-		delete m_Im3dPixelTriangles;
 	}
 
 	void VXRenderer::Tick(float deltaTime)
@@ -119,7 +95,7 @@ namespace Vortex
 			m_World->GetGrid()->vertices->Bind();
 			m_World->GetGrid()->indices->Bind();
 
-			GraphicsContext::Get()->Draw(m_World->GetGrid()->indices->GetSize());
+			GraphicsContext::Get()->DrawIndexed(m_World->GetGrid()->indices->GetSize());
 		}
 	}
 
@@ -191,11 +167,6 @@ namespace Vortex
 	void VXRenderer::RenderWorld(World* worldToRender)
 	{
 		m_World = worldToRender;
-	}
-
-	void VXRenderer::DrawIm3d(unsigned int drawListCount, const Im3d::DrawList* drawlists)
-	{
-
 	}
 
 	void VXRenderer::PostFrambufferResize(int width, int height)

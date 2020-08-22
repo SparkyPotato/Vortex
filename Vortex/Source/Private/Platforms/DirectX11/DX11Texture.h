@@ -14,6 +14,7 @@ namespace Vortex
 		virtual ~DX11Texture();
 
 		virtual void Bind() override;
+		virtual void Unbind() override;
 		virtual void Recreate() override;
 
 		virtual int GetWidth() override { return m_Width; }

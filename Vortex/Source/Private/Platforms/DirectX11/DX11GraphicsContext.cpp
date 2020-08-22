@@ -98,6 +98,9 @@ namespace Vortex
 	{
 		switch (topology)
 		{
+		case Topology::PointList:
+			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+			break;
 		case Topology::LineList:
 			p_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 			break;
@@ -190,6 +193,36 @@ namespace Vortex
 		{
 			switch (element.dataType)
 			{
+			case ShaderDataType::col1:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R8_UNORM;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				break;
+			case ShaderDataType::col2:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R8G8_UNORM;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				break;
+			case ShaderDataType::col4:
+				semantics[i] = element.semantic;
+				desc[i].SemanticName = semantics[i].c_str();
+				desc[i].SemanticIndex = 0;
+				desc[i].Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				desc[i].InputSlot = 0;
+				desc[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				desc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+				desc[i].InstanceDataStepRate = 0;
+				break;
 			case ShaderDataType::float1:
 				semantics[i] = element.semantic;
 				desc[i].SemanticName = semantics[i].c_str();

@@ -3,7 +3,7 @@
 
 namespace Vortex
 {
-	DX11VertexBuffer::DX11VertexBuffer(void* vertices, int count, const VertexLayout& layout, BufferAccessType accessType)
+	DX11VertexBuffer::DX11VertexBuffer(void* vertices, unsigned int count, const VertexLayout& layout, BufferAccessType accessType)
 		: m_Layout(layout), m_Size(count), m_AccessType(accessType)
 	{
 		GraphicsContext::Get()->RegisterPrimitive(this);
@@ -38,12 +38,26 @@ namespace Vortex
 		context->SetVertexBuffer(this);
 	}
 
+	void DX11VertexBuffer::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		UINT stride = m_Layout.GetStride();
+		UINT offset = 0;
+
+		context->Lock();
+		context->GetContext()->IASetVertexBuffers(0, 1, nullptr, &stride, &offset);
+		context->Unlock();
+
+		context->SetVertexBuffer(nullptr);
+	}
+
 	void DX11VertexBuffer::Recreate()
 	{
 		// Does nothing yet.
 	}
 
-	void DX11VertexBuffer::Set(void* vertices, int count)
+	void DX11VertexBuffer::Set(void* vertices, unsigned int count)
 	{
 		if (m_AccessType == BufferAccessType::Static)
 		{

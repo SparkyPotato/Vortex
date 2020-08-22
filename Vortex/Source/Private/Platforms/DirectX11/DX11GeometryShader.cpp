@@ -28,6 +28,15 @@ namespace Vortex
 		context->Unlock();
 	}
 
+	void DX11GeometryShader::Unbind()
+	{
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());
+
+		context->Lock();
+		context->GetContext()->GSSetShader(nullptr, NULL, 0);
+		context->Unlock();
+	}
+
 	void DX11GeometryShader::Recreate()
 	{
 		m_Blob->Release();

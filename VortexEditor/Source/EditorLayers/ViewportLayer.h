@@ -21,10 +21,6 @@ public:
 private:
 	void HandleResize(int width, int height);
 
-	void Im3dRenderer(float deltaTime);
-	void Im3dNewFrame(float deltaTime);
-	void Im3dEndFrame();
-
 	bool* m_IsOpen;
 
 	Vortex::GPTexture* m_Texture;

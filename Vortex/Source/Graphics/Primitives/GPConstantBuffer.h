@@ -8,8 +8,9 @@ namespace Vortex
 	*/
 	enum class ConstantBufferTarget
 	{
-		VertexShader,
-		PixelShader
+		VertexShader = 1,
+		GeometryShader = 1 << 1,
+		PixelShader = 1 << 2
 	};
 
 	class GPConstantBuffer : public GraphicsPrimitive
@@ -20,9 +21,10 @@ namespace Vortex
 		/*
 			Create a constant buffer with `size` data.
 		*/
-		static GPConstantBuffer* Create(void* data, int size, ConstantBufferTarget target);
+		static GPConstantBuffer* Create(void* data, int size, int target);
 
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		virtual void Recreate() = 0;
 		
 		/*

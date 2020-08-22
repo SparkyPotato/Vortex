@@ -20,10 +20,8 @@ outputdir = "%{cfg.buildcfg}/"
 Includes = {}
 Includes["spdlog"] = "Vortex/ThirdParty/spdlog/include"
 Includes["imgui"] = "Vortex/ThirdParty/imgui"
-Includes["im3d"] = "Vortex/ThirdParty/im3d"
 
 include "Vortex/ThirdParty/imgui"
-include "Vortex/ThirdParty/im3d"
 
 project "Vortex"
 	location "Vortex"
@@ -42,8 +40,7 @@ project "Vortex"
 	
 	links
 	{
-		"imgui",
-		"im3d"
+		"imgui"
 	}
 	
 	files

@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Module.h>
+#include <Graphics/Primitives/GPVertexBuffer.h>
 #include <Graphics/Primitives/GPFramebuffer.h>
 #include <Graphics/Primitives/GPConstantBuffer.h>
 #include <Graphics/Primitives/GPVertexShader.h>
@@ -9,8 +10,6 @@
 #include <Core/Events/WindowEvent.h>
 
 DECLARE_LOGGER(LogRenderer);
-
-namespace Im3d { struct DrawList; }
 
 namespace Vortex
 {
@@ -41,8 +40,6 @@ namespace Vortex
 
 		void RenderWorld(World* worldToRender);
 
-		void DrawIm3d(unsigned int drawListCount, const Im3d::DrawList* drawlists);
-
 	private:
 		void PostFrambufferResize(int width, int height);
 		void ResizeFramebuffer(int width, int height);
@@ -65,20 +62,6 @@ namespace Vortex
 
 		GPPixelShader* m_ColorPixelShader;
 		GPPixelShader* m_TexturePixelShader;
-
-		/*
-			Im3d shaders;
-		*/
-		GPVertexShader* m_Im3dVertexPoints;
-		GPVertexShader* m_Im3dVertexLines;
-		GPVertexShader* m_Im3dVertexTriangles;
-
-		GPGeometryShader* m_Im3dGeometryPoints;
-		GPGeometryShader* m_Im3dGeometryLines;
-
-		GPPixelShader* m_Im3dPixelPoints;
-		GPPixelShader* m_Im3dPixelLines;
-		GPPixelShader* m_Im3dPixelTriangles;
 
 		GPConstantBuffer* m_ConstantBuffer;
 		ConstantBuffer m_ConstantBufferData;

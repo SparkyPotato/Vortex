@@ -23,6 +23,7 @@ namespace Vortex
 			Binding a swap chain does nothing yet!
 		*/
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 		/*
 			Recreates the swap chain.
 		*/
