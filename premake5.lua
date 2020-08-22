@@ -20,8 +20,10 @@ outputdir = "%{cfg.buildcfg}/"
 Includes = {}
 Includes["spdlog"] = "Vortex/ThirdParty/spdlog/include"
 Includes["imgui"] = "Vortex/ThirdParty/imgui"
+Includes["im3d"] = "Vortex/ThirdParty/im3d"
 
 include "Vortex/ThirdParty/imgui"
+include "Vortex/ThirdParty/im3d"
 
 project "Vortex"
 	location "Vortex"
@@ -40,7 +42,8 @@ project "Vortex"
 	
 	links
 	{
-		"imgui"
+		"ImGui",
+		"Im3d"
 	}
 	
 	files
@@ -54,7 +57,7 @@ project "Vortex"
 		"Vortex/Source",
 		"%{Includes.spdlog}",
 		"%{Includes.imgui}",
-		"%{Includes.im3d}"
+		"%{Includes.im3d}",
 	}
 	
 	filter "system:windows"
@@ -114,7 +117,8 @@ project "VortexEditor"
 	links 
 	{
 		"Vortex",
-		"imgui"
+		"ImGui",
+		"Im3d"
 	}
 	
 	filter "system:windows"
