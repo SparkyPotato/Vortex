@@ -7,6 +7,12 @@ project "Im3d"
 	targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
 	objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
 	
+	includedirs
+	{
+		"../../Source",
+		"../spdlog/include"
+	}
+	
 	files
 	{
 		"im3d.h",
@@ -23,3 +29,19 @@ project "Im3d"
 		
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"
+	
+	filter "configurations:DebugAll"
+		runtime "Debug"
+		symbols "on"
+	
+	filter "configurations:DebugEngine"
+		runtime "Debug"
+		symbols "on"
+		
+	filter "configurations:DebugApplication"
+		runtime "Release"
+		optimize "on"
+		
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"

@@ -6,12 +6,12 @@
 
 namespace Vortex
 {
-	GPPixelShader* GPPixelShader::Create(std::string file)
+	GPPixelShader* GPPixelShader::Create(std::string file, std::string defines)
 	{
 		switch (GraphicsContext::Get()->GetAPI())
 		{
 		case GraphicsAPI::DirectX11:
-			return new DX11PixelShader(file);
+			return new DX11PixelShader(file, defines);
 		default:
 			return nullptr;
 		}

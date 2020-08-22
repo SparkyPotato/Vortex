@@ -21,6 +21,10 @@ public:
 private:
 	void HandleResize(int width, int height);
 
+	void Im3dRenderer(float deltaTime);
+	void Im3dNewFrame(float deltaTime);
+	void Im3dEndFrame();
+
 	bool* m_IsOpen;
 
 	Vortex::GPTexture* m_Texture;
@@ -30,6 +34,7 @@ private:
 	Vortex::Entity* m_EditorEntity = nullptr;
 
 	bool m_IsMouseInViewportBounds = false;
+	bool m_IsViewportActive = false;
 	ImVec2 m_ViewportTopLeft;
 	ImVec2 m_ViewportBottomRight;
 	ImVec2 m_LastFrameMousePosition;

@@ -338,6 +338,8 @@ namespace Vortex
 
 			m_Renderer->Tick(m_RenderDeltaTime);
 
+			if (m_PostRenderFunction) m_PostRenderFunction(m_RenderDeltaTime);
+
 			while (!m_RenderedGui) {}
 			m_Gui->Draw();
 

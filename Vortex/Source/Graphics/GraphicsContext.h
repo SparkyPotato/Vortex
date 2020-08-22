@@ -60,7 +60,9 @@ namespace Vortex
 		/*
 			Draws to the screen.
 		*/
-		virtual void Draw(int drawSize) = 0;
+		virtual void Draw(unsigned int drawSize) = 0;
+
+		virtual void DrawIndexed(unsigned int drawSize)
 
 		/*
 			Threading functions. 

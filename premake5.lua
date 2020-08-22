@@ -42,7 +42,8 @@ project "Vortex"
 	
 	links
 	{
-		"imgui"
+		"imgui",
+		"im3d"
 	}
 	
 	files

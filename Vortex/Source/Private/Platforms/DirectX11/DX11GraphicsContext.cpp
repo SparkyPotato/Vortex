@@ -51,12 +51,12 @@ namespace Vortex
 
 		D3D11_RENDER_TARGET_BLEND_DESC renderDesc;
 		ZeroMemory(&renderDesc, sizeof(D3D11_RENDER_TARGET_BLEND_DESC));
-		renderDesc.BlendEnable = false;
+		renderDesc.BlendEnable = true;
 		renderDesc.SrcBlend = D3D11_BLEND_ONE;
-		renderDesc.DestBlend = D3D11_BLEND_SRC1_COLOR;
- 		renderDesc.BlendOp = D3D11_BLEND_OP_ADD;
- 		renderDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
- 		renderDesc.DestBlendAlpha = D3D11_BLEND_SRC1_ALPHA;
+		renderDesc.DestBlend = D3D11_BLEND_SRC_COLOR;
+		renderDesc.BlendOp = D3D11_BLEND_OP_ADD;
+		renderDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+		renderDesc.DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		renderDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		renderDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
@@ -113,7 +113,14 @@ namespace Vortex
 		}
 	}
 
-	void DX11GraphicsContext::Draw(int drawSize)
+	void DX11GraphicsContext::Draw(unsigned int drawSize)
+	{
+		Lock();
+		p_Context->Draw(drawSize, 0);
+		Unlock();
+	}
+
+	void DX11GraphicsContext::DrawIndexed(unsigned int drawSize)
 	{
 		Lock();
 		p_Context->DrawIndexed(drawSize, 0, 0);

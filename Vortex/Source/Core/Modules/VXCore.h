@@ -56,6 +56,8 @@ namespace Vortex
 
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
+		virtual void SetCustomPostRender(std::function<void(float deltaTime)> function) { m_PostRenderFunction = function; }
+
 		/*
 			Returns the last tick delta.
 		*/
@@ -108,6 +110,8 @@ namespace Vortex
 		bool m_RenderedGui = false;
 		uint64_t m_MainThreadFrameCount = 10;
 		uint64_t m_RenderThreadFrameCount = 10;
+
+		std::function<void(float deltaTime)> m_PostRenderFunction = nullptr;
 
 		// A pointer to the user-defined application.
 		Application* m_App = nullptr;

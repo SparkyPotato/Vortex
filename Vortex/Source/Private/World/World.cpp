@@ -32,6 +32,8 @@ namespace Vortex
 		{
 			delete camera;
 		}
+
+		if (m_Grid) delete m_Grid;
 	}
 
 	Entity* World::CreateEntity(std::string name)

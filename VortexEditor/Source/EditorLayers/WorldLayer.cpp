@@ -19,7 +19,7 @@ WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	m_World->SetMainCamera(camera);
 	camera->SetNearPlane(2.f);
 
-	m_World->AddGrid(1000.f, 10.f, 1.f, { 1.f, 1.f, 1.f, 0.25f });
+	m_World->AddGrid(1000.f, 10.f, 1.f, { 1.f, 1.f, 1.f, 0.15f });
 
 	memset(m_NewEntityNameBuffer, 0, sizeof(m_NewEntityNameBuffer));
 	memset(m_EntityNameBuffer, 0, sizeof(m_EntityNameBuffer));

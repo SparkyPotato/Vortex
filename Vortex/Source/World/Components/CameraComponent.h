@@ -36,7 +36,8 @@ namespace Vortex
 		float GetFarPlane() { return m_FarPlane; }
 		float GetFOVMultiple() { return m_Multiple; }
 
-		const Math::Matrix GetViewProjectionMatrix() { return m_Transform->GetTransformInverse() * m_ProjectionMatrix; }
+		Math::Matrix GetViewProjectionMatrix() { return m_Transform->GetTransformInverse() * m_ProjectionMatrix; }
+		const Math::Matrix& GetProjectionMatrix() { return m_ProjectionMatrix; }
 
 		Math::Vector GetForwardVector();
 		Math::Vector GetRightVector();

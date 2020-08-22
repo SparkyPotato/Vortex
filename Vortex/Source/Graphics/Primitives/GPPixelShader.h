@@ -14,7 +14,7 @@ namespace Vortex
 		/*
 			Create the pixel shader from the HLSL file.
 		*/
-		static GPPixelShader* Create(std::string file);
+		static GPPixelShader* Create(std::string file, std::string defines);
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;

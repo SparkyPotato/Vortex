@@ -24,7 +24,8 @@ namespace Vortex
 
 		virtual void SetTopology(Topology topology) override;
 
-		virtual void Draw(int drawSize) override;
+		virtual void Draw(unsigned int drawSize) override;
+		virtual void DrawIndexed(unsigned int drawSize) override;
 
 		virtual void Lock() override;
 		virtual void Unlock() override;

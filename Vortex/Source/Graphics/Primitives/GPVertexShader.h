@@ -14,7 +14,7 @@ namespace Vortex
 		/*
 			Creates a vertex shader from the HLSL file given.
 		*/
-		static GPVertexShader* Create(std::string file);
+		static GPVertexShader* Create(std::string file, std::string defines);
 
 		virtual void Bind() = 0;
 		virtual void Recreate() = 0;
