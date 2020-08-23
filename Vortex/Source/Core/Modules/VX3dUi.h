@@ -1,23 +1,23 @@
 #pragma once
 #include <Core/Module.h>
+#include <Math/Vector.h>
+
+DECLARE_LOGGER(Log3DUI);
 
 namespace Vortex
 {
-	class VXCore;
-	class Window;
-
 	/*
-		Module that deals with ImGui rendering.
+		Module that deals with Im3d rendering.
 	*/
-	class VXGui : public Module
+	class VX3dUi : public Module
 	{
 	public:
-		VXGui();
-		virtual ~VXGui();
+		VX3dUi();
+		virtual ~VX3dUi();
 
 		virtual void Startup() override;
 		virtual void Shutdown() override;
-
+		
 		virtual void Tick(float deltaTime) override;
 		void Draw();
 
@@ -25,11 +25,9 @@ namespace Vortex
 
 		virtual void OnConsoleCommand(ConsoleCommand command) override;
 
+		void SetViewportTopLeft(const Math::Vector& topLeft) { m_ViewportTopLeft = topLeft; }
+
 	private:
-		void SetVortexColors();
-
-		Window* m_Window;
-
-		bool m_ShouldRestart = false;
+		Math::Vector m_ViewportTopLeft;
 	};
 }

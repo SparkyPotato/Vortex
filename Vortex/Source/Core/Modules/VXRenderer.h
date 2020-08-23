@@ -33,12 +33,16 @@ namespace Vortex
 		void RenderToFramebuffer(GPFramebuffer* framebuffer);
 		void RenderToWindow(Window* window);
 
+		GPFramebuffer* GetTarget() { return m_Target; }
+
 		void RequestFramebufferResize(int width, int height);
 		void ResizeAllCameras();
 		void ResizeIfRequired();
 		bool ResizeOnWindow(WindowResizeEvent& event);
 
 		void RenderWorld(World* worldToRender);
+
+		World* GetWorld() { return m_World; }
 
 	private:
 		void PostFrambufferResize(int width, int height);

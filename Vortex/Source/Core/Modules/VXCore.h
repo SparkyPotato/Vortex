@@ -2,6 +2,7 @@
 #include <Core/Module.h>
 #include <Core/Modules/VXInput.h>
 #include <Core/Modules/VXGui.h>
+#include <Core/Modules/VX3dUi.h>
 #include <Core/Modules/VXRenderer.h>
 #include <Core/Modules/VXScriptManager.h>
 #include <Core/Application.h>
@@ -77,6 +78,8 @@ namespace Vortex
 
 		VXGui* GetGui() { return m_Gui; }
 
+		VX3dUi* Get3dUi() { return m_3dUi; }
+
 		/*
 			Returns the layer stack.
 		*/
@@ -99,13 +102,16 @@ namespace Vortex
 		VXInput* m_Input = nullptr;
 		// The Vortex GUI Module.
 		VXGui* m_Gui = nullptr;
+		// The Vortex 3D UI Module.
+		VX3dUi* m_3dUi = nullptr;
 		// The Vortex Renderer.
 		VXRenderer* m_Renderer = nullptr;
 		// The Vortex Scripting Manager.
 		VXScriptManager* m_ScriptManager = nullptr;
 
 		std::thread* p_RenderThread = nullptr;
-		bool m_RenderedGui = false;
+		volatile bool m_RenderedGui = false;
+		volatile bool m_Rendered3dUi = false;
 		uint64_t m_MainThreadFrameCount = 10;
 		uint64_t m_RenderThreadFrameCount = 10;
 

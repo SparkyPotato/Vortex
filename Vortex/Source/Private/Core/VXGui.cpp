@@ -3,9 +3,8 @@
 #include <Core/Modules/VXCore.h>
 #include <Graphics/Primitives/GPFramebuffer.h>
 #include <Private/Core/ImGuiImplementation.h>
-#include <imgui.h>
-
 #include <Core/VXConsole.h>
+#include <imgui.h>
 
 namespace Vortex
 {
@@ -63,7 +62,6 @@ namespace Vortex
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.MouseWheel = GInput->GetMouseState().scrollDelta;
 
 		// Start ImGui frame.
 		ImGuiImplementation::NewFrame();

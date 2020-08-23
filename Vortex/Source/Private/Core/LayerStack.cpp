@@ -76,4 +76,12 @@ namespace Vortex
 			(*it)->OnGuiRender();
 		}
 	}
+
+	void LayerStack::Render3dUi()
+	{
+		for (auto it = m_Layers.rbegin(); it != m_Layers.rend(); std::advance(it, 1))
+		{
+			(*it)->On3dUiRender();
+		}
+	}
 }

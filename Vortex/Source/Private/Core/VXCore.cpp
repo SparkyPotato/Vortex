@@ -50,6 +50,9 @@ namespace Vortex
 		m_Gui = new VXGui();
 		m_Gui->Startup();
 
+		m_3dUi = new VX3dUi();
+		m_3dUi->Startup();
+
 		m_Renderer = new VXRenderer();
 		m_Renderer->Startup();
 
@@ -74,6 +77,8 @@ namespace Vortex
 		VX_TRACE(LogCore, "Shutting down Vortex Core Module.");
 
 		m_IsTicking = false;
+		m_RenderedGui = true;
+		m_Rendered3dUi = true;
 		p_RenderThread->join();
 
 		// Destroys the layer stack.
@@ -91,6 +96,10 @@ namespace Vortex
 		m_Renderer->Shutdown();
 		delete m_Renderer;
 		GRenderer = m_Renderer = nullptr;
+
+		m_3dUi->Shutdown();
+		delete m_3dUi;
+		m_3dUi = nullptr;
 
 		// Deletes the Vortex GUI Module.
 		m_Gui->Shutdown();
@@ -282,6 +291,17 @@ namespace Vortex
 				m_Gui->Tick(m_TickDeltaTime);
 				m_RenderedGui = true;
 
+				if (m_Rendered3dUi)
+				{
+					QueryPerformanceCounter(&m_TickCurrentTime);
+					m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+					m_TickDeltaTime /= m_Frequency.QuadPart;
+
+					continue;
+				}
+				m_3dUi->Tick(m_TickDeltaTime);
+				m_Rendered3dUi = true;
+
 				QueryPerformanceCounter(&m_TickCurrentTime);
 				m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
 				m_TickDeltaTime /= m_Frequency.QuadPart;
@@ -303,6 +323,17 @@ namespace Vortex
 				}
 				m_Gui->Tick(m_TickDeltaTime);
 				m_RenderedGui = true;
+
+				if (m_Rendered3dUi)
+				{
+					QueryPerformanceCounter(&m_TickCurrentTime);
+					m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
+					m_TickDeltaTime /= m_Frequency.QuadPart;
+
+					continue;
+				}
+				m_3dUi->Tick(m_TickDeltaTime);
+				m_Rendered3dUi = true;
 
 				QueryPerformanceCounter(&m_TickCurrentTime);
 				m_TickDeltaTime = (float)(m_TickCurrentTime.QuadPart - m_TickLastTime.QuadPart);
@@ -335,8 +366,12 @@ namespace Vortex
 
 			m_Renderer->ResizeIfRequired();
 			m_RenderedGui = false;
+			m_Rendered3dUi = false;
 
 			m_Renderer->Tick(m_RenderDeltaTime);
+
+			while (!m_Rendered3dUi) {}
+			m_3dUi->Draw();
 
 			while (!m_RenderedGui) {}
 			m_Gui->Draw();

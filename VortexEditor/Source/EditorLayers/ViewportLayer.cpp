@@ -117,6 +117,8 @@ void ViewportLayer::OnGuiRender()
 				m_ViewportTopLeft = ImGui::GetItemRectMin();
 				m_ViewportBottomRight = ImGui::GetItemRectMax();
 
+				GCore->Get3dUi()->SetViewportTopLeft({ m_ViewportTopLeft.x, m_ViewportTopLeft.y, 0.f });
+
 				m_IsMouseInViewportBounds = ImGui::IsItemHovered();
 				m_IsViewportActive = ImGui::IsWindowFocused();
 			}

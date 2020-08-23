@@ -17,6 +17,8 @@ namespace Vortex
 		const Math::Vector& GetRotation() { return m_Rotation; }
 		const Math::Vector& GetScale() { return m_Scale; }
 
+		Math::Vector GetWorldPosition();
+
 		const Math::Matrix GetTransform();
 		const Math::Matrix GetTransformInverse();
 		const Math::Matrix GetRotationMatrix();

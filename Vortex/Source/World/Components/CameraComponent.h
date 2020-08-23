@@ -28,6 +28,8 @@ namespace Vortex
 		void SetFarPlane(float farPlane = 1000.f);
 		void SetFOVMultiple(float FOVMultiple = PHI);
 
+		TransformComponent* GetTransform() { return m_Transform; }
+
 		void Resize(float aspectRatio);
 
 		CameraProjection GetProjectionMode() { return m_Projection; }

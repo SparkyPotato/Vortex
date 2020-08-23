@@ -19,6 +19,15 @@ namespace Vortex
 
 	}
 
+	Math::Vector TransformComponent::GetWorldPosition()
+	{
+		if (m_ParentTransform)
+		{
+			return m_ParentTransform->GetWorldPosition() + m_Position;
+		}
+		return m_Position;
+	}
+
 	const Math::Matrix TransformComponent::GetTransform()
 	{
 		if (m_ParentTransform)

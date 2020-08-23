@@ -34,10 +34,15 @@ namespace Vortex
 			Passes the event through all layers if it isn't handled.
 		*/
 		void PassEvent(Event& event);
+
 		/*
 			Renders ImGui for all layers.
 		*/
 		void RenderGui();
+		/*
+			Renders Im3d for all layers.
+		*/
+		void Render3dUi();
 
 	private:
 		std::vector<Layer*> m_Layers;

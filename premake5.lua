@@ -137,7 +137,7 @@ project "VortexEditor"
 		
 	filter "configurations:DebugEngine"
 		defines "CFG_DEBUGENG"
-		runtime "Release"
+		runtime "Debug"
 		optimize "on"
 		
 	filter "configurations:DebugApplication"

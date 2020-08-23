@@ -51,6 +51,11 @@ namespace Vortex
 		virtual void OnGuiRender() {}
 
 		/*
+			Called every frame when Im3d is being rendered. Im3d will only work here. Don't have to override.
+		*/
+		virtual void On3dUiRender() {}
+
+		/*
 			Called with all unhandled events in the Vortex Core. Doesn't get any event handled by layers. Doesn't have to be overridden.
 		*/
 		virtual void OnEvent(Event& event) {};
