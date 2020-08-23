@@ -2,6 +2,7 @@
 #include <Private/Platforms/DirectX11/DX11Texture.h>
 #include <Private/Platforms/DirectX11/DX11Framebuffer.h>
 #include <EditorLayers/WorldLayer.h>
+#include <im3d_math.h>
 
 using namespace Vortex;
 
@@ -131,6 +132,11 @@ void ViewportLayer::OnGuiRender()
 		}
 	}
 	ImGui::PopStyleVar(1);
+}
+
+void ViewportLayer::On3dUiRender()
+{
+	
 }
 
 void ViewportLayer::HandleResize(int width, int height)

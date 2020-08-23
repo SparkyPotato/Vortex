@@ -16,7 +16,9 @@ public:
 	virtual void OnDetach() override;
 
 	virtual void Tick(float deltaTime) override;
+
 	virtual void OnGuiRender() override;
+	virtual void On3dUiRender() override;
 
 private:
 	void HandleResize(int width, int height);
@@ -37,4 +39,6 @@ private:
 
 	float m_MovementSpeed = 3.f;
 	float m_Sensitivity = 1.f;
+
+	float translation[3] = { 0.f, 0.f, 0.f };
 };

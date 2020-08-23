@@ -184,6 +184,8 @@ namespace Vortex
 
 	void DX11GraphicsContext::GenerateInputLayout()
 	{
+		if (!m_CurrentVertexShader || !m_CurrentVertexBuffer) return;
+
 		int size = m_CurrentVertexBuffer->GetLayout().GetElementCount();
 		D3D11_INPUT_ELEMENT_DESC* desc = new D3D11_INPUT_ELEMENT_DESC[size];
 		std::string* semantics = new std::string[size];
