@@ -100,6 +100,34 @@ void WorldLayer::OnGuiRender()
 	ImGui::PopStyleVar();
 }
 
+void WorldLayer::On3dUiRender()
+{
+	Im3d::GetContext().m_gizmoHeightPixels = 250.f;
+	if (m_CurrentlySelectedEntity)
+	{
+		m_GizmoMatrix.setTranslation({ m_Position[0], m_Position[1], m_Position[2] });
+		Im3d::PushMatrix(m_GizmoMatrix);
+		switch (m_GizmoMode)
+		{
+		case GizmoMode::Translation:
+			if (Im3d::GizmoTranslation("Main Gizmo Translation", m_Position))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
+			}
+			break;
+		case GizmoMode::Rotation:
+			break;
+		case GizmoMode::Scale:
+			if (Im3d::GizmoScale("Main Gizmo Scale", m_Scale))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetScale(m_Scale);
+			}
+			break;
+		}
+		Im3d::PopMatrix();
+	}
+}
+
 void WorldLayer::FocusEntity()
 {
 	if (m_CurrentlySelectedEntity && m_IsWorldActive)

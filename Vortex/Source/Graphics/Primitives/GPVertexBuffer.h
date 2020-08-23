@@ -123,6 +123,7 @@ namespace Vortex
 			Creates a vertex buffer from `count` vertices according to the the layout.
 		*/
 		static GPVertexBuffer* Create(void* vertices, unsigned int count, const VertexLayout& layout, BufferAccessType accessType);
+		static GPVertexBuffer* Create(unsigned int size, VertexLayout& layout);
 
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;

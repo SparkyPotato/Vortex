@@ -125,6 +125,8 @@ namespace Vortex
 
 	void VX3dUi::Draw()
 	{
+		GRenderer->GetTarget()->DisableDepth();
+
 		auto drawLists = Im3d::GetDrawLists();
 		unsigned int drawListCount = Im3d::GetDrawListCount();
 
@@ -144,13 +146,11 @@ namespace Vortex
 			{
 				delete m_Vertices;
 
-				m_Vertices = GPVertexBuffer::Create((void*) drawlist.m_vertexData, drawlist.m_vertexCount, m_VertexLayout, BufferAccessType::Dynamic);
-				m_BufferSize = m_Vertices->GetSize();
+				m_BufferSize += drawlist.m_vertexCount;
+				m_Vertices = GPVertexBuffer::Create(m_BufferSize, m_VertexLayout);
 			}
-			else
-			{
-				m_Vertices->Set((void*) drawlist.m_vertexData, drawlist.m_vertexCount);
-			}
+			m_Vertices->Set((void*)drawlist.m_vertexData, drawlist.m_vertexCount);
+
 			m_ConstantBuffer->Bind();
 			m_GeometryConstantBuffer->Bind();
 

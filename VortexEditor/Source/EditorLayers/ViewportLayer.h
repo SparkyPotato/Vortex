@@ -22,6 +22,9 @@ public:
 
 private:
 	void HandleResize(int width, int height);
+	void OnW();
+	void OnE();
+	void OnR();
 
 	bool* m_IsOpen;
 

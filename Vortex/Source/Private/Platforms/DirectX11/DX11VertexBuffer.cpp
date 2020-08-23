@@ -11,6 +11,25 @@ namespace Vortex
 		Create(vertices);
 	}
 
+	DX11VertexBuffer::DX11VertexBuffer(unsigned int count, const VertexLayout& layout)
+		: m_Layout(layout), m_Size(count), m_AccessType(BufferAccessType::Dynamic)
+	{
+		GraphicsContext::Get()->RegisterPrimitive(this);
+
+		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get()); 
+
+		D3D11_BUFFER_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.ByteWidth = m_Layout.GetStride() * m_Size;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.StructureByteStride = m_Layout.GetStride();
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.MiscFlags = NULL;
+
+		context->GetDevice()->CreateBuffer(&desc, NULL, &m_Buffer);
+	}
+
 	DX11VertexBuffer::~DX11VertexBuffer()
 	{
 		DX11GraphicsContext* context = reinterpret_cast<DX11GraphicsContext*>(GraphicsContext::Get());

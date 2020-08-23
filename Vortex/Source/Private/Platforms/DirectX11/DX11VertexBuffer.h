@@ -8,6 +8,7 @@ namespace Vortex
 	{
 	public:
 		DX11VertexBuffer(void* vertices, unsigned int count, const VertexLayout& layout, BufferAccessType accessType);
+		DX11VertexBuffer(unsigned int count, const VertexLayout& layout);
 		virtual ~DX11VertexBuffer();
 
 		virtual void Bind() override;

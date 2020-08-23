@@ -26,6 +26,10 @@ void ViewportLayer::OnAttach()
 	m_Texture = GPTexture::Create(400, 400);
 	m_Framebuffer = GPFramebuffer::Create(m_Texture);
 
+	GInput->AddKeyBinding(BIND_INPUT(this->OnW), InputCode::W, Binding::Pressed);
+	GInput->AddKeyBinding(BIND_INPUT(this->OnE), InputCode::E, Binding::Pressed);
+	GInput->AddKeyBinding(BIND_INPUT(this->OnR), InputCode::R, Binding::Pressed);
+
 	GRenderer->RenderToFramebuffer(m_Framebuffer);
 }
 
@@ -146,5 +150,29 @@ void ViewportLayer::HandleResize(int width, int height)
 	else if (width != m_Texture->GetWidth() || height != m_Texture->GetHeight())
 	{
 		GRenderer->RequestFramebufferResize(width, height);
+	}
+}
+
+void ViewportLayer::OnW()
+{
+	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
+	{
+		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Translation);
+	}
+}
+
+void ViewportLayer::OnE()
+{
+	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
+	{
+		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Rotation);
+	}
+}
+
+void ViewportLayer::OnR()
+{
+	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
+	{
+		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Scale);
 	}
 }

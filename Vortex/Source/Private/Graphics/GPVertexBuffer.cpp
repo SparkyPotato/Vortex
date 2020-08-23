@@ -17,4 +17,15 @@ namespace Vortex
 			return nullptr;
 		}
 	}
+
+	GPVertexBuffer* GPVertexBuffer::Create(unsigned int size, VertexLayout& layout)
+	{
+		switch (GraphicsContext::Get()->GetAPI())
+		{
+		case GraphicsAPI::DirectX11:
+			return new DX11VertexBuffer(size, layout);
+		default:
+			return nullptr;
+		}
+	}
 }

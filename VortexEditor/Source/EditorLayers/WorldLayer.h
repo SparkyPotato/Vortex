@@ -7,6 +7,13 @@ DECLARE_LOGGER(LogWorld);
 class WorldLayer : public Vortex::Layer
 {
 public:
+	enum class GizmoMode
+	{
+		Translation,
+		Rotation,
+		Scale
+	};
+
 	WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen);
 	virtual ~WorldLayer();
 
@@ -14,9 +21,13 @@ public:
 	virtual void OnDetach() override;
 
 	virtual void Tick(float deltaTime) override;
+
 	virtual void OnGuiRender() override;
+	virtual void On3dUiRender() override;
 
 	Vortex::Entity* GetEditorEntity() { return m_EditorEntity; }
+
+	void SetGizmoMode(GizmoMode mode) { m_GizmoMode = mode; }
 
 private:
 	void FocusEntity();
@@ -34,6 +45,8 @@ private:
 	void DrawCamera();
 
 	Vortex::Entity* m_EditorEntity = nullptr;
+
+	GizmoMode m_GizmoMode = GizmoMode::Translation;
 
 	Vortex::Entity* m_CurrentlySelectedEntity = nullptr;
 	float m_Position[3];
@@ -65,4 +78,6 @@ private:
 
 	char m_NewEntityNameBuffer[100];
 	char m_EntityNameBuffer[100];
+
+	Im3d::Mat4 m_GizmoMatrix;
 };
