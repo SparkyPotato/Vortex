@@ -106,45 +106,9 @@ void WorldLayer::OnGuiRender()
 
 void WorldLayer::On3dUiRender()
 {
-	if (m_CurrentlySelectedEntity)
-	{
-		Im3d::Mat4 mat;
-		mat.setTranslation({ m_Position[0], m_Position[1], m_Position[2] });
-		Im3d::Mat3 rotation = Im3d::FromEulerXYZ(Im3d::Vec3
-		(
-			(float) -m_Rotation[0] * PI / 180.f, 
-			(float) -m_Rotation[1] * PI / 180.f, 
-			(float) -m_Rotation[2] * PI / 180.f
-		));
-		mat.setRotation(rotation);
-		mat.setScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
+	DrawGizmos();
 
-		Im3d::PushMatrix(mat);
-		Im3d::PushSize(3.f);
-		switch (Im3d::GetContext().m_gizmoMode)
-		{
-		case Im3d::GizmoMode_Translation:
-			if (Im3d::GizmoTranslation("Translation", m_Position))
-			{
-				m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
-			}
-			break;
-		case Im3d::GizmoMode_Rotation:
-			if (Im3d::GizmoRotation("Rotation", m_Rotation))
-			{
-				m_CurrentlySelectedEntity->GetTransform()->SetRotation(m_Rotation);
-			}
-			break;
-		case Im3d::GizmoMode_Scale:
-			if (Im3d::GizmoScale("Scale", m_Scale))
-			{
-				m_CurrentlySelectedEntity->GetTransform()->SetScale(m_Scale);
-			}
-			break;
-		}
-		Im3d::PopSize();
-		Im3d::PopMatrix();
-	}
+	DrawCameraFrustrums();
 }
 
 void WorldLayer::FocusEntity()
@@ -535,4 +499,137 @@ void WorldLayer::DrawCamera()
 	}
 
 	ImGui::Separator();
+}
+
+void WorldLayer::DrawGizmos()
+{
+	if (m_CurrentlySelectedEntity)
+	{
+		if (m_World->GetMainCamera() != m_EditorEntity->GetCameraComponent()) return;
+
+		Im3d::Mat4 mat;
+		mat.setTranslation({ m_Position[0], m_Position[1], m_Position[2] });
+		Im3d::Mat3 rotation = Im3d::FromEulerXYZ(Im3d::Vec3
+		(
+			(float)-m_Rotation[0] * PI / 180.f,
+			(float)-m_Rotation[1] * PI / 180.f,
+			(float)-m_Rotation[2] * PI / 180.f
+		));
+		mat.setRotation(rotation);
+		mat.setScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
+
+		Im3d::PushMatrix(mat);
+		Im3d::PushSize(3.f);
+		switch (Im3d::GetContext().m_gizmoMode)
+		{
+		case Im3d::GizmoMode_Translation:
+			if (Im3d::GizmoTranslation("Translation", m_Position))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
+			}
+			break;
+		case Im3d::GizmoMode_Rotation:
+			if (Im3d::GizmoRotation("Rotation", m_Rotation))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetRotation(m_Rotation);
+			}
+			break;
+		case Im3d::GizmoMode_Scale:
+			if (Im3d::GizmoScale("Scale", m_Scale))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetScale(m_Scale);
+			}
+			break;
+		}
+		Im3d::PopSize();
+		Im3d::PopMatrix();
+	}
+}
+
+void WorldLayer::DrawCameraFrustrums()
+{
+	for (auto camera : m_World->GetCameras())
+	{
+		if (m_World->GetMainCamera() == camera) continue;
+
+		if (m_CurrentlySelectedEntity && m_CurrentlySelectedEntity->GetCameraComponent() == camera)
+			Im3d::PushSize(3.f);
+		else
+			Im3d::PushSize(1.f);
+		Im3d::PushColor(Im3d::Color_Green);
+
+		auto matrix = camera->GetTransform()->GetTransform();
+
+		Math::Vector neara, nearb, nearc, neard;
+
+		neara.x = -camera->GetWidth() / 2.f;
+		neara.y = camera->GetHeight() / 2.f;
+		nearb.x = camera->GetWidth() / 2.f;
+		nearb.y = camera->GetHeight() / 2.f;
+		nearc.x = camera->GetWidth() / 2.f;
+		nearc.y = -camera->GetHeight() / 2.f;
+		neard.x = -camera->GetWidth() / 2.f;
+		neard.y = -camera->GetHeight() / 2.f;
+		neara.z = nearb.z = nearc.z = neard.z = camera->GetNearPlane();
+
+		neara *= matrix;
+		nearb *= matrix;
+		nearc *= matrix;
+		neard *= matrix;
+
+		Im3d::DrawQuad({ neara.x, neara.y, neara.z }, { nearb.x, nearb.y, nearb.z }, { nearc.x, nearc.y, nearc.z }, { neard.x, neard.y, neard.z });
+
+		Math::Vector fara, farb, farc, fard;
+
+		if (camera->GetProjectionMode() == CameraProjection::Orthographic)
+		{
+			fara.x = -camera->GetWidth() / 2.f;
+			fara.y = camera->GetHeight() / 2.f;
+			farb.x = camera->GetWidth() / 2.f;
+			farb.y = camera->GetHeight() / 2.f;
+			farc.x = camera->GetWidth() / 2.f;
+			farc.y = -camera->GetHeight() / 2.f;
+			fard.x = -camera->GetWidth() / 2.f;
+			fard.y = -camera->GetHeight() / 2.f;
+			fara.z = farb.z = farc.z = fard.z = camera->GetFarPlane();
+
+			fara *= matrix;
+			farb *= matrix;
+			farc *= matrix;
+			fard *= matrix;
+
+			Im3d::DrawQuad({ fara.x, fara.y, fara.z }, { farb.x, farb.y, farb.z }, { farc.x, farc.y, farc.z }, { fard.x, fard.y, fard.z });
+		}
+		else
+		{
+			fara = neara - camera->GetTransform()->GetPosition();
+			fara *= camera->GetFarPlane();
+			farb = nearb - camera->GetTransform()->GetPosition();
+			farb *= camera->GetFarPlane();
+			farc = nearc - camera->GetTransform()->GetPosition();
+			farc *= camera->GetFarPlane();
+			fard = neard - camera->GetTransform()->GetPosition();
+			fard *= camera->GetFarPlane();
+
+			Im3d::DrawQuad({ fara.x, fara.y, fara.z }, { farb.x, farb.y, farb.z }, { farc.x, farc.y, farc.z }, { fard.x, fard.y, fard.z });
+		}
+
+		Im3d::BeginLines();
+		Im3d::Vertex(neara.x, neara.y, neara.z);
+		Im3d::Vertex(fara.x, fara.y, fara.z);
+
+		Im3d::Vertex(nearb.x, nearb.y, nearb.z);
+		Im3d::Vertex(farb.x, farb.y, farb.z);
+
+		Im3d::Vertex(nearc.x, nearc.y, nearc.z);
+		Im3d::Vertex(farc.x, farc.y, farc.z);
+
+		Im3d::Vertex(neard.x, neard.y, neard.z);
+		Im3d::Vertex(fard.x, fard.y, fard.z);
+		Im3d::End();
+
+
+		Im3d::PopColor();
+		Im3d::PopSize();
+	}
 }

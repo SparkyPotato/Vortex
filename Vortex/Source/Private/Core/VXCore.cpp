@@ -125,9 +125,6 @@ namespace Vortex
 
 	void VXCore::Tick(float deltaTime)
 	{
-		// Ticks the Vortex Input module.
-		m_Input->Tick(deltaTime);
-
 		ENG_PROFILESTART("Application Tick");
 		// Calls the application tick.
 		m_App->Tick(deltaTime);
@@ -274,6 +271,9 @@ namespace Vortex
 
 			// Get time before frame.
 			QueryPerformanceCounter(&m_TickLastTime);
+
+			// Ticks the Vortex Input module.
+			m_Input->Tick(m_TickDeltaTime);
 
 			// Updates the application window, getting all window events.
 			m_Window->GetEvents();

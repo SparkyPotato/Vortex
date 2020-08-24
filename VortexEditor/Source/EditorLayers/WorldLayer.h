@@ -35,6 +35,9 @@ private:
 	void DrawSprite();
 	void DrawCamera();
 
+	void DrawGizmos();
+	void DrawCameraFrustrums();
+
 	Vortex::Entity* m_EditorEntity = nullptr;
 
 	Vortex::Entity* m_CurrentlySelectedEntity = nullptr;
