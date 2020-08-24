@@ -128,9 +128,6 @@ namespace Vortex
 		// Ticks the Vortex Input module.
 		m_Input->Tick(deltaTime);
 
-		// Updates the application window, getting all window events.
-		m_Window->GetEvents();
-
 		ENG_PROFILESTART("Application Tick");
 		// Calls the application tick.
 		m_App->Tick(deltaTime);
@@ -277,6 +274,9 @@ namespace Vortex
 
 			// Get time before frame.
 			QueryPerformanceCounter(&m_TickLastTime);
+
+			// Updates the application window, getting all window events.
+			m_Window->GetEvents();
 
 			if (m_MainThreadFrameCount - 5 > m_RenderThreadFrameCount)
 			{

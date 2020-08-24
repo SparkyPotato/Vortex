@@ -28,7 +28,7 @@ namespace Vortex
 		return m_Position;
 	}
 
-	const Math::Matrix TransformComponent::GetTransform()
+	Math::Matrix TransformComponent::GetTransform()
 	{
 		if (m_ParentTransform)
 		{
@@ -37,7 +37,7 @@ namespace Vortex
 		return m_Transformation;
 	}
 
-	const Math::Matrix TransformComponent::GetTransformInverse()
+	Math::Matrix TransformComponent::GetTransformInverse()
 	{
 		if (m_ParentTransform)
 		{
@@ -46,7 +46,7 @@ namespace Vortex
 		return m_InverseTransformation;
 	}
 
-	const Math::Matrix TransformComponent::GetRotationMatrix()
+	Math::Matrix TransformComponent::GetRotationMatrix()
 	{
 		if (m_ParentTransform)
 		{

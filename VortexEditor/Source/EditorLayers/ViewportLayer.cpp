@@ -87,6 +87,10 @@ void ViewportLayer::Tick(float deltaTime)
 	}
 	else if (GInput->GetMouseState().leftButton)
 	{
+		GWindow->ShowCursor();
+		GWindow->FreeCursor();
+		GInput->UseRawInput(false);
+
 		// Selecting stuff.
 	}
 	else
@@ -157,7 +161,7 @@ void ViewportLayer::OnW()
 {
 	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
 	{
-		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Translation);
+		Im3d::GetContext().m_gizmoMode = Im3d::GizmoMode_Translation;
 	}
 }
 
@@ -165,7 +169,7 @@ void ViewportLayer::OnE()
 {
 	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
 	{
-		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Rotation);
+		Im3d::GetContext().m_gizmoMode = Im3d::GizmoMode_Rotation;
 	}
 }
 
@@ -173,6 +177,6 @@ void ViewportLayer::OnR()
 {
 	if (m_IsViewportActive && !GInput->GetMouseState().rightButton)
 	{
-		m_WorldLayer->SetGizmoMode(WorldLayer::GizmoMode::Scale);
+		Im3d::GetContext().m_gizmoMode = Im3d::GizmoMode_Scale;
 	}
 }

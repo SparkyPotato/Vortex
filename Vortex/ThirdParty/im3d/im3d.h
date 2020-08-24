@@ -863,7 +863,8 @@ inline void                PopLayerId()                                         
 inline Id                  GetLayerId()                                                                                     { return GetContext().getLayerId(); }
 
 inline bool                GizmoTranslation(const char* _id, float _translation_[3], bool _local)                           { return GizmoTranslation(MakeId(_id), _translation_, _local);   }
-inline bool                GizmoRotation(const char* _id, float _rotation_[3*3], bool _local)                               { return GizmoRotation(MakeId(_id), _rotation_, _local);}
+// inline bool                GizmoRotation(const char* _id, float _rotation_[3*3], bool _local)                               { return GizmoRotation(MakeId(_id), _rotation_, _local); }
+inline bool                GizmoRotation(const char* _id, float _rotation_[3], bool _local)                                 { return GizmoRotation(MakeId(_id), _rotation_, _local); }
 inline bool                GizmoScale(const char* _id, float _scale_[3])                                                    { return GizmoScale(MakeId(_id), _scale_); }
 inline bool                Gizmo(const char* _id, float _translation_[3], float _rotation_[3*3], float _scale_[3])          { return Gizmo(MakeId(_id), _translation_, _rotation_, _scale_); }
 inline bool                Gizmo(const char* _id, float _transform_[4*4])                                                   { return Gizmo(MakeId(_id), _transform_); }
@@ -877,4 +878,4 @@ inline Context&            GetContext()                                         
 inline void                SetContext(Context& _ctx)                                                                        { internal::g_CurrentContext = &_ctx; }
 inline void                MergeContexts(Context& _dst_, const Context& _src)                                               { _dst_.merge(_src); }
 
-} // namespac Im3d
+} // namespace Im3d

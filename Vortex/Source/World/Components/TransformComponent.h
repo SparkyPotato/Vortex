@@ -19,9 +19,9 @@ namespace Vortex
 
 		Math::Vector GetWorldPosition();
 
-		const Math::Matrix GetTransform();
-		const Math::Matrix GetTransformInverse();
-		const Math::Matrix GetRotationMatrix();
+		Math::Matrix GetTransform();
+		Math::Matrix GetTransformInverse();
+		Math::Matrix GetRotationMatrix();
 
 		void SetPosition(const Math::Vector& position);
 		void SetRotation(const Math::Vector& rotation);

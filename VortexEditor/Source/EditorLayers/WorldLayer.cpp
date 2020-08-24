@@ -1,9 +1,12 @@
 #include <EditorLayers/WorldLayer.h>
 #include <EditorLayers/AssetLayer.h>
+#include <im3d_math.h>
 
 using namespace Vortex;
 
 DEFINE_LOGGER(LogWorld);
+
+constexpr float PI = 3.14159265f;
 
 WorldLayer::WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen)
 	: m_IsWorldOpen(isWorldOpen), m_IsPropertiesOpen(isPropertiesOpen)
@@ -32,6 +35,7 @@ WorldLayer::~WorldLayer()
 
 void WorldLayer::OnAttach()
 {
+	Im3d::GetContext().m_gizmoHeightPixels = 250.f;
 	GInput->AddKeyBinding(BIND_INPUT(this->FocusEntity), InputCode::F, Binding::Pressed);
 	GRenderer->RenderWorld(m_World);
 }
@@ -102,28 +106,43 @@ void WorldLayer::OnGuiRender()
 
 void WorldLayer::On3dUiRender()
 {
-	Im3d::GetContext().m_gizmoHeightPixels = 250.f;
 	if (m_CurrentlySelectedEntity)
 	{
-		m_GizmoMatrix.setTranslation({ m_Position[0], m_Position[1], m_Position[2] });
-		Im3d::PushMatrix(m_GizmoMatrix);
-		switch (m_GizmoMode)
+		Im3d::Mat4 mat;
+		mat.setTranslation({ m_Position[0], m_Position[1], m_Position[2] });
+		Im3d::Mat3 rotation = Im3d::FromEulerXYZ(Im3d::Vec3
+		(
+			(float) -m_Rotation[0] * PI / 180.f, 
+			(float) -m_Rotation[1] * PI / 180.f, 
+			(float) -m_Rotation[2] * PI / 180.f
+		));
+		mat.setRotation(rotation);
+		mat.setScale({ m_Scale[0], m_Scale[1], m_Scale[2] });
+
+		Im3d::PushMatrix(mat);
+		Im3d::PushSize(3.f);
+		switch (Im3d::GetContext().m_gizmoMode)
 		{
-		case GizmoMode::Translation:
-			if (Im3d::GizmoTranslation("Main Gizmo Translation", m_Position))
+		case Im3d::GizmoMode_Translation:
+			if (Im3d::GizmoTranslation("Translation", m_Position))
 			{
 				m_CurrentlySelectedEntity->GetTransform()->SetPosition(m_Position);
 			}
 			break;
-		case GizmoMode::Rotation:
+		case Im3d::GizmoMode_Rotation:
+			if (Im3d::GizmoRotation("Rotation", m_Rotation))
+			{
+				m_CurrentlySelectedEntity->GetTransform()->SetRotation(m_Rotation);
+			}
 			break;
-		case GizmoMode::Scale:
-			if (Im3d::GizmoScale("Main Gizmo Scale", m_Scale))
+		case Im3d::GizmoMode_Scale:
+			if (Im3d::GizmoScale("Scale", m_Scale))
 			{
 				m_CurrentlySelectedEntity->GetTransform()->SetScale(m_Scale);
 			}
 			break;
 		}
+		Im3d::PopSize();
 		Im3d::PopMatrix();
 	}
 }
@@ -354,11 +373,11 @@ void WorldLayer::DrawTransform()
 	{
 		for (float& val : m_Rotation)
 		{
-			if (val > 360.f)
+			if (val > 180.f)
 			{
-				val = 0.f;
+				val -= 360.f;
 			}
-			else if (val < 0.f)
+			else if (val < -180.f)
 			{
 				val += 360.f;
 			}

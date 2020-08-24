@@ -78,6 +78,8 @@
 
 using namespace Im3d;
 
+constexpr float PI = 3.14159265f;
+
 constexpr Color Color_GizmoHighlight = Im3d::Color_Gold;
 
 static const int VertsPerDrawPrimitive[DrawPrimitive_Count] =
@@ -897,7 +899,108 @@ bool Im3d::GizmoTranslation(Id _id, float _translation_[3], bool _local)
 	return ret;
 }
 
-bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
+// bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
+// {
+// 	Context& ctx = GetContext();
+// 
+// 	Vec3 origin = ctx.getMatrix().getTranslation();
+// 	float worldRadius = ctx.pixelsToWorldSize(origin, ctx.m_gizmoHeightPixels);
+// 	#if IM3D_CULL_GIZMOS
+// 		if (!ctx.isVisible(origin, worldRadius))
+// 		{
+// 			return false;
+// 		}
+// 	#endif
+// 
+// 	Id currentId = ctx.m_activeId; // store currentId to detect if the gizmo becomes active during this call
+// 	ctx.pushId(_id);
+// 	ctx.m_appId = _id;
+// 
+// 	bool ret = false;
+// 	Mat3& storedRotation = ctx.m_gizmoStateMat3;
+// 	Mat3* outMat3 = (Mat3*)_rotation_;
+// 	Vec3 euler = ToEulerXYZ(*outMat3);
+// 	float worldSize = ctx.pixelsToWorldSize(origin, ctx.m_gizmoSizePixels);
+// 
+// 	struct AxisG { Id m_id; Vec3 m_axis; Color m_color; };
+// 	AxisG axes[] =
+// 		{
+// 			{ MakeId("axisX"), Vec3(1.0f, 0.0f, 0.0f), Color_Red   },
+// 			{ MakeId("axisY"), Vec3(0.0f, 1.0f, 0.0f), Color_Green },
+// 			{ MakeId("axisZ"), Vec3(0.0f, 0.0f, 1.0f), Color_Blue  }
+// 		};
+// 	Id viewId = MakeId("axisV");
+// 
+// 	Sphere boundingSphere(origin, worldRadius);
+// 	Ray ray(ctx.getAppData().m_cursorRayOrigin, ctx.getAppData().m_cursorRayDirection);
+// 	bool intersects = ctx.m_appHotId == ctx.m_appId || Intersects(ray, boundingSphere);
+// 
+// 	const AppData& appData = ctx.getAppData();
+// 
+// 	if (_local)
+// 	{
+// 	 // extract axes from the pushed matrix
+// 		for (int i = 0; i < 3; ++i)
+// 		{
+// 			if (ctx.m_activeId == axes[i].m_id)
+// 			{
+// 			 // use the stored matrix where the id is active, avoid rotating the axis frame during interaction (cause numerical instability)
+// 				axes[i].m_axis = Normalize(Vec3(storedRotation.getCol(i)));
+// 			}
+// 			else
+// 			{
+// 				axes[i].m_axis = Normalize(Vec3(ctx.getMatrix().getCol(i)));
+// 			}
+// 		}
+// 	}
+// 
+// 	ctx.pushMatrix(Mat4(1.0f));
+// 	for (int i = 0; i < 3; ++i)
+// 	{
+// 		if (i == 0 && (ctx.m_activeId == axes[1].m_id || ctx.m_activeId == axes[2].m_id || ctx.m_activeId == viewId))
+// 		{
+// 			continue;
+// 		}
+// 		if (i == 1 && (ctx.m_activeId == axes[2].m_id || ctx.m_activeId == axes[0].m_id || ctx.m_activeId == viewId))
+// 		{
+// 			continue;
+// 		}
+// 		if (i == 2 && (ctx.m_activeId == axes[0].m_id || ctx.m_activeId == axes[1].m_id || ctx.m_activeId == viewId))
+// 		{
+// 			continue;
+// 		}
+// 
+// 		AxisG& axis = axes[i];
+// 		ctx.gizmoAxislAngle_Draw(axis.m_id, origin, axis.m_axis, worldRadius * 0.9f, euler[i], axis.m_color, 0.0f);
+// 		if (intersects && ctx.gizmoAxislAngle_Behavior(axis.m_id, origin, axis.m_axis, appData.m_snapRotation, worldRadius * 0.9f, worldSize, &euler[i]))
+// 		{
+// 			*outMat3 = Rotation(axis.m_axis, euler[i] - ctx.m_gizmoStateFloat) * storedRotation;
+// 			ret = true;
+// 		}
+// 	}
+// 	if (!(ctx.m_activeId == axes[0].m_id || ctx.m_activeId == axes[1].m_id || ctx.m_activeId == axes[2].m_id))
+// 	{
+// 		Vec3 viewNormal = ctx.getAppData().m_viewDirection;
+// 		float angle = 0.0f;
+// 		if (intersects && ctx.gizmoAxislAngle_Behavior(viewId, origin, viewNormal, appData.m_snapRotation, worldRadius, worldSize, &angle))
+// 		{
+// 			*outMat3 = Rotation(viewNormal, angle) * storedRotation;
+// 			ret = true;
+// 		}
+// 		ctx.gizmoAxislAngle_Draw(viewId, origin, viewNormal, worldRadius, angle, viewId == ctx.m_activeId ? Color_GizmoHighlight : Color_White, 1.0f);
+// 	}
+// 	ctx.popMatrix();
+// 
+// 	if (currentId != ctx.m_activeId)
+// 	{
+// 	 // gizmo became active, store rotation matrix
+// 		storedRotation = *outMat3;
+// 	}
+// 	ctx.popId();
+// 	return ret;
+// }
+
+bool Im3d::GizmoRotation(Id _id, float _rotation_[3], bool _local)
 {
 	Context& ctx = GetContext();
 
@@ -916,17 +1019,22 @@ bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
 
 	bool ret = false;
 	Mat3& storedRotation = ctx.m_gizmoStateMat3;
-	Mat3* outMat3 = (Mat3*)_rotation_;
-	Vec3 euler = ToEulerXYZ(*outMat3);
+	Vec3 outVec3 = 
+	{ 
+		-_rotation_[0] * PI / 180.f,
+		-_rotation_[1] * PI / 180.f,
+		-_rotation_[2] * PI / 180.f
+	};
+
 	float worldSize = ctx.pixelsToWorldSize(origin, ctx.m_gizmoSizePixels);
 
 	struct AxisG { Id m_id; Vec3 m_axis; Color m_color; };
 	AxisG axes[] =
-		{
-			{ MakeId("axisX"), Vec3(1.0f, 0.0f, 0.0f), Color_Red   },
-			{ MakeId("axisY"), Vec3(0.0f, 1.0f, 0.0f), Color_Green },
-			{ MakeId("axisZ"), Vec3(0.0f, 0.0f, 1.0f), Color_Blue  }
-		};
+	{
+		{ MakeId("axisX"), Vec3(1.0f, 0.0f, 0.0f), Color_Red   },
+		{ MakeId("axisY"), Vec3(0.0f, 1.0f, 0.0f), Color_Green },
+		{ MakeId("axisZ"), Vec3(0.0f, 0.0f, 1.0f), Color_Blue  }
+	};
 	Id viewId = MakeId("axisV");
 
 	Sphere boundingSphere(origin, worldRadius);
@@ -937,12 +1045,12 @@ bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
 
 	if (_local)
 	{
-	 // extract axes from the pushed matrix
+		// extract axes from the pushed matrix
 		for (int i = 0; i < 3; ++i)
 		{
 			if (ctx.m_activeId == axes[i].m_id)
 			{
-			 // use the stored matrix where the id is active, avoid rotating the axis frame during interaction (cause numerical instability)
+				// use the stored matrix where the id is active, avoid rotating the axis frame during interaction (cause numerical instability)
 				axes[i].m_axis = Normalize(Vec3(storedRotation.getCol(i)));
 			}
 			else
@@ -969,10 +1077,9 @@ bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
 		}
 
 		AxisG& axis = axes[i];
-		ctx.gizmoAxislAngle_Draw(axis.m_id, origin, axis.m_axis, worldRadius * 0.9f, euler[i], axis.m_color, 0.0f);
-		if (intersects && ctx.gizmoAxislAngle_Behavior(axis.m_id, origin, axis.m_axis, appData.m_snapRotation, worldRadius * 0.9f, worldSize, &euler[i]))
+		ctx.gizmoAxislAngle_Draw(axis.m_id, origin, axis.m_axis, worldRadius * 0.9f, outVec3[i], axis.m_color, 0.0f);
+		if (intersects && ctx.gizmoAxislAngle_Behavior(axis.m_id, origin, axis.m_axis, appData.m_snapRotation, worldRadius * 0.9f, worldSize, &outVec3[i]))
 		{
-			*outMat3 = Rotation(axis.m_axis, euler[i] - ctx.m_gizmoStateFloat) * storedRotation;
 			ret = true;
 		}
 	}
@@ -982,7 +1089,6 @@ bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
 		float angle = 0.0f;
 		if (intersects && ctx.gizmoAxislAngle_Behavior(viewId, origin, viewNormal, appData.m_snapRotation, worldRadius, worldSize, &angle))
 		{
-			*outMat3 = Rotation(viewNormal, angle) * storedRotation;
 			ret = true;
 		}
 		ctx.gizmoAxislAngle_Draw(viewId, origin, viewNormal, worldRadius, angle, viewId == ctx.m_activeId ? Color_GizmoHighlight : Color_White, 1.0f);
@@ -991,12 +1097,17 @@ bool Im3d::GizmoRotation(Id _id, float _rotation_[3*3], bool _local)
 
 	if (currentId != ctx.m_activeId)
 	{
-	 // gizmo became active, store rotation matrix
-		storedRotation = *outMat3;
+		// gizmo became active, store rotation matrix
+		// storedRotation = *outMat3;
 	}
+	_rotation_[0] = -outVec3.x * 180.f / PI;
+	_rotation_[1] = -outVec3.y * 180.f / PI;
+	_rotation_[2] = -outVec3.z * 180.f / PI;
+
 	ctx.popId();
 	return ret;
 }
+
 bool Im3d::GizmoScale(Id _id, float _scale_[3])
 {
 	Context& ctx = GetContext();
@@ -2435,7 +2546,7 @@ bool Context::gizmoAxislAngle_Behavior(Id _id, const Vec3& _origin, const Vec3& 
 	Vec3 intersection;
 	if (aligned < 0.05f)
 	{
-	 // ray-plane intersection fails at grazing angles, use capsule interesection
+	 // ray-plane intersection fails at grazing angles, use capsule intersection
 		float t1;
 		Vec3 capsuleAxis = Cross(viewDir, _axis);
 		Capsule capsule(_origin + capsuleAxis * _worldRadius, _origin - capsuleAxis * _worldRadius, _worldSize * 0.5f);

@@ -7,13 +7,6 @@ DECLARE_LOGGER(LogWorld);
 class WorldLayer : public Vortex::Layer
 {
 public:
-	enum class GizmoMode
-	{
-		Translation,
-		Rotation,
-		Scale
-	};
-
 	WorldLayer(bool* isWorldOpen, bool* isPropertiesOpen);
 	virtual ~WorldLayer();
 
@@ -27,14 +20,12 @@ public:
 
 	Vortex::Entity* GetEditorEntity() { return m_EditorEntity; }
 
-	void SetGizmoMode(GizmoMode mode) { m_GizmoMode = mode; }
+	void SetCurrentEntity(Vortex::Entity* entity);
 
 private:
 	void FocusEntity();
 
 	void DisplayChildren(const Vortex::World::WorldNode& node);
-
-	void SetCurrentEntity(Vortex::Entity* entity);
 
 	void DrawAddEntity();
 	void DrawAddComponent();
@@ -45,8 +36,6 @@ private:
 	void DrawCamera();
 
 	Vortex::Entity* m_EditorEntity = nullptr;
-
-	GizmoMode m_GizmoMode = GizmoMode::Translation;
 
 	Vortex::Entity* m_CurrentlySelectedEntity = nullptr;
 	float m_Position[3];
