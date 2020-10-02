@@ -14,8 +14,7 @@
 
 # Preferences
 *.ini
-**/Preferences/*
-*.vxprefs
+
 
 # Temporaries
 **/Temp/*
